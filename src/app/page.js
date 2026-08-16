@@ -3,10 +3,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import WaveTimelineSlider from "../components/WaveTimelineSlider"; // NEW WAVY SLIDER
 import Place from "../components/Place";
-import MapHoverPin from "../components/MapHoverPin"; // NEW SEPARATE COMPONENT
+import MapHoverPin from "../components/MapHoverPin";
 import Sidebar from "../components/Sidebar";
-import TimelineSlider from "../components/TimelineSlider";
 import Navbar from "../components/Navbar";
 import FloatingMenu from "../components/FloatingMenu";
 import FamilyTreeModal from "../components/FamilyTreeModal";
@@ -30,8 +30,9 @@ export default function Home() {
 
   const currentData = timelineData[activeEra];
 
-  const handleSliderChange = (event) => {
-    setActiveEra(Number(event.target.value));
+  // Handler for your new Wavy Timeline Slider (triggers chapter selection & sidebar)
+  const handleSelectChapter = (index) => {
+    setActiveEra(index);
     setShowSidebar(true);
     setShowPopup(false);
   };
@@ -56,7 +57,7 @@ export default function Home() {
           >
             <div className="relative w-[3840px] h-[2160px]">
               <Image
-                src="/Map.png"
+                src="/MapMain.png"
                 alt="Map of Aryavarta"
                 fill
                 className="object-cover opacity-40 contrast-125 saturate-50"
@@ -64,7 +65,7 @@ export default function Home() {
               />
               <div className="absolute inset-0 z-10">
                 
-                {/* 1. INDEPENDENT MAP HOVER LOCATIONS (Uses MapHoverPin with hover-only effects) */}
+                {/* 1. INDEPENDENT MAP HOVER LOCATIONS */}
                 {mapLocations.map((pin) => (
                   <MapHoverPin
                     key={pin.id}
@@ -79,7 +80,7 @@ export default function Home() {
                   />
                 ))}
 
-                {/* 2. SLIDER-DRIVEN PINS (Uses original Place component with continuous slider animation) */}
+                {/* 2. SLIDER-DRIVEN PINS */}
                 {currentData.pins.map((pin, index) => (
                   <Place
                     key={`slider-pin-${index}`}
@@ -116,10 +117,11 @@ export default function Home() {
         currentData={currentData}
       />
 
-      <TimelineSlider
-        activeEra={activeEra}
-        handleSliderChange={handleSliderChange}
-        totalEras={timelineData.length}
+      {/* NEW INTERACTIVE WAVY TIMELINE SLIDER */}
+      <WaveTimelineSlider
+        chapters={timelineData}
+        currentChapterIndex={activeEra}
+        onSelectChapter={handleSelectChapter}
       />
 
       <FamilyTreeModal

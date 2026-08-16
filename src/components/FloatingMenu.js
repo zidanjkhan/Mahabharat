@@ -1,58 +1,32 @@
 // src/components/FloatingMenu.js
 "use client";
 
-// We have updated the function definition to accept the setShowFamilyTree tool as a prop.
-// This is "reading the note."
 export default function FloatingMenu({ setShowFamilyTree }) {
   return (
     <div className="absolute left-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-40 pointer-events-auto">
-      {/* --- CHAPTERS BUTTON --- */}
       <button
-        className="group relative flex items-center h-12 w-12 hover:w-36 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl transition-all duration-300 ease-in-out overflow-hidden cursor-pointer"
-        // We will add the onClick handler later when we build the Chapter Popup!
-      >
-        {/* The Icon stays exactly 3rem (12 units) wide so it stays centered when collapsed */}
-        <div className="flex items-center justify-center min-w-[3rem] h-full text-amber-500 group-hover:text-amber-400 transition-colors">
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-            />
-          </svg>
-        </div>
-
-        {/* The hidden text that fades in on hover */}
-        <span className="text-xs font-bold text-slate-200 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-          Chapters
-        </span>
-      </button>
-
-      {/* --- FAMILY TREE BUTTON (Trigger) --- */}
-      <button
-        className="group relative flex items-center h-12 w-12 hover:w-40 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl transition-all duration-300 ease-in-out overflow-hidden cursor-pointer"
-        // This is the CRITICAL integration point.
-        // We add an onClick event to the button. When clicked, it calls an arrow function '() => {}'
-        // which immediately calls the 'setShowFamilyTree(true)' tool we received as a prop.
-        // This tool changes the memory in page.js from 'false' to 'true'.
         onClick={() => setShowFamilyTree(true)}
+        className="group relative flex items-center h-14 w-14 hover:w-50 bg-gradient-to-r from-[#070b14]/95 via-[#0f172a]/90 to-[#070b14]/95 backdrop-blur-xl border border-amber-500/40 hover:border-amber-400 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] transition-all duration-500 ease-out overflow-hidden cursor-pointer"
       >
-        <div className="flex items-center justify-center min-w-[3rem] h-full text-amber-500 group-hover:text-amber-400 transition-colors">
-          {/* A network/branching node icon representing a lineage tree */}
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        {/* Original Branching Node Icon */}
+        <div className="flex items-center justify-center min-w-[3.5rem] h-full text-amber-400 group-hover:text-amber-300 transition-transform duration-300 group-hover:scale-110">
+          <svg className="w-5 h-5 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" fill="currentColor" viewBox="0 0 24 24">
             <path d="M10 3H14V7H10V3ZM11 8H13V13H18V15H22V19H18V17H13V21H11V17H6V19H2V15H6V13H11V8Z" />
           </svg>
         </div>
 
-        <span className="text-xs font-bold text-slate-200 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-          Family Tree
-        </span>
+        {/* Expanded Text with Subtitle */}
+        <div className="flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pr-4">
+          <span className="text-xs font-serif font-bold text-amber-300 tracking-wider uppercase">
+            Dynasty Lineage
+          </span>
+          <span className="text-[9px] font-sans text-slate-400 tracking-widest uppercase">
+            Explore Kuru Tree
+          </span>
+        </div>
+
+        {/* Glowing vertical accent line */}
+        <div className="absolute right-0 top-2 bottom-2 w-[2px] bg-amber-500/50 group-hover:bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
       </button>
     </div>
   );

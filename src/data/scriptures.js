@@ -10,7 +10,7 @@ export const timelineData = [
 In response to his inquiry regarding her identity, the woman questioned his intent. Shantanu declared his status as the King of Hastinapur and professed his deep love for her, expressing a desire to marry her. The woman agreed to his proposal but stipulated two conditions that must be met. 
 
 Intrigued yet apprehensive, the king urged her to state her requirements. She outlined her first condition: he must never inquire about her origin or identity. The second condition required that while he could observe her actions, he must never interfere or question them. The woman warned that should he violate either condition, she would leave him. Though taken aback by such demands, Shantanu was overwhelmed by his feelings and agreed to her terms. They then returned to the palace where they wed.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" }]
   },
   {
     era: "Chapter 2",
@@ -27,7 +27,7 @@ The queen halted and turned to face him. "But you promised," she reminded him ge
 The queen smiled, yet there was a hint of sadness in her eyes. "Very well, dear King. According to our agreement, I must now depart. However, before I go, I shall reveal my secret. I am Ganga, the Goddess of the River. The eight children born to you are celestial beings, Vasus of the heavens. They once angered a great sage who, in retaliation, cursed them to live as humans and endure the suffering of mortal life. Seven of these Vasus repented and sought mercy, and the sage shortened their human lives. Yet, the eighth Vasu remained defiant and as a result, was condemned to experience a long and painful existence in this world. This eighth child is the eighth Vasu. I will take him with me and prepare him, teaching him the skills and resilience necessary to face the trials ahead. I promise to return him to you once his training is complete." 
 
 With that, Ganga disappeared, taking the child with her. The king stood by the river in a stunned silence for a long while before returning to the palace, his heart heavy with sorrow.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" }]
   },
   {
     era: "Chapter 3",
@@ -44,7 +44,7 @@ Shantanu, refusing to disinherit Devavrata, turned down the proposal and returne
 The fisherman cautioned him, "But your sons will always have a claim to the throne, which could lead to conflict for my grandchildren."
 
 Devavrata made a solemn vow: "In addition to giving up my right to the throne, I also promise to remain a celibate for my entire life." At these words, the heavens opened up, showering him with flowers. From that moment on, he was known as Bhishma, meaning 'the one who took a terrible oath.' Pleased, the fisherman gave Satyavati to Shantanu. Shantanu granted Bhishma the extraordinary ability to choose the time and place of his own death, effectively rendering him nearly immortal.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" }]
   },
   {
     era: "Chapter 5",
@@ -58,8 +58,8 @@ None could match Bhishma's skill in battle. King Shalva pursued him the longest,
 
 The remaining two princesses, Ambika and Ambalika, were married to the young king. Unfortunately, the king's health deteriorated, and he passed away. Satyavati was deeply troubled as the kingdom now faced the dire prospect of being without a lineage. She turned to Bhishma, urging him to take the throne and marry the widows. "Mother," he said, "you know better than anyone of my vow to never claim the crown and to remain celibate. I cannot break this oath." With this in mind, Satyavati proposed another solution and unveiled a secret she had held for many years.`,
     pins: [
-      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" },
-      { name: "Kasi", top: 50, left: 62, color: "blue", size: "sm" }
+      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg " },
+      { name: "Kasi", top: 50, left: 61.5, color: "blue", size: "lg" }
     ]
   },
   {
@@ -75,7 +75,7 @@ Next, Ambalika was summoned. Upon seeing him, she turned pale with fright. Vyasa
 Ambika gave birth to a son named Dhritarashtra, who was blind. Ambalika's son was named Pandu due to his pale complexion. The third son, born to the handmaiden, was named Vidura and was considered the most perfect of the three. As the boys matured, Pandu was appointed King, despite Dhritarashtra being the eldest, as ancient laws dictated a blind man was deemed incapable of ruling. Vidura was given the position of Prime Minister. 
 
 Dhritarashtra was arranged to marry Gandhari. Upon learning of her husband's blindness, Gandhari chose to wear a blindfold from that day forth so she could share in his experience of the world. Pandu married Kunti, and later took a second wife, Princess Madri. However, Kunti held a secret—one that would shake the foundations of the kingdom.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }]
   },
   {
     era: "Chapter 7",
@@ -103,7 +103,7 @@ He created 100 pots, carefully breaking the mass of flesh into equal portions an
 Eventually, the firstborn son emerged from one of the pots, wailing as his lungs filled with air. The wild animals outside Hastinapur responded with cries, the winds howled violently, and fierce fires broke out around the kingdom. This firstborn son was named Duryodhana. One by one, his 99 brothers followed suit, emerging from their jars until a daughter named Dushala was born. These children came to be known as the Kauravas. 
 
 Dhritarashtra felt immense gratitude to finally have heirs. Yet, he was acutely aware that Yudhisthira, the son of King Pandu, would inherit the throne of Hastinapur as the eldest of the generation. This realization bred jealousy and resentment in Dhritarashtra's heart, setting the stage for a fierce rivalry.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }]
   },
   {
     era: "Chapter 9",
@@ -116,7 +116,7 @@ This tragedy left Kunti as the sole parent of the five Pandava brothers. With a 
 A fierce rivalry developed between Duryodhana and Bhima. Bhima, known for his immense strength, often bested the Kaurava brothers in wrestling matches, humiliating them in front of their peers. Meanwhile, Arjuna, gifted in the arts of warfare, excelled in all forms of combat training. 
 
 One day, while playing in the fields, the princes found themselves in a predicament. Their ball had tumbled into a deep, dry well. To make matters worse, Yudhisthira accidentally lost his ring as it slipped from his finger and fell into the depths alongside the ball. As the young princes struggled to devise a plan, an archer happened to pass by. He collected reeds, skillfully shot the first reed into the ball, and continued shooting subsequent reeds into the end of the previous one, forming a chain to pull out the ball. Next, the archer fired an arrow that returned bearing Yudhisthira's lost ring. Overjoyed, the princes invited the archer back to the palace to meet their Granduncle Bhishma.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" }]
   },
   {
     era: "Chapter 10",
@@ -132,7 +132,7 @@ One day, Drona set up a wooden bird in a tree and instructed the princes to aim 
 
 As the princes honed their skills, Drona soon requested his Guru Dakshina—the traditional fee paid by a student. "Bring me King Drupada," Drona commanded. The princes set off, quickly overcame Drupada's guards in Panchala, and brought him to Drona's feet. Drona said, "Once you claimed only a king can befriend another king. I sought your kingdom so I could earn your friendship, and I have succeeded. But out of mercy, I return half to you." Drupada accepted with a tight smile, but the humiliation would linger, and the two former friends would one day find themselves on opposing sides of a great war.`,
     pins: [
-      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" },
+      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" },
       { name: "Panchala", top: 42, left: 56, color: "red", size: "lg" }
     ]
   },
@@ -147,7 +147,7 @@ One day, Duryodhana suggested a trip to the banks of the river Ganga. When the o
 Meanwhile, Bhima sank deeper into the river, surrounded by the Naga, or serpent beings, who began to bite him mercilessly. However, in a twist of fate, their venom counteracted the poison in his system, and Bhima awoke. Breaking free from his bindings with ease, Bhima seized the Nagas and hurled them against the riverbed in a display of his formidable strength. The terrified Nagas swam to Vasuki, the King of the Naga realm.
 
 Upon realizing that the intruder was none other than Bhima, the son of Vayu the Wind God, Vasuki invited Bhima into the Naga palace. To aid in Bhima's recovery, the Naga King presented him with pots of Rasakunda, a mystical nectar renowned for enhancing strength. Bhima consumed eight vessels of this nectar and fell into a deep sleep. Once rejuvenated, the Naga King returned him safely to the surface. When Bhima returned to the palace and recounted his incredible tale, Yudhisthira cautioned him to remain silent about Duryodhana's involvement, realizing the depth of their cousin's malice.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }]
   },
   {
     era: "Chapter 12",
@@ -163,7 +163,7 @@ In the audience, Duryodhana recognized Karna's potential. "Guru Drona," he said,
 
 Yet amidst the crowd, one heart was heavy with grief. Kunti, watching from afar, wept as she realized that the young man before her was her firstborn son—the one she had secretly placed in a basket and set adrift on the river many years ago. The son she had conceived with Surya, the Sun God.`,
     pins: [
-      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "xl" },
+      { name: "Hastinapur", top: 33, left: 50, color: "amber", size: "lg" },
       { name: "Anga", top: 53, left: 78, color: "red", size: "lg" }
     ]
   },
@@ -179,7 +179,7 @@ Though Yudhisthira was wary, he consented to fulfill his royal duties. Unbeknown
 
 One of the builders, loyal to Prime Minister Vidura, discreetly sent word back, alerting him to the dangers. Vidura cautioned Yudhisthira to remain vigilant. Upon their arrival, the Pandavas and Kunti settled in their new mansion. The first four days passed without incident, but on the fifth night, disaster struck. The mansion suddenly erupted into flames, engulfing the structure in a raging inferno. The people of Varnavata watched in horror, fully believing that no one could have survived such a catastrophic blaze.`,
     pins: [
-      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" },
+      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" },
       { name: "Varnavata", top: 37, left: 55, color: "amber", size: "md" } 
     ]
   },
@@ -257,8 +257,8 @@ The Pandavas accepted these terms, and Yudhisthira began his reign over a land t
 
 One day, the Pandavas received a visit from Sage Narada, who delivered a foreboding warning. He cautioned them that having Draupadi as their common wife could foster divisions among the brothers. Following the sage's counsel, Draupadi and her husbands agreed upon a pact: if any brother entered Draupadi's chambers while she was with another, the intruding brother would be required to spend 12 years in exile.`,
     pins: [
-      { name: "Hastinapur", top: 30, left: 48, color: "red", size: "xl" },
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" }
+      { name: "Hastinapur", top: 30, left: 48, color: "red", size: "lg" },
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" }
     ]
   },
   {
@@ -272,7 +272,7 @@ Although Arjuna swiftly dealt with the thieves and returned victorious, he now f
 His journey took him across lakes and dense forests. While bathing in the river Ganga, he was pulled underwater by the Naga Princess Ulupi. Enchanted by her, he married her, and she bore him a son named Iravan. Ulupi bestowed upon him the ability to conquer any amphibious creature and assured him of invincibility in water. 
 
 Arjuna continued to Manipur, where he married the warrior Princess Chitrangada, under the condition that their son, Babruvahana, would remain in Manipur to inherit the throne. Arjuna then traveled south to the oceans, where he heroically rescued five celestial maidens who had been cursed to live as giant crocodiles. Continuing his odyssey, Arjuna eventually arrived at Prabhas, marking another chapter in his extraordinary journey.`,
-    pins: [{ name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" }] 
+    pins: [{ name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" }] 
   },
   {
     era: "Chapter 22",
@@ -285,7 +285,7 @@ Eager to win her hand, Arjuna sought counsel from Lord Krishna. Krishna revealed
 During a religious ceremony, as Subhadra prepared to return to Dwaraka, Arjuna charged forth, swiftly lifting Subhadra onto his chariot and racing away. The princess's guards were caught off guard. 
 
 Meanwhile, the elders of the Yadava clan, including Subhadra's brother Balarama, were incensed by Arjuna's bold act. Balarama quickly assembled a formidable army to recapture the rogue prince, but he questioned Krishna's silence. Krishna replied with calm authority: "Arjuna is the most esteemed among Kshatriya princes. Should you pursue him, the mighty Arjuna would surely humiliate your forces. Accept this union, and bring them back to Dwaraka where they can be married with all due ceremony." Calmed by Krishna's wise counsel, Balarama and the elders welcomed Arjuna and Subhadra back, honoring their union with a splendid marriage ceremony.`,
-    pins: [{ name: "Dwarka", top: 62, left: 24, color: "blue", size: "xl" }]
+    pins: [{ name: "Dwarka", top: 60, left: 23, color: "blue", size: "lg" }]
   },
   {
     era: "Chapter 23",
@@ -299,8 +299,8 @@ Meanwhile, Draupadi also gave birth to five sons—Prativindhya, Sutasoma, Shrut
 
 Krishna maintained a close friendship with Arjuna, frequently visiting Indraprastha to share in their joys. One day, as Krishna and Arjuna strolled along the riverbank, they were approached by a Brahmin seeking assistance. This encounter would lead them to a monumental task involving the fiery destruction of a great forest.`,
     pins: [
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" },
-      { name: "Dwarka", top: 62, left: 24, color: "amber", size: "xl" }
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" },
+      { name: "Dwarka", top: 60, left: 23, color: "amber", size: "lg" }
     ]
   },
   {
@@ -317,7 +317,7 @@ In retaliation, a furious Indra summoned a violent storm, momentarily rendering 
 
 A celestial voice boomed from the heavens: "Hold your wrath, Lord Indra. This forest is destined to burn. Know that Krishna and Prince Arjuna are invincible." Conceding to the divine decree, Indra halted his attacks. As Agni completed his meal, a mysterious Asura emerged from the flames, begging Arjuna for protection. Arjuna granted the Asura, named Mayasura, asylum.`,
     pins: [
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" },
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" },
       { name: "Khandava Forest", top: 39, left: 40, color: "red", size: "lg" } 
     ]
   },
@@ -333,8 +333,8 @@ One day, Sage Narada visited Yudhisthira, bringing important news. He informed t
 
 Seeking guidance, Yudhisthira approached Lord Krishna. Krishna confirmed he was qualified, but warned, "There is one who will stand in your way: King Jarasandha of Magadha. He will attempt to obstruct the Yajna. Having conquered many kingdoms, he has imprisoned 99 Kshatriyas whom he intends to sacrifice to his deity. Jarasandha must be defeated, and the imprisoned kings freed."`,
     pins: [
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" },
-      { name: "Magadha", top: 55, left: 69, color: "red", size: "xl" }
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" },
+      { name: "Magadha", top: 55, left: 69, color: "red", size: "lg" }
     ]
   },
   {
@@ -349,8 +349,8 @@ In a moment of clarity, Lord Krishna plucked a leaf from a nearby tree, split it
 
 With Jarasandha vanquished, the imprisoned kings were liberated and pledged their support to Yudhisthira. The Rajasuya Yajna was then held in Indraprastha, attracting hundreds of kings, including Dhritarashtra, Duryodhana, Bhishma, and Drona. During the ceremony, King Shishupala repeatedly insulted Lord Krishna. After crossing the threshold of a hundred offenses, Krishna unleashed the Sudarshana Chakra, swiftly beheading Shishupala and fulfilling an ancient curse. The ceremony concluded with Yudhisthira recognized as the World King.`,
     pins: [
-      { name: "Magadha", top: 55, left: 69, color: "red", size: "xl" },
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" }
+      { name: "Magadha", top: 55, left: 69, color: "red", size: "lg" },
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" }
     ]
   },
   {
@@ -365,8 +365,8 @@ This incident ignited a profound sense of embarrassment in Duryodhana that quick
 
 Duryodhana recounted the mocking words, and the blind king's face contorted with anger. Dhritarashtra's desire to see his son ascend to power burned fiercely within him. He listened intently as Shakuni devised a cunning proposal: "We will build a magnificent hall of our own in Hastinapur and invite Yudhisthira to a friendly game of dice. I will play on Duryodhana's behalf, and I have never lost." Thus, fueled by resentment and ambition, Duryodhana and Shakuni set their sinister plan into motion, altering the fate of their families forever.`,
     pins: [
-      { name: "Hastinapur", top: 30, left: 48, color: "red", size: "xl" },
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" }
+      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" },
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" }
     ]
   },
   {
@@ -383,8 +383,8 @@ The Kauravas reveled in their wins, cheering loudly, while the Pandava brothers 
 
 Having lost his entire kingdom, Yudhisthira was taunted by Duryodhana to wager his brothers. He lost them. He wagered himself and lost. Finally, Duryodhana declared, "You have just one possession left. Wager your wife Draupadi, and you may win freedom for yourself and your brothers." Cold sweat trickled down Yudhisthira's face as he uttered, "I agree." The dice were cast, and once more, Shakuni's voice echoed: "I win!"`,
     pins: [
-      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" },
-      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "xl" }
+      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" },
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" }
     ]
   },
   {
@@ -402,6 +402,6 @@ As Dushasana unraveled her garment, Draupadi fervently prayed for help. In that 
 At this critical juncture, Bhima erupted in fury: "You wild creature! I vow to crack open your chest on the battlefield and wash Draupadi's hair with your blood! This I swear, or else I vow never to enter the heavens!" 
 
 Bhima's fearsome oath sent shockwaves through the court, rousing King Dhritarashtra to take action. Finally recognizing the depth of the evil, Dhritarashtra nullified the results of the game, restoring the kingdom to Yudhisthira and granting the Pandavas their freedom. However, Duryodhana, seething with rage, soon convinced his father to summon them back for one final, fateful game of dice.`,
-    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "xl" }]
+    pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }]
   }
 ];
