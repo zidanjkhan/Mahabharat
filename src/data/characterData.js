@@ -1,7 +1,7 @@
 // src/data/characterData.js
 
 export const characterData = {
-  "Ganga": {
+  Ganga: {
     name: "Ganga",
     title: "River Goddess",
     gender: "female",
@@ -10,9 +10,9 @@ export const characterData = {
       Ganga, the celestial river goddess of purity, abundance, and life, descended from the heavens to earth for a mortal mission ordained by higher cosmic laws. She agreed to become the wife of King Shantanu under a strict, unyielding divine condition: that he would never question, criticize, or interfere with any of her actions, no matter how cruel or incomprehensible they might appear. With serene detachment, she bore him eight divine Vasus incarnated as sons, drowning the first seven in her waters immediately after birth to release them swiftly from a severe earthly curse. When she spared the eighth son—who would grow up to become the legendary, tragic patriarch Bhishma—she revealed her identity and departed back to the celestial realms. 
       
       Her character embodies the profound dichotomy of divine duty versus human emotion, showcasing how higher cosmic mandates often transcend ordinary earthly compassion. Even after her departure, her lineage and bloodline shaped the destiny of the entire Kuru dynasty, marking her as an eternal symbol of grace, absolute commitment, and transformative power.
-    `
+    `,
   },
-  "Shantanu": {
+  Shantanu: {
     name: "Shantanu",
     title: "King of Hastinapur",
     gender: "male",
@@ -21,9 +21,9 @@ export const characterData = {
       Shantanu was the glorious, far-ranging king of Hastinapur belonging to the venerable Kuru dynasty, renowned throughout the realm for his righteous governance, immense wealth, and military supremacy. His life took an irreversible turn when he walked along the banks of the sacred Ganges and fell spellbound by the ethereal beauty of the goddess Ganga, whom he married despite her enigmatic warnings. Years later, heartbroken by her departure and grieving the loss of his upbringing with Devavrata, Shantanu fell deeply in love once more with the captivating fisher queen Satyavati. 
       
       Driven by an intense infatuation and human frailty, his desires inadvertently set off a cascading chain of tragic events. To satisfy Satyavati's father and secure her hand in marriage, his devoted son Devavrata took the terrifying vow of lifelong celibacy, transforming into Bhishma. Shantanu's reign ultimately highlights the tragic friction between a king's personal desires and the heavy, enduring burdens placed upon future generations of his empire.
-    `
+    `,
   },
-  "Satyavati": {
+  Satyavati: {
     name: "Satyavati",
     title: "The Fisher Queen",
     gender: "female",
@@ -32,9 +32,9 @@ export const characterData = {
       Born mysteriously from a fish and raised by a humble fisherman along the Yamuna river, Satyavati possessed a captivating, celestial fragrance that magically drifted across miles, catching the attention of the wandering sage Parasara. With him, she bore the great sage Vyasa on a secluded island. Later, her striking beauty and sharp wits charmed King Shantanu, who elevated her to the throne of Hastinapur as his chief queen. 
       
       Satyavati was far more than a royal consort; she was a brilliant political mastermind who fiercely protected her bloodline and empire. When her royal sons with Shantanu died childless and young, threatening the Kuru dynasty with total extinction, it was her strategic vision and command that orchestrated the ancient Niyoga ritual. Summoning her firstborn Vyasa, she ensured the survival of the royal line, cementing her legacy as one of the most resilient, visionary, and pragmatic women in the epic.
-    `
+    `,
   },
-  "Bhishma": {
+  Bhishma: {
     name: "Bhishma",
     title: "Supreme Commander (Pitamaha)",
     gender: "male",
@@ -43,9 +43,9 @@ export const characterData = {
       Originally named Devavrata, Bhishma earned his terrifying moniker through the supreme sacrifice of the 'Bhishma Pratigya'—vowing absolute celibacy and renouncing all claims to the throne of Hastinapur to secure his aging father's happiness. Blessed by his father with 'Ichcha Mrityu' (the power to choose his own time of death), he stood as the invincible shield, moral anchor, and supreme commander of the Kuru empire across multiple generations. 
       
       Despite possessing unmatched military prowess, profound wisdom, and a deep, abiding paternal love for the Pandavas, Bhishma was tragically bound by a rigid, misplaced sense of duty to serve the throne of Hastinapur, regardless of how corrupt its leadership became. Forced to fight against righteousness on the battlefield of Kurukshetra, his fall by Arjuna's arrows—supported by Shikhandi—marked the emotional turning point of the war, ending an era of supreme patriarchal grace.
-    `
+    `,
   },
-  "Chitrangada": {
+  Chitrangada: {
     name: "Chitrangada",
     title: "The Eldest Son",
     gender: "male",
@@ -54,9 +54,9 @@ export const characterData = {
       Chitrangada was the first son born to King Shantanu and Queen Satyavati following their royal marriage. Growing up under the shadow of his fiercely dedicated elder stepbrother Bhishma, Chitrangada blossomed into a dazzlingly powerful warrior prince whose martial prowess rivaled even the demigods of heaven, earning him widespread fame across neighboring kingdoms. 
       
       However, his brilliance was destined to burn brightly for only a short time. Shortly after ascending to prominence, he engaged in a ferocious, unyielding war against a proud Gandharva king who shared his exact name. The bitter conflict lasted for years until Chitrangada perished young on the battlefield, leaving Hastinapur without an immediate heir and plunging Queen Satyavati into deep grief, setting the stage for Vichitravirya's ascension.
-    `
+    `,
   },
-  "Vichitravirya": {
+  Vichitravirya: {
     name: "Vichitravirya",
     title: "The Fragile King",
     gender: "male",
@@ -65,9 +65,9 @@ export const characterData = {
       Crowned king of Hastinapur at a very tender age under the protective guardianship of Bhishma, Vichitravirya was physically frail, emotionally volatile, and deeply consumed by palace luxuries and sensual pleasures. To secure his status and political alliances, Bhishma famously gate-crashed the grand Swayamvara of the princesses of Kasi, single-handedly defeating assembled monarchs to bring home Ambika and Ambalika as his brides. 
       
       Unfortunately, Vichitravirya's weak constitution rapidly deteriorated due to excessive indulgence and consumption. He succumbed to chronic illness and wasted away childless, leaving his young wives widowed and plunging the mighty Kuru empire into an unprecedented succession crisis that forced Satyavati to turn to unconventional measures to save the dynasty.
-    `
+    `,
   },
-  "Vyasa": {
+  Vyasa: {
     name: "Vyasa",
     title: "The Great Sage",
     gender: "male",
@@ -76,9 +76,9 @@ export const characterData = {
       Sage Veda Vyasa was the monumental compiler of the Vedas, the division-master of sacred knowledge, the author of the Mahabharata, and an immortal seer who transcends past, present, and future. Born to Satyavati on a remote river island before her royal marriage, he possessed blazing spiritual energy, an austere appearance, and absolute cosmic insight. 
       
       When the Kuru lineage faced total extinction following Vichitravirya's death, Satyavati called upon her firstborn to exercise the ancient tradition of Niyoga. Through his divine grace and potent spiritual presence, he fathered Dhritarashtra, Pandu, and Vidura. Throughout the epic, Vyasa acts as a recurring divine witness, moral guide, and chronicler, offering profound spiritual counsel to the Pandavas during their darkest hours of trial and exile.
-    `
+    `,
   },
-  "Ambika": {
+  Ambika: {
     name: "Ambika",
     title: "First Widow",
     gender: "female",
@@ -87,9 +87,9 @@ export const characterData = {
       Princess Ambika of Kasi was brought to the palace of Hastinapur alongside her sister Ambalika after Bhishma won them in a legendary combat. Her early life was marked by sudden tragedy when her husband, King Vichitravirya, died prematurely of illness, leaving her widowed while still young. 
       
       Following royal command, she participated in the Niyoga tradition with the formidable ascetic Sage Vyasa to preserve the Kuru line. Terrified and overwhelmed by the sage's fierce, blazing appearance and matted hair, Ambika closed her eyes tightly throughout the entire encounter out of sheer panic. This involuntary action resulted in her firstborn son, Dhritarashtra, being born completely blind—a physical condition that mirrored the metaphorical blindness of affection that later consumed his royal reign.
-    `
+    `,
   },
-  "Ambalika": {
+  Ambalika: {
     name: "Ambalika",
     title: "Second Widow",
     gender: "female",
@@ -98,9 +98,9 @@ export const characterData = {
       Princess Ambalika came to Hastinapur alongside her sister Ambika as a co-wife to King Vichitravirya. Her life took a somber turn when her husband passed away childless shortly after their marriage, forcing her into the complex political and ritualistic world of the royal court led by Queen Satyavati. 
       
       Mandated to take part in the Niyoga ritual to save the dynasty from perishing, Ambalika entered the chambers of Sage Vyasa. Upon confronting the terrifying, otherworldly aura of the ascetic, the shock and fright caused her face to turn completely and unnaturally pale. Consequently, her son Pandu was born with a pale, pallid complexion. She lived out her years witnessing the slow fracture of the Kuru household, eventually retiring to the forest alongside Satyavati and Ambika.
-    `
+    `,
   },
-  "Handmaiden": {
+  Handmaiden: {
     name: "Handmaiden",
     title: "The Maid",
     gender: "female",
@@ -109,9 +109,9 @@ export const characterData = {
       When Queen Ambika was commanded to visit Sage Vyasa a second time to bear another heir and flatly refused out of lingering terror, a loyal and noble handmaiden was sent into the chamber in her royal mistress's place. Unlike the Kuru queens who cowered in fear, this courageous woman remained completely calm, composed, respectful, and entirely fearless in the presence of the great sage. 
       
       Her pure devotion and unshakeable inner composure during the sacred Niyoga ritual yielded Vidura, who emerged into the world as the direct incarnation of Dharma (righteousness) itself. Celebrated universally as the wisest, most morally incorruptible statesman in ancient history, the handmaiden's bloodline single-handedly preserved the moral integrity of the Hastinapur administration.
-    `
+    `,
   },
-  "Gandhari": {
+  Gandhari: {
     name: "Gandhari",
     title: "Blindfolded Queen",
     gender: "female",
@@ -120,9 +120,9 @@ export const characterData = {
       Princess Gandhari of Gandhar made the supreme, extraordinary choice upon her marriage to voluntarily blindfold her eyes with a silk cloth for her entire life, refusing to experience the light of the world out of solidarity with her blind husband, Dhritarashtra. A woman of immense spiritual power, fierce self-discipline, and unyielding moral righteousness, her heart suffered an unbearable trial as she watched her one hundred sons slowly yield to greed, arrogance, and tyranny. 
       
       Despite knowing her sons were walking down a path of utter destruction, her maternal grief was profound. Following the apocalyptic war that wiped out her entire progeny, her immense sorrow culminated in a powerful, grief-stricken curse directed at Lord Krishna, accepting the total annihilation of her dynasty with stoic majesty.
-    `
+    `,
   },
-  "Dhritarashtra": {
+  Dhritarashtra: {
     name: "Dhritarashtra",
     title: "The Blind King",
     gender: "male",
@@ -131,9 +131,9 @@ export const characterData = {
       Born completely blind, Dhritarashtra was bypassed for the throne of Hastinapur in his youth in favor of his younger brother Pandu, a circumstance that seeded a lifelong bitterness and insecurity within his soul. When he finally inherited power following Pandu's retirement, his crippling, blind affection for his eldest son Duryodhana corrupted his judgment, causing him to constantly turn a blind eye to widespread injustice, rigged gambling matches, and palace conspiracies. 
       
       He constantly fluctuated between moments of profound philosophical clarity and weak paternal indulgence. Ultimately, his inability to control his sons or enforce true righteousness made him a tragic spectator to the total destruction of his kingdom and family.
-    `
+    `,
   },
-  "Kunti": {
+  Kunti: {
     name: "Kunti",
     title: "First Queen",
     gender: "female",
@@ -142,20 +142,20 @@ export const characterData = {
       Endowed in her youth with a miraculous boon and mantra by the sage Durvasa, Princess Pritha—later known as Kunti—possessed the extraordinary power to invoke any celestial deity to bless her with children. Testing the mantra out of youthful curiosity before her marriage, she was blessed with Karna, whom she reluctantly set adrift in a basket on the river to protect her family's honor. 
       
       As the chief queen of Pandu and mother to the senior Pandavas, Kunti displayed ironclad resolve, grace, and unmatched leadership. She guided her young, grieving sons through brutal forest exiles, poverty, and political persecution, maintaining their royal dignity until they reclaimed their rightful place, all while keeping her heavy secret regarding Karna locked deep within her heart.
-    `
+    `,
   },
-  "Pandu": {
+  Pandu: {
     name: "Pandu",
     title: "The Pale King",
-    gender:"male",
+    gender: "male",
     imageUrl: "/depiction/Pandu.jfif",
     fullDescription: `
       A brilliant military strategist, peerless archer, and deeply righteous monarch, Pandu expanded the boundaries and influence of Hastinapur across all directions during his golden reign. However, his life took a dark, fatal turn during a royal hunt when he accidentally shot a revered sage who was disguised in the form of a mating deer. The dying sage laid a curse upon him: that Pandu would instantly perish if he ever attempted to approach his wives with romantic intimacy. 
       
       Stricken with immense remorse, Pandu abdicated his throne, renounced royal luxuries, and chose to live as an ascetic in the Himalayan forests alongside Kunti and Madri. He ultimately met his tragic end when he momentarily forgot the curse and tried to embrace Madri, leaving his legacy split and his family orphaned.
-    `
+    `,
   },
-  "Madri": {
+  Madri: {
     name: "Madri",
     title: "Second Queen",
     gender: "female",
@@ -164,9 +164,9 @@ export const characterData = {
       Princess Madri of Madra was Pandu's second wife, renowned throughout the northern kingdoms for her breathtaking beauty, tranquil disposition, and gentle heart. Utilizing Kunti's shared divine mantra, Madri invoked the celestial twin physicians, the Ashwini Kumaras, and was blessed with the divine twins, Nakula and Sahadeva. 
       
       Her life was shattered by intense grief when King Pandu succumbed to his fatal curse while attempting to embrace her. Overwhelmed by a sense of unbearable guilt and self-blame, Madri chose to commit Sati on her husband's funeral pyre, entrusting the care of her young twins entirely to Kunti in an emotional farewell that left an indelible mark on the family.
-    `
+    `,
   },
-  "Vidura": {
+  Vidura: {
     name: "Vidura",
     title: "Prime Minister",
     gender: "male",
@@ -175,7 +175,7 @@ export const characterData = {
       As the prime minister of Hastinapur, Vidura was universally revered as the earthly embodiment of Dharma (righteousness), wisdom, and uncorrupted intellect. Born from a royal handmaiden, he was systematically denied formal kingship due to social hierarchy, yet his moral authority and political genius formed the true backbone of the empire's administration. 
       
       Vidura fearlessly spoke truth to power, constantly warning Dhritarashtra against Duryodhana's wicked plots and toxic ambitions. Whenever tyranny threatened the Pandavas, Vidura acted as their secret guardian, providing vital intelligence, safe shelter, and timeless ethical guidance encapsulated in the famous philosophical text known as 'Vidura Niti'.
-    `
+    `,
   },
   "Lord Krishna": {
     name: "Lord Krishna",
@@ -186,9 +186,9 @@ export const characterData = {
       Lord Krishna, the supreme avatar of Lord Vishnu, walked the earth during the Dwapara Yuga to dismantle adharma, protect the righteous, and restore cosmic balance. Maintaining strict neutrality when the Kurukshetra war became inevitable, he offered a monumental choice to both sides: his entire invincible Narayani army to Duryodhana, or his own personal presence as an unarmed advisor and charioteer to Arjuna. 
       
       On the battlefield, paralyzed by moral dread, Arjuna received the eternal philosophical revelations of the Bhagavad Gita directly from Krishna. Acting as the ultimate grand strategist, Krishna orchestrated every critical maneuver of the war to ensure that righteousness ultimately triumphed over greed, arrogance, and adharma.
-    `
+    `,
   },
-  "Duryodhana": {
+  Duryodhana: {
     name: "Duryodhana",
     title: "Kaurava Prince",
     gender: "male",
@@ -197,7 +197,7 @@ export const characterData = {
       Duryodhana was the eldest son of Dhritarashtra and Gandhari, born amidst ominous natural portents that warned of immense doom for the dynasty. Possessing a body tempered to diamond-like invulnerability by his mother's spiritual gaze—save for his vulnerable thighs—he was fiercely proud, immensely ambitious, and consumed by a lifelong resentment toward the Pandavas. 
       
       Driven by an unquenchable hunger for supreme political power, he masterminded vicious plots against his cousins, including the infamous game of dice and the public humiliation of Draupadi. His uncompromising rigidity ultimately triggered the apocalyptic Kurukshetra war, where he fought with legendary valor until falling as the final, defiant warrior of his camp.
-    `
+    `,
   },
   "99 Brothers": {
     name: "99 Brothers",
@@ -208,9 +208,9 @@ export const characterData = {
       The Kauravas comprised the remaining ninety-nine sons of Dhritarashtra and Gandhari, led prominently by fierce commanders like Dushasana and Vikarna. Bound tightly to Duryodhana's political ambitions and royal privileges, they largely supported his continuous oppressive schemes against the Pandavas throughout their youth and exile. 
       
       While isolated brothers like Vikarna occasionally questioned the profound immorality of their actions—such as during Draupadi's humiliation—nearly all of them marched side by side into the catastrophic battlefield of Kurukshetra. There, they met their definitive, brutal end one by one, primarily at the hands of the raging Bhima, wiping the collateral branch of the family tree completely from history.
-    `
+    `,
   },
-  "Yudhisthira": {
+  Yudhisthira: {
     name: "Yudhisthira",
     title: "The Just King",
     gender: "male",
@@ -219,9 +219,9 @@ export const characterData = {
       Eldest of the Pandava brothers, Yudhisthira was born from Lord Yama, the god of dharma, justice, and moral law. Known universally across the ancient world as 'Dharmaraj', he strove never to utter a falsehood or commit an unjust act throughout his entire life, though his fatal human weakness for a game of dice led his family into devastating exiles and trials. 
       
       Despite bearing unimaginable suffering and grief, his adherence to virtue remained so absolute that his chariot was said to hover slightly above the earth. His character explores the heavy, often agonizing burdens of maintaining absolute truth and righteousness in a deeply flawed, complex world.
-    `
+    `,
   },
-  "Bhima": {
+  Bhima: {
     name: "Bhima",
     title: "The Mighty",
     gender: "male",
@@ -230,39 +230,116 @@ export const characterData = {
       Born from Vayu, the divine wind god, Bhima possessed terrifying, god-like physical strength, unyielding endurance, and a fierce, passionate temperament. He served as the primary physical protector and shield of the Pandavas, single-handedly eliminating formidable demons, monsters, and wicked tyrants like Kichaka and Jarasandha who threatened his family. 
       
       During the Kurukshetra war, Bhima fulfilled his solemn blood oaths with terrifying precision—tearing open Dushasana's chest and shattering Duryodhana's thighs with a fatal mace blow. Beneath his fearsome exterior on the battlefield lay a deeply loyal, affectionate brother and husband who cared intensely for his family's honor.
-    `
+    `,
   },
-  "Arjuna": {
+  Arjuna: {
     name: "Arjuna",
     title: "The Archer",
     gender: "male",
     imageUrl: "/depiction/Arjuna.jfif",
     fullDescription: `
-      The peerless master archer born from Indra, the king of gods, Arjuna was the ultimate warrior prince of his generation, trained extensively by the legendary master Dronacharya. He mastered celestial weapons across the universe, secured the divine bow Gandiva, and stood as the central military hero of the Kurukshetra war. 
+      The fearless master archer born from Indra, the king of gods, Arjuna was the ultimate warrior prince of his generation, trained extensively by the legendary master Dronacharya. He mastered celestial weapons across the universe, secured the divine bow Gandiva, and stood as the central military hero of the Kurukshetra war. 
       
       On the battlefield, paralyzed by deep moral dread at the prospect of killing his own relatives and teachers, Arjuna received the immortal philosophical discourse of the Bhagavad Gita from Lord Krishna. Transformed by divine wisdom, he fulfilled his Kshetriya duty with absolute focus, turning the tide of the entire conflict and securing victory for the righteous.
-    `
+    `,
   },
-  "Nakula": {
+  Nakula: {
     name: "Nakula",
     title: "The Handsome",
-    gender:"male",
+    gender: "male",
     imageUrl: "/depiction/Nakula.jfif",
     fullDescription: `
       The fourth Pandava brother, born to Queen Madri through the divine grace of the Ashwini Kumaras, Nakula was celebrated across the ancient world as the most handsome man alive. Beyond his striking physical appearance, he was an exceptional swordsman, an expert military tactician, and a master equine scientist who managed the magnificent royal stables of Indraprastha. 
       
       Quiet, deeply loyal, and steadfastly devoted to Yudhisthira's leadership, Nakula fought valiantly through every single grueling day of the Kurukshetra war, surviving the catastrophic conflict to witness the dawn of a new righteous era.
-    `
+    `,
   },
-  "Sahadeva": {
+  Sahadeva: {
     name: "Sahadeva",
     title: "The Wise",
-    gender:"male",
+    gender: "male",
     imageUrl: "/depiction/Sahadeva.png",
     fullDescription: `
       The youngest of the Pandava brothers, Sahadeva was also born to Queen Madri through the Ashwini Kumaras. He possessed profound wisdom, complete mastery over astrology, and a deep, terrifying foresight into the unfolding patterns of cosmic time. 
       
       Cursed to die instantly if he ever revealed the secrets of the future or the impending outcome of the war without explicit permission, he remained silently observant throughout the tragic political buildup. Despite his quiet, introverted nature, he proved to be a brilliant commander, a sound strategist, and a pillar of humility during the darkest moments of the Pandava exile and war.
-    `
-  }
+    `,
+  },
+  Karna: {
+    name: "Karna",
+    title: "The Tragic Hero",
+    gender: "male",
+    imageUrl: "/depiction/Karna.jfif",
+    fullDescription: `
+      The eldest son of Kunti and the sun god Surya, Karna was born with divine gifts and a noble heart. Raised as a charioteer's son, he was known for his unwavering loyalty, generosity, and unmatched martial prowess. 
+      
+      Despite being rejected by his biological family, Karna remained true to his principles and fought valiantly for his adopted family during the Kurukshetra war. His tragic fate serves as a poignant reminder of the complexities of honor and duty in the face of adversity.
+    `,
+  },
+  Dronacharya: {
+    name: "Dronacharya",
+    title: "Master of Military Science",
+    gender: "male",
+    imageUrl: "/depiction/Dronacharya.jfif",
+    fullDescription: `
+      Dronacharya was the legendary royal preceptor (guru) who trained both the Kaurava and Pandava princes in advanced weaponry and military arts, unmatched in his mastery of celestial astras. Born miraculously from a clay pot (droṇa) after his ascetic father Bharadwaja beheld a celestial apsara, Drona grew up in poverty before seeking vengeance against his childhood friend Drupada, eventually carving out a position of supreme authority in Hastinapur. 
+      
+      Bound by his allegiance and loyalty to the throne of Hastinapur rather than absolute righteousness, he fought valiantly on the side of the Kauravas as a revered commander during the war. His tragic death on the battlefield—brought about after hearing a strategic lie about his son Ashwathama's death, which caused him to drop his weapons and sit in meditation—marked one of the most agonizing moral fractures of the Kurukshetra war.
+    `,
+  },
+  Ashwathama: {
+    name: "Ashwathama",
+    title: "The Immortal Warrior",
+    gender: "male",
+    imageUrl: "/depiction/Ashwathama.jfif",
+    fullDescription: `
+      Ashwathama was the formidable son of Dronacharya and Kripi, born with a precious gem (Mani) embedded upon his forehead that protected him from hunger, fatigue, fear, and supernatural weapons. As a supreme master of martial arts and celestial weaponry, he fought fiercely alongside the Kauravas as one of their greatest commanders during the Kurukshetra war. 
+      
+      Consumed by immense grief, rage, and vengeance following the brutal slaying of his father through deceit, Ashwathama committed a devastating night raid on the Pandava camp. Condemned by Lord Krishna for his desperate act of unleashing the ultimate Brahmashira Astra on the womb of Uttara, he was cursed with immortal, solitary wandering across the earth, bearing his unhealed wounds and immense guilt through the ages.
+    `,
+  },
+  Ghatotkacha: {
+    name: "Ghatotkacha",
+    title: "The Mighty Rakshasa-Prince",
+    gender: "male",
+    imageUrl: "/depiction/Ghatotkacha.png",
+    fullDescription: `
+      Ghatotkacha was the powerful son born from the union of the Pandava prince Bhima and the forest demoness (rakshasini) Hidimba. Possessing colossal physical stature, shape-shifting abilities, and terrifying magical powers, he was raised in the forests before joining the Pandavas to offer his total loyalty and support during their times of greatest need. 
+      
+      During the nighttime battles of Kurukshetra, his demonic illusions and devastating aerial warfare wreaked absolute havoc on the Kaurava army, forcing Duryodhana to deploy his ultimate, infallible celestial weapon—the Vasavi Shakti given by Indra—against him. Ghatotkacha grew to gigantic proportions just before perishing from the strike, crushing countless enemy soldiers beneath his falling body and sacrificing his life to save Arjuna.
+    `,
+  },
+  Abhimanyu: {
+    name: "Abhimanyu",
+    title: "The Fearless Hero",
+    gender: "male",
+    imageUrl: "/depiction/Abhimanyu.jfif",
+    fullDescription: `
+      Abhimanyu was the dazzling, deeply heroic son of Arjuna and Subhadra, renowned for his unmatched bravery, radiant beauty, and exceptional military genius. Earning legendary status even before birth, he famously overheard Arjuna explaining the complex military formation known as the Chakravyuha while his mother was pregnant, mastering the art of entering it, though he never heard the secret to exiting safely. 
+      
+      During the thirteenth day of the Kurukshetra war, when the Kauravas trapped the Pandava forces with the formation, young Abhimanyu stepped forward as a teenager to breach it single-handedly. Trapped deep inside enemy lines after fighting off an entire generation of veteran commanders with peerless valor, he fell fighting heroically to his last breath, leaving an eternal legacy of supreme sacrifice.
+    `,
+  },
+  Shakuni: {
+    name: "Shakuni",
+    title: "The Master Strategist",
+    gender: "male",
+    imageUrl: "/depiction/Shakuni.jfif",
+    fullDescription: `
+      Shakuni was the King of Gandhara, brother to Queen Gandhari, and the brilliant, calculating mastermind behind the political conspiracies that fueled the Mahabharata epic. Deeply embittered by how Hastinapur's aggressive foreign policy forced a political marriage upon his sister, he vowed from the shadows to systematically dismantle and destroy the Kuru dynasty from within. 
+      
+      Armed with magical dice carved from the spine of his deceased father—which always rolled according to his exact will—Shakuni orchestrated the rigged gambling match that stripped the Pandavas of their kingdom and subjected Draupadi to public humiliation. His cunning, psychological manipulation, and unwavering presence at Duryodhana's side steered the empire straight toward total apocalyptic war.
+    `,
+  },
+  Draupadi: {
+    name: "Draupadi",
+    title: "Empress of Panchala",
+    gender: "female",
+    imageUrl: "/depiction/Draupadi.jfif",
+    fullDescription: `
+      Draupadi, also known as Panchali, was born miraculously out of a sacred fire ritual (yajna) performed by King Drupada of Panchala, emerging fully grown alongside her twin brother Dhrishtadyumna with a divine mission to alter the course of history. Renowned across the ancient world for her striking beauty, sharp intellect, and fierce, unyielding sense of justice, she became the common wife of the five Pandavas through a unique destiny. 
+      
+      Her life reached a devastating turning point during the rigged game of dice when she was dragged into the royal assembly, insulted, and subjected to public humiliation by the Kauravas. Refusing to let her dignity be compromised, her furious cries for justice and vengeance became the moral fuel that ultimately drove the entire Kuru dynasty toward the apocalyptic war of Kurukshetra, cementing her legacy as an eternal symbol of supreme feminine power, resilience, and righteousness.
+    `,
+  },
 };

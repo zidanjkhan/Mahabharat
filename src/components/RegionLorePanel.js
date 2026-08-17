@@ -5,13 +5,12 @@ export default function RegionLorePanel({ selectedRegion }) {
   // If no region is hovered, we can either hide it or show a default "Explore Aryavarta" prompt
   if (!selectedRegion) {
     return (
-      <div className="absolute top-24 left-6 z-40 w-96 p-6 bg-[#070b14]/80 backdrop-blur-md border border-amber-600/20 rounded-lg shadow-2xl pointer-events-none transition-all duration-500 opacity-60">
+      <div className="absolute top-15 left-6 z-40 w-96 p-6 bg-[#070b14]/50 backdrop-blur-md border border-amber-600/20 rounded-lg shadow-2xl pointer-events-none transition-all duration-500 opacity-60">
         <h3 className="text-amber-500 font-serif text-lg tracking-widest uppercase mb-2">
           Aryavarta Realm
         </h3>
         <p className="text-slate-400 text-sm font-serif leading-relaxed">
-          Hover over any illuminated kingdom on the map to reveal its ancient
-          history, lore, and strategic significance.
+          Explore the ancient kingdoms of the Mahabharat epic.
         </p>
       </div>
     );

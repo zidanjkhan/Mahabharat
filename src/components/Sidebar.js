@@ -44,23 +44,46 @@ export default function Sidebar({
         </button>
       </aside>
 
-      {/* --- DEEP LORE BOOK MODAL --- */}
+      {/* --- DEEP LORE ANCIENT MANUSCRIPT MODAL --- */}
       {showPopup && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-none p-4 sm:p-10">
-          <div className="bg-slate-900 opacity-80 border border-amber-600/50 p-8 sm:p-12 max-w-4xl w-full h-[85vh] shadow-2xl relative flex flex-col rounded-lg">
-            <div className="flex justify-between items-center border-b border-slate-700 pb-4 mb-6 shrink-0">
-              <h4 className="text-amber-500 font-bold font-serif text-2xl uppercase tracking-widest">
-                Ancient Records: {currentData.title}
-              </h4>
-              <button
-                onClick={() => setShowPopup(false)}
-                className="text-slate-400 hover:text-white text-3xl font-bold"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="overflow-y-auto pr-4 custom-scrollbar text-slate-300 font-serif leading-loose text-lg whitespace-pre-wrap">
-              {currentData.deepLore}
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-none p-4 sm:p-6 overflow-y-auto">
+          {/* Main Ancient Page Container Wrapper */}
+          <div className="relative w-full max-w-4xl h-[88vh] max-h-[920px] flex flex-col items-center justify-center my-auto">
+            
+            {/* Ancient Page Background Image */}
+            <img
+              src="/Page.png"
+              alt="Ancient Scripture Page"
+              className="absolute inset-0 w-full h-full object-fill pointer-events-none z-0 filter drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)]"
+            />
+
+            {/* Close Button Positioned Safely in the Top-Right Corner */}
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-[-40] right-5 sm:right-0 text-[#885200] hover:text-[#ffa012] text-2xl font-black z-30 transition-transform hover:scale-110 drop-shadow-sm"
+              title="Close Manuscript"
+            >
+              ✕
+            </button>
+
+            {/* Content Layer with expanded left/right padding */}
+            <div className="relative z-20 w-full h-full flex flex-col px-16 sm:px-28 pt-20 pb-25 overflow-hidden">
+              
+              {/* Header Section inside the manuscript (Replaced subtitle, deep bronze-red title for maximum visibility) */}
+              <div className="flex flex-col items-center border-b border-[#5c351b]/50 pb-4 mb-6 shrink-0 text-center">
+                <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.3em] text-[#422600]">
+                  {currentData.era}
+                </span>
+                <h4 className="text-[#6b4306] font-serif font-black text-2xl sm:text-3xl uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(255,255,255,0.4)]">
+                  {currentData.title}
+                </h4>
+              </div>
+
+              {/* Scrollable Ancient Text Body (Clean sans-serif or crisp font for ultimate legibility, deep dark brown-black tone) */}
+              <div className="flex-1 overflow-y-auto pr-4 sm:pr-6 font-sans text-sm sm:text-base leading-relaxed sm:leading-[2] text-justify text-[#261005] font-semibold selection:bg-amber-900/30 whitespace-pre-wrap [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#5c3a21]/50 [&::-webkit-scrollbar-thumb]:rounded-full">
+                {currentData.deepLore}
+              </div>
+
             </div>
           </div>
         </div>

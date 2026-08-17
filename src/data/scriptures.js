@@ -200,6 +200,19 @@ Meanwhile, the Pandava family fled deep into the forest, exhausted from hunger a
     ]
   },
   {
+  era: "Chapter 15",
+  title: "Demon Slayer",
+  summary: "Having escaped the burning house of lac, the Pandavas and Kunti reach the town of Ekachakra, disguising themselves as brahmins under the guidance of Sage Vyasa. Staying with a pious brahmin family, Bhima discovers their profound grief because a terrifying demon named Bakasura demands a human cartload of food and the person delivering it every single week. Stepping forward in place of their host's son, Bhima confronts and slays the fierce demon, liberating the village from his tyranny.",
+  deepLore: `Following their miraculous escape from the burning lac palace in Varnavat, the Pandavas and Kunti fled deep into the forest. Guided by Sage Vyasa, they eventually arrived at the town of Ekachakra, where they chose to live in disguise as humble brahmins, relying on alms for sustenance while taking refuge with a pious brahmin family. 
+
+During their stay, Bhima noticed that their host family was plunged into deep, inconsolable grief. Upon inquiring, he learned that the village was terrorized by a fierce man-eating demon named Bakasura. To save the town from destruction, the villagers had struck a dreadful pact: every week, a cartload of food, two oxen, and a human being from a household must be sent to the demon as his meal. It was now their host family's turn to send a member. 
+
+Displaying the supreme selflessness and duty characteristic of his family, Yudhishthira insisted that they could not allow their host—who had given them shelter—to sacrifice a loved one. Stepping forward, Bhima volunteered to take the place of the host's son. He went to Bakasura's domain driving the cart filled with food, calmly eating the offerings himself. Enraged by this disrespect, Bakasura attacked. A titanic wrestling duel ensued, shaking the earth, until Bhima overpowered the monster, broke his back, and dragged his lifeless body back to the village gates, freeing Ekachakra from terror forever.`,
+  pins: [
+    { name: "Ekachakra", top: 30, left: 52, color: "emerald", size: "md" }
+  ]
+},
+  {
     era: "Chapter 16",
     title: "Demon Son",
     summary: "In the forest, Bhima slays the fearsome demon Hidimba, marries his sister Hidimbi, and fathers a powerful half-demon son, Ghatotkacha. The brothers then seek refuge in a town, disguising themselves as Brahmins, where Bhima continues his heroic deeds by slaying the tyrannical demon Bakasura.",
@@ -216,7 +229,7 @@ The Pandavas then encountered Sage Vyasa, who guided them to safety. Disguised a
     ]
   },
   {
-    era: "Chapter 17",
+    era: "Chapter 17 & 18",
     title: "Daughter of Fire",
     summary: "The Pandavas travel to the Kingdom of Panchala for the grand Swayamvar of Princess Draupadi. Disguised as a humble Brahmin, Arjuna steps up to an impossible archery challenge that had humiliated the greatest kings. He effortlessly strikes the target, winning Draupadi's hand but sparking a violent riot among the outraged warrior class.",
     deepLore: `Upon hearing the captivating tale of King Drupada's daughter, the Pandavas decided to journey to the Kingdom of Panchal to attend the Swayamvar. At the grand stadium, the attendees were segregated by caste. The Pandavas, disguised as Brahmins, settled among the priests, while the Kshatriyas, including their sworn enemies Duryodhana and Karna, occupied the opposite side.
@@ -403,5 +416,149 @@ At this critical juncture, Bhima erupted in fury: "You wild creature! I vow to c
 
 Bhima's fearsome oath sent shockwaves through the court, rousing King Dhritarashtra to take action. Finally recognizing the depth of the evil, Dhritarashtra nullified the results of the game, restoring the kingdom to Yudhisthira and granting the Pandavas their freedom. However, Duryodhana, seething with rage, soon convinced his father to summon them back for one final, fateful game of dice.`,
     pins: [{ name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }]
+  },
+  {
+    era: "Chapter 31",
+    title: "Pandavas in Exile & The Second Game of Dice",
+    summary: "Returning to Indraprastha after their first exile, the Pandavas are unexpectedly intercepted and drawn into a second fatal game of dice. Driven by his sense of Kshatriya honor, Yudhisthira accepts Duryodhana's wager and loses once more, sentenced to 12 years in the wilderness and a 13th year of total anonymity known as Agyatvas.",
+    deepLore: `Returning to Indraprastha, the Pandavas were unexpectedly intercepted and drawn into yet another game of dice. Driven by his sense of Kshatriya honor, Yudhisthira felt compelled to accept the challenge laid before him. Duryodhana proposed an exceptionally unusual wager: the loser would be condemned to endure 13 years of exile—12 years spent in the wilderness, and the 13th year requiring them to hide within a city known as Agyatvas. If they were discovered during that final year, an additional 12 years of exile would be imposed. 
+
+The game commenced, and much to Yudhisthira's dismay, he was once more on the losing side. With heavy hearts, the Pandavas prepared for their time in the wilderness. Due to her frailty, their mother Kunti chose to remain behind in Hastinapur under the care of their uncle Vidur. Meanwhile, Draupadi's five children, along with Subhadra and Abhimanyu, were entrusted to Lord Krishna's protection in Dwarka. News of the Pandavas' exile quickly spread through Hastinapur and Indraprastha. Many citizens, deeply attached to their beloved king, wished to accompany him into the wilderness, but Yudhisthira, humbled by their affection, implored them to stay behind and look after mother Kunti. Sages and learned men joined the Pandavas on their journey, offering guidance and assistance.`,
+    pins: [
+      { name: "Indraprastha", top: 38, left: 42, color: "blue", size: "lg" },
+      { name: "Hastinapur", top: 33, left: 50, color: "red", size: "lg" }
+    ]
+  },
+  {
+    era: "Chapter 32",
+    title: "The Akshaya Patra & Sage Vyasa's Counsel",
+    summary: "Arriving in the Kamyaka forest, the Pandavas receive a visit from Sage Vyasa, who advises Yudhisthira to seek the blessings of Lord Surya. The Sun God bestows a miraculous, inexhaustible cooking pot upon Draupadi to sustain them and their refugees.",
+    deepLore: `Life in their new forest home presented heavy emotional burdens. Draupadi and Bhima were particularly vocal in expressing their anger at Yudhisthira's unwavering adherence to Kshatriya law and his destructive gambling habits. They held him accountable for their current predicament, and during one heated moment, Bhima even called for fire to burn Yudhisthira's hands in frustration. Arjuna, despite his heartbreak, maintained a sense of acceptance toward their fate, suspecting that Duryodhana's scheme was to utilize the 13 years to amass a formidable army. Nakula and Sahadeva remained steadfastly loyal to their elder brothers, while Yudhisthira was consumed by guilt over their misfortune.
+
+During this challenging time, Sage Vyasa came to visit Yudhisthira and offered wise council. He advised Yudhisthira to seek the blessings of Lord Surya, the Sun God, whose radiant energy nourishes all life. The Sun God Surya looked favorably upon the young king and bestowed upon him a remarkable gift: a mystical pot. Surya instructed Yudhisthira to give the pot to Draupadi, explaining its extraordinary properties: any meal prepared in this pot will be inexhaustible throughout the day until Draupadi eats from it, after which the pot will remain empty until the next day, when its magical essence renews with the touch of the sun's rays. Grateful for this divine gift, Yudhisthira returned to his family with the means to feed not only themselves, but also many citizens who had sought refuge with the Pandavas.`,
+    pins: [
+      { name: "Kamyaka Forest", top: 45, left: 38, color: "amber", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 33",
+    title: "Arjuna's Quest & The Pashupatastra",
+    summary: "Understanding the Kauravas' military buildup, Sage Vyasa tasks Arjuna with acquiring divine weapons. Arjuna journeys into the Himalayas, where he battles a disguised Lord Shiva and secures the ultimate Pashupatastra.",
+    deepLore: `Sage Vyasa informed Yudhisthira of the Kauravas' preparations to amass a formidable army. Understanding the gravity of the situation, Arjuna was tasked with a vital quest: he would journey to acquire divine weapons from Lord Indra, which would prepare them for the impending battle. Accepting this weighty responsibility, Arjuna bid farewell to his family—sorrow weighing heavily upon him—as he set forth on his journey towards the north and the Himalayas. 
+
+Arjuna travelled for months, traversing rugged terrains, until he encountered a holy sage engaged in deep meditation. Upon waking, the sage tested Arjuna's resolve, offering him the pleasures of hermitage and heaven, but Arjuna remained steadfast, revealing himself to be an agent of Lord Indra and Lord Shiva. While meditating on Mount Kailash, a wild boar charged at him, and Arjuna released an arrow simultaneously with a mysterious hunter. Claiming the game, a fierce battle of archery erupted between them. Exhausted and realizing his opponent's peerless skill, Arjuna fashioned a clay lingam of Lord Shiva and placed a floral garland upon it. To his astonishment, the garland appeared on the hunter, revealing him to be Lord Shiva. Pleased beyond measure by Arjuna's unmatched valor and devotion, Lord Shiva granted him the catastrophic celestial weapon, the Pashupatastra, warning him never to use it recklessly against lesser foes.`,
+    pins: [
+      { name: "Himalayas & Mount Kailash", top: 20, left: 55, color: "cyan", size: "lg" }
+    ]
+  },
+  {
+    era: "Chapter 34",
+    title: "Urvashi's Curse",
+    summary: "Following his weapon acquisitions, Arjuna is whisked away to Lord Indra's celestial court. There, he politely rejects the romantic advances of the heavenly apsara Urvashi, who angrily curses him to live as a eunuch among women—a curse Indra later turns into a blessing for their upcoming Agyatvas.",
+    deepLore: `In a flash of light, Arjuna was greeted by Lord Indra and the other gods, who blessed him with their divine weapons and invaluable knowledge. A celestial vehicle whisked him away to the realms above, where a grand celebration awaited him with dancers and musicians. Under Indra's guidance, Arjuna learned to wield various weapons and immersed himself in the arts of dance and music taught by Chitrasena the Gandharva. 
+
+Amidst these wonders, a radiant apsara named Urvashi grew captivated by Arjuna's handsome and virtuous character. One night, driven by desire, she made her way to his chambers and demanded he satisfy her desires. Taken aback, Arjuna respectfully declined, stating that because she had chosen Puru as a husband and was an ancestor of his lineage, he regarded her with the reverence due to a mother. Urvashi's heartache turned into fury, and trembling with rage, she pronounced a curse upon him: to become impotent and spend his time among females as a dancing eunuch. When Lord Indra learned of this, he comforted Arjuna, assuring him that this curse would serve him well during his final year of exile when he must live incognito.`,
+    pins: [
+      { name: "Indra's Heaven", top: 15, left: 60, color: "cyan", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 35",
+    title: "Meeting Lord Hanuman & The Celestial Flowers",
+    summary: "Guided by Sage Narada, the Pandavas embark on a holy pilgrimage. While seeking fragrant flowers for Draupadi along a mountain pass, Bhima encounters his divine elder brother, Lord Hanuman, disguised as an old monkey.",
+    deepLore: `While Arjuna was away in the heavens, the Pandavas felt a profound sense of loss. One fateful day, Sage Narada visited their forest dwelling, bringing uplifting news of Arjuna's success. Acting on Narada's advice, Yudhisthira and his family embarked on a sacred pilgrimage to divine places of worship. One morning, while sitting by a riverbank, Draupadi noticed a beautiful flower drifting downstream and asked Bhima to fetch more from up the mountain. 
+
+As Bhima ascended, he encountered an unusual obstruction: an old monkey's tail stretched along his path. Asking the monkey to move its tail, Bhima attempted to lift it, but to his utter shock—despite possessing the strength of ten thousand elephants—the tail would not budge. Recognizing this was no ordinary creature, a humbled Bhima folded his hands and begged the monkey to reveal its true form. In a dazzling flash of light, the monkey transformed into Lord Hanuman. Sharing stories of their common wind-god father Vayu, Hanuman guided Bhima toward the celestial flowers guarded by Kubere's Yakshas.`,
+    pins: [
+      { name: "Gandhamadana Mountains", top: 30, left: 65, color: "amber", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 36",
+    title: "Arjuna's Return & The Destruction of Nivatakavacha",
+    summary: "Arjuna returns from heaven bearing divine armaments after successfully eradicating the arrogant flying demon city of Nivatakavacha. He regales his brothers with tales of his cosmic adventures.",
+    deepLore: `Guided by Lord Hanuman, Bhima ventured into Kubere's garden, smashed opposing guards who intervened, and returned home with a bounty of celestial blooms. There, he was met with a spectacular sight: a celestial vehicle had arrived, bringing their beloved Arjuna back to them. Arjuna embraced his brothers and Draupadi, presenting her with precious gifts before handing the divine flowers over to Yudhisthira. 
+
+That night, Arjuna enthralled his family with tales of his adventures in Indra's abode, recounting his rigorous training and the curse from Urvashi. Before departing the heavenly realms, Lord Indra had charged Arjuna with a mission to conquer the flying city of Nivatakavacha, whose inhabitants had abused boons granted by Brahma to terrorize the demigods. Utilizing Indra's thunderbolt and his divine armaments, Arjuna engaged their demonic illusions and successfully brought down the entire floating city with a mantra-charged astra.`,
+    pins: [
+      { name: "Kamyaka Camp", top: 45, left: 38, color: "amber", size: "lg" }
+    ]
+  },
+  {
+    era: "Chapter 37",
+    title: "The Humiliation of Duryodhana",
+    summary: "Manipulated by Shakuni, Duryodhana travels near the Pandavas' forest camp to flaunt his luxury, but is captured in battle by the Gandharvas. The noble Pandavas rescue him, deepening Duryodhana's resentment.",
+    deepLore: `King Dhritarashtra, feeling sorrow for his nephews yet still desiring his son's absolute supremacy, listened as Shakuni manipulated Duryodhana into embarking on a sporting expedition into the forest to camp near the Pandavas and flaunt their opulent wealth. Accompanied by Karna, Shakuni, his wives, and hundreds of guards, Duryodhana set off. While journeying, Duryodhana tried to claim a forest lake for a swimming party, but found it occupied by Chitrasena and his Gandharva forces. 
+
+A fierce clash ensued in which Duryodhana's royal guards were soundly defeated and Karna was forced to retreat. Duryodhana and many of his retainers were captured, while his fleeing wives sought refuge in the Pandava camp. Though Bhima scoffed at rescuing their tormentor, Yudhisthira insisted that family ties supersede enmity, and Draupadi urged them to aid their cousin. The Pandavas quickly routed the Gandharvas, and when Arjuna recognized their leader as his former music teacher Chitrasena, Chitrasena released Duryodhana. However, being rescued by the Pandavas only fueled Duryodhana's anger and planted deeper seeds of resentful humiliation.`,
+    pins: [
+      { name: "Dwaita Lake Forest", top: 42, left: 40, color: "amber", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 38",
+    title: "The Abduction of Draupadi by Jayadratha",
+    summary: "Jayadratha, king of Sindhu, becomes consumed by lust upon seeing Draupadi alone at their dwelling and forcibly drags her onto his chariot. The Pandava brothers pursue and capture him.",
+    deepLore: `While still in the forest, Draupadi encountered an unexpected visitor: Jayadratha, husband of Duryodhana's sister Dussala, who stopped by their dwelling requesting refreshments. Struck by her beauty, Jayadratha cast aside virtue and spoke seductively, urging her to abandon her beggar-like husbands and come with him. When Draupadi angrily rebuked him and warned him of her husbands' wrath, Jayadratha seized her arm and forcibly dragged her toward his chariot. 
+
+Draupadi's piercing screams alerted a nearby brahmin and summoned the returning Pandava brothers. Swiftly mobilizing, Nakula intercepted Jayadratha's chariot to rescue Draupadi, Arjuna unleashed his arrows to destroy Jayadratha's chariot, and Bhima pulled Jayadratha from the wreckage. Surrounded by the five powerful warriors and a furious queen, Jayadratha cowered in terror as the Pandavas prepared to uphold their honor against the transgressor.`,
+    pins: [
+      { name: "Forest Dwelling", top: 44, left: 42, color: "amber", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 39",
+    title: "The Final Years of Exile & The Akshaya Patra Test",
+    summary: "Spared by the Pandavas, Jayadratha performs penance to Lord Shiva to secure a boon against them. Meanwhile, Duryodhana sends a sage with disciples to test the Akshaya Patra, but Krishna miraculously intervenes.",
+    deepLore: `Humbled and begging for mercy, Jayadratha's life was spared through Draupadi and Yudhisthira's leniency towards their sister Dussala. However, as a mark of utter disgrace, Bhima sheared off Jayadratha's hair, leaving five distinct tufts. Seeking vengeance, Jayadratha performed rigorous penance to Lord Shiva by the banks of the Ganges. Though Shiva denied him the power to defeat all Pandavas permanently, he granted Jayadratha the ability to halt the other four Pandavas for a single day in battle. 
+
+Back in Hastinapur, Duryodhana enlisted a powerful sage and over 30 brahmin disciples to visit the Pandavas' dwelling with a cunning plan: request food when Draupadi's Akshaya Patra was empty for the day, so that the sage's curse would destroy the Pandavas. Arriving precisely when the pot was exhausted, Yudhisthira prayed frantically to Lord Krishna. Krishna appeared, consumed a single grain of rice left in the vessel, and instantly filled the stomachs of the sage and all his disciples across the forest, forcing them to flee in embarrassed awe.`,
+    pins: [
+      { name: "Dwaita Forest Camp", top: 46, left: 37, color: "amber", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 40",
+    title: "Yudhisthira's Test & The Yaksha Prashna",
+    summary: "As their exile concludes, a distressed brahmin's lost fire-sticks lead the Pandavas into a trap. All four younger brothers fall lifeless by a mysterious lake after ignoring a Yaksha's warnings. Yudhisthira answers all philosophical riddles, reviving his brothers.",
+    deepLore: `Just before entering their final year of hiding, a distressed brahmin discovered a deer had snared his prayer tools in its antlers and fled into the forest. Moved by compassion, Yudhisthira and his brothers set out to help. Thirst soon gripped them, and Sahadeva spotted a distant lake. One by one, Nakula, Sahadeva, Arjuna, and Bhima rushed to drink without answering the warnings of a supernatural Yaksha, and all fell lifeless. 
+
+When Yudhisthira finally discovered his four brothers lying lifeless, he approached the water. The Yaksha stopped him, declaring he must answer his questions before drinking. Yudhisthira successfully answered every deep philosophical riddle posed to him. Impressed by his insight, the Yaksha offered to revive one brother. Yudhisthira chose Nakula so that Queen Madri would also have a surviving son, displaying supreme selflessness. The Yaksha then revealed himself to be Lord Yama, Yudhisthira's spiritual father, who restored all his brothers to life and blessed them with the gift of remaining concealed during their upcoming year in incognito.`,
+    pins: [
+      { name: "The Enchanted Lake", top: 48, left: 35, color: "cyan", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 41",
+    title: "The Year in Hiding (Agyatvas) at Viratanagar",
+    summary: "Guided by Dharma, the Pandavas plan their disguise for their 13th year of exile in King Virata's city of Viratanagar. They hide their weapons in a tree and assume various servant roles in the royal court.",
+    deepLore: `Instructed by Lord Dharma, the Pandavas chose the city of Viratanagar to spend their final year of exile incognito. Realizing that discovery by Duryodhana's spies would result in another 12 years of exile, they meticulously planned their disguises. Yudhisthira became Kanka, a court gambler and advisor to King Virata; Bhima became Vallava, a royal master cook and wrestler; Arjuna became Brihannala, a eunuch music and dance tutor training Princess Uttara, utilizing Urvashi's curse; Nakula became Granthika, a horse caretaker; and Sahadeva became Tantripala, a cowherd. 
+
+Draupadi assumed the identity of Sairandhri, a royal maid working under Queen Sudeshna. Depositing their celestial weapons high in the branches of a secluded tree on the city outskirts, they integrated seamlessly into the royal household and spent the first few months in relative tranquility.`,
+    pins: [
+      { name: "Viratanagar", top: 35, left: 45, color: "emerald", size: "lg" }
+    ]
+  },
+  {
+    era: "Chapter 42",
+    title: "The Insolence of Kichaka",
+    summary: "Kichaka, the powerful military commander of Matsya and Queen Sudeshna's brother, becomes lustfully obsessed with Draupadi (disguised as Sairandhri) and publicly humiliates her in the royal court when she spurns him.",
+    deepLore: `King Virata, an elderly and feeble ruler, had delegated much of his kingdom's defense to his sister's brother, Kichaka, who consequently wielded considerable power. Kichaka's eyes fell upon Draupadi as Sairandhri, and he was immediately overcome with desire. When he made advances, Draupadi firmly rebuffed him, warning him of her Gandharva husbands. Unfazed, Kichaka pressured Queen Sudeshna, who reluctantly sent Draupadi to fetch wine from Kichaka's palace. 
+
+When Draupadi refused his advances in private, Kichaka grew forceful, causing her to bolt toward the royal court where King Virata was sitting. In a shocking display of arrogance, Kichaka seized Draupadi by her hair, slammed her to the ground, and insulted her in front of the assembly. King Virata, overwhelmed by his dependence on Kichaka for security, remained silent, leaving Draupadi humiliated and unprotected.`,
+    pins: [
+      { name: "Virata Royal Court", top: 35, left: 45, color: "emerald", size: "md" }
+    ]
+  },
+  {
+    era: "Chapter 43",
+    title: "The Death of Kichaka",
+    summary: "Seeking refuge in Bhima's quarters, a distraught Draupadi helps orchestrate a trap. At midnight in the dark dancing hall, Bhima slays Kichaka, crushing his arrogance permanently.",
+    deepLore: `Distraught and angered, Draupadi sought refuge in Bhima's quarters that night and recounted the horrifying event. Bhima's rage flared, but Draupadi reminded him of the danger of jeopardizing their safety before their year of hiding was fully complete. Together, they devised a strategic plan for revenge. Anticipating Kichaka's relentless pursuit, Draupadi feigned compliance, telling Kichaka to meet her in the royal dancing hall at midnight. 
+
+Instead of Draupadi, Kichaka was met by a powerful silhouette stepping out of the shadows: Bhima. Caught off guard, Kichaka launched into a fierce struggle, but Bhima's ferocity proved overwhelming, and Kichaka fell to the ground with his life extinguished. When servants discovered Kichaka's lifeless body the next morning, panic engulfed the palace, and though Queen Sudeshna suspected Sairandhri, Draupadi calmly requested 13 days to find other employment.`,
+    pins: [
+      { name: "Royal Dancing Hall", top: 35, left: 45, color: "amber", size: "md" }
+    ]
   }
 ];

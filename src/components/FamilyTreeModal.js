@@ -7,19 +7,99 @@ import { HLine, VLine } from "./RelationshipLines";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { characterData } from "@/data/characterData";
 
-export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
+// Helper component: Supports both Desktop Hover and Mobile Tap/Click
+function DivineBox({ x, y, name, title, description, imageUrl }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  // Toggle state for mobile tapping
+  const handleClick = (e) => {
+    e.stopPropagation();
+    setShowTooltip((prev) => !prev);
+  };
+
+  return (
+    <div 
+      className="absolute z-35 flex flex-col items-center pointer-events-auto cursor-pointer group"
+      style={{ left: `${x}px`, top: `${y}px`, transform: 'translate(-50%, -50%)' }}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onClick={handleClick}
+    >
+      {/* Container: Always a circle, scales up on hover or active mobile state */}
+      <div className={`w-14 h-14 ${showTooltip ? 'w-24 h-24' : ''} group-hover:w-24 group-hover:h-24 rounded-full bg-[#070b14] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.5)] overflow-hidden relative transition-all duration-300 ease-in-out flex items-center justify-center`}>
+        {imageUrl ? (
+          <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-amber-950/40 flex items-center justify-center text-amber-300 font-serif font-bold text-xs">
+            {name}
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-transparent opacity-60"></div>
+        
+        {/* Name label appears clearly inside on hover or mobile click */}
+        <div className={`absolute inset-0 flex items-center justify-center text-center p-1 ${showTooltip ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 bg-black/40`}>
+          <span className="text-[10px] font-bold font-serif text-amber-200 uppercase tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
+            {name}
+          </span>
+        </div>
+
+        {/* Small text label visible when minimized */}
+        <span className={`absolute text-[9px] font-bold font-serif text-amber-200 uppercase tracking-tighter ${showTooltip ? 'opacity-0' : 'opacity-100'} group-hover:opacity-0 transition-opacity duration-200 drop-shadow-[0_2px_4px_rgba(0,0,0,1)]`}>
+          {name.slice(0, 3)}
+        </span>
+      </div>
+
+      {/* Tooltip Popup */}
+      {showTooltip && (
+        <div className="absolute bottom-full mb-3 w-48 p-3 bg-[#070b14]/95 border border-amber-500/50 rounded-lg shadow-2xl backdrop-blur-md z-50 text-center animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
+          <span className="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest block mb-0.5">
+            {title}
+          </span>
+          <p className="text-xs text-slate-200 font-serif leading-tight">
+            {description}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function FamilyTreeModal({ 
+  showFamilyTree, 
+  setShowFamilyTree, 
+  selectedCharacter: searchSelectedCharacter, 
+  setSelectedCharacter: setSearchSelectedCharacter 
+}) {
   const [showHeader, setShowHeader] = useState(true);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
+  // Handle header fade-in/out timer on modal open (Fades out after 1 second)
   useEffect(() => {
     if (showFamilyTree) {
       setShowHeader(true);
       const timer = setTimeout(() => {
         setShowHeader(false);
-      }, 8000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [showFamilyTree]);
+
+  // Handle incoming character selection from Global Search
+  useEffect(() => {
+    if (searchSelectedCharacter && showFamilyTree) {
+      const charName = typeof searchSelectedCharacter === 'string' 
+        ? searchSelectedCharacter 
+        : searchSelectedCharacter.name;
+        
+      if (charName && characterData[charName]) {
+        setSelectedCharacter(characterData[charName]);
+      }
+      
+      if (setSearchSelectedCharacter) {
+        setSearchSelectedCharacter(null);
+      }
+    }
+  }, [searchSelectedCharacter, showFamilyTree, setSearchSelectedCharacter]);
 
   if (!showFamilyTree) return null;
 
@@ -35,7 +115,7 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
       {/* FLOATING HEADER */}
       <div className="absolute top-0 left-0 w-full flex justify-center items-center px-6 sm:px-12 py-6 z-[60] pointer-events-none">
         <h4
-          className={`text-amber-500 font-bold font-serif text-lg sm:text-2xl uppercase tracking-[0.3em] drop-shadow-[0_4px_20px_rgba(0,0,0,1)] transition-opacity duration-1000 ${
+          className={`text-amber-500 font-bold font-serif text-lg sm:text-2xl uppercase tracking-[0.3em] drop-shadow-[0_4px_20px_rgba(0,0,0,1)] transition-opacity duration-500 ${
             showHeader ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -94,24 +174,44 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                   {/* --- GENERATION 4 MARRIAGES --- */}
                   <HLine x={300} y={1040} width={220} />
                   <HLine x={720} y={1040} width={230} />
-                  <HLine x={950} y={1040} width={390} />
+                  <HLine x={950} y={1040} width={370} />
 
                   {/* --- GENERATION 4 TO 5 DESCENT --- */}
                   <VLine x={410} y={1040} height={280} />
                   <HLine x={300} y={1320} width={220} />
                   <VLine x={300} y={1320} height={160} />
                   <VLine x={520} y={1320} height={160} />
+                  
+                  {/* --- DRONACHARYA TO ASHWATHAMA LINE --- */}
+                  <VLine x={-50} y={1140} height={300} />
 
-                  <VLine x={935} y={1040} height={280} />
-                  <HLine x={820} y={1320} width={340} />
-                  <VLine x={820} y={1320} height={160} />
-                  <VLine x={990} y={1320} height={160} />
-                  <VLine x={1160} y={1320} height={160} />
+                  {/* --- CLEANED DIVINE BOON CONNECTIONS (Kunti to Karna) --- */}
+                  <VLine x={720} y={1140} height={50} dotted={true} divine={true} />
+                  <VLine x={770} y={1190} height={130} dotted={true} divine={true} />
+                  <HLine x={120} y={1190} width={650} dotted={true} divine={true} />
+                  <VLine x={120} y={1190} height={290} dotted={true} divine={true} />
+                  <HLine x={770} y={1320} width={390} dotted={true} divine={true} />
+                  <VLine x={820} y={1320} height={160} dotted={true} divine={true} />
+                  <VLine x={990} y={1320} height={160} dotted={true} divine={true} />
+                  <VLine x={1160} y={1320} height={160} dotted={true} divine={true} />
 
-                  <VLine x={1245} y={1040} height={280} />
-                  <HLine x={1245} y={1320} width={295} />
-                  <VLine x={1340} y={1320} height={160} />
-                  <VLine x={1540} y={1320} height={160} />
+                  <VLine x={1245} y={1040} height={280} dotted={true} divine={true} />
+                  <HLine x={1245} y={1320} width={295} dotted={true} divine={true} />
+                  <VLine x={1340} y={1320} height={160} dotted={true} divine={true} />
+                  <VLine x={1540} y={1320} height={160} dotted={true} divine={true} />
+
+                  {/* --- PANDAVAS DESCENT & DRAUPADI CONNECTION BAR --- */}
+                  <VLine x={820} y={1590} height={50} />
+                  <VLine x={990} y={1590} height={160} />
+                  <VLine x={1160} y={1590} height={160} />
+                  <VLine x={1340} y={1590} height={50} />
+                  <VLine x={1510} y={1590} height={50} />
+                  <VLine x={1740} y={1590} height={50} />
+                  <HLine x={820} y={1640} width={920} />
+
+                  {/* --- GHATOTKACHA & ABHIMANYU DESCENT --- */}
+                  <VLine x={990} y={1640} height={170} />
+                  <VLine x={1160} y={1640} height={170} />
                 </div>
 
                 {/* =========================================
@@ -227,6 +327,16 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
 
                 {/* GENERATION 4 (Y = 1040) */}
                 <CharacterBox
+                  name="Shakuni"
+                  title="The Deceiver"
+                  gender="male"
+                  x={120}
+                  y={1040}
+                  description="Gandhari's brother and the main antagonist of the Mahabharata."
+                  imageUrl="/depiction/Shakuni.jfif"
+                  onSelect={() => handleCharacterClick("Shakuni")}
+                />
+                <CharacterBox
                   name="Gandhari"
                   title="Blindfolded Queen"
                   gender="female"
@@ -270,7 +380,7 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                   name="Madri"
                   title="Second Queen"
                   gender="female"
-                  x={1340}
+                  x={1250}
                   y={1040}
                   description="Pandu's second wife. Mother to the twins."
                   imageUrl="/depiction/Madri.jfif"
@@ -286,6 +396,16 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                   imageUrl="/depiction/Vidhura.jfif"
                   onSelect={() => handleCharacterClick("Vidura")}
                 />
+                <CharacterBox
+                  name="Dronacharya"
+                  title="Master of Arms"
+                  gender="male"
+                  x={-50}
+                  y={1040}
+                  description="Royal preceptor of both the Kauravas and Pandavas."
+                  imageUrl="/depiction/Dronacharya.jfif"
+                  onSelect={() => handleCharacterClick("Dronacharya")}
+                />
 
                 {/* LORD KRISHNA */}
                 <CharacterBox
@@ -293,7 +413,7 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                   title="The Supreme Guide & Strategist"
                   gender="male"
                   x={650}
-                  y={1290}
+                  y={1330}
                   width="168px"
                   height="236px"
                   variant="divine"
@@ -303,6 +423,26 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                 />
 
                 {/* GENERATION 5 (Y = 1480) */}
+                <CharacterBox
+                  name="Ashwathama"
+                  title="The Immortal Warrior"
+                  gender="male"
+                  x={-50}
+                  y={1480}
+                  description="Son of Dronacharya. Cursed with immortality and eternal wandering."
+                  imageUrl="/depiction/Ashwathama.jfif"
+                  onSelect={() => handleCharacterClick("Ashwathama")}
+                />
+                <CharacterBox
+                  name="Karna"
+                  title="The Tragic Hero"
+                  gender="male"
+                  x={120}
+                  y={1480}
+                  description="Secretly Kunti's firstborn, raised by a charioteer family. Loyal friend of Duryodhana."
+                  imageUrl="/depiction/Karna.jfif"
+                  onSelect={() => handleCharacterClick("Karna")}
+                />
                 <CharacterBox
                   name="Duryodhana"
                   title="Kaurava Prince"
@@ -369,12 +509,100 @@ export default function FamilyTreeModal({ showFamilyTree, setShowFamilyTree }) {
                   name="Sahadeva"
                   title="The Wise"
                   gender="male"
-                  x={1540}
+                  x={1510}
                   y={1480}
                   description="Youngest Pandava, master of astrology."
                   imageUrl="/depiction/Sahadeva.png"
                   onSelect={() => handleCharacterClick("Sahadeva")}
                 />
+                <CharacterBox
+                  name="Draupadi"
+                  title="The Queen of Pandavas"
+                  gender="female"
+                  x={1740}
+                  y={1480}
+                  description="Wife of the Pandavas, known for her intelligence and strength."
+                  imageUrl="/depiction/Draupadi.jfif"
+                  onSelect={() => handleCharacterClick("Draupadi")}
+                />
+
+                {/* Sons of Pandavas (Y = 1810) */}
+                <CharacterBox
+                  name="Abhimanyu"
+                  title="The Young Warrior"
+                  gender="male"
+                  x={1160}
+                  y={1810}
+                  description="Son of Arjuna and Subhadra, known for his bravery and skill."
+                  imageUrl="/depiction/Abhimanyu.jfif"
+                  onSelect={() => handleCharacterClick("Abhimanyu")}
+                />
+                <CharacterBox
+                  name="Ghatotkacha"
+                  title="The Mighty Warrior"
+                  gender="male"
+                  x={990}
+                  y={1810}
+                  description="Son of Bhima and Hidimba, known for his incredible strength."
+                  imageUrl="/depiction/Ghatotkacha.png"
+                  onSelect={() => handleCharacterClick("Ghatotkacha")}
+                />
+
+                {/* =========================================
+                    LAYER 3: DIVINE PARENT BOXES (z-30)
+                    ========================================= */}
+                <div className="absolute inset-0 z-30 pointer-events-none">
+                  {/* Surya (Father of Karna) */}
+                  <DivineBox 
+                    x={120} 
+                    y={1270} 
+                    name="Surya" 
+                    title="The Sun God" 
+                    description="Celestial solar deity who bestowed Karna upon Kunti." 
+                    imageUrl="/depiction/Surya.jfif"
+                  />
+
+                  {/* Dharma / Yama (Father of Yudhisthira) */}
+                  <DivineBox 
+                    x={820} 
+                    y={1335} 
+                    name="Dharma" 
+                    title="Lord of Justice" 
+                    description="God of righteousness and moral law, father of Yudhisthira." 
+                    imageUrl="/depiction/Dharma.png"
+                  />
+
+                  {/* Vayu (Father of Bhima) */}
+                  <DivineBox 
+                    x={990} 
+                    y={1335} 
+                    name="Vayu" 
+                    title="Lord of Wind" 
+                    description="Celestial deity of breath, wind, and immense strength, father of Bhima." 
+                    imageUrl="/depiction/Vayu.jfif"
+                  />
+
+                  {/* Indra (Father of Arjuna) */}
+                  <DivineBox 
+                    x={1160} 
+                    y={1335} 
+                    name="Indra" 
+                    title="King of Heavens" 
+                    description="Lord of thunder, lightning, and rain, celestial father of Arjuna." 
+                    imageUrl="/depiction/Indra.jfif"
+                  />
+
+                  {/* Ashwini Kumaras (Fathers of Nakula & Sahadeva) */}
+                  <DivineBox 
+                    x={1425} 
+                    y={1335} 
+                    name="Ashwins" 
+                    title="Twin Divine Physicians" 
+                    description="Celestial horsemen and gods of medicine, fathers of Nakula and Sahadeva." 
+                    imageUrl="/depiction/Ashwins.png"
+                  />
+                </div>
+
               </div>
             </div>
           </TransformComponent>

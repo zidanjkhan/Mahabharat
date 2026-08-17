@@ -25,8 +25,7 @@ export default function FloatingMenu({ setShowFamilyTree }) {
           </span>
         </div>
 
-        {/* Glowing vertical accent line */}
-        <div className="absolute right-0 top-2 bottom-2 w-[2px] bg-amber-500/50 group-hover:bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+        
       </button>
     </div>
   );

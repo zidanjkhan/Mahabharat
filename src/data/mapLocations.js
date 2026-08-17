@@ -10,6 +10,14 @@ export const mapLocations = [
     description: "The grand and majestic capital city of the Kuru dynasty, meticulously established on the sacred banks of the Ganges. As the primary seat of political governance, Hastinapur witnessed generations of royal coronations, intense courtly intrigues, the catastrophic game of dice that sealed a tragic fate, and served as the absolute epicenter of imperial power and royal authority throughout the unfolding of the epic."
   },
   {
+    id: "indraprastha",
+    name: "Indraprastha",
+    top: 38, left: 45,
+    size: "lg",
+    color: "blue",
+    description: "The magnificent capital city of the Pandavas, built on the banks of the Yamuna. Known for its opulent palaces, grand architecture, and vibrant cultural life, Indraprastha served as a symbol of prosperity and power during the epic's events."
+  },
+  {
     id: "kurukshetra",
     name: "Kurukshetra",
     top: 29, 
@@ -30,8 +38,8 @@ export const mapLocations = [
   {
     id: "mathura",
     name: "Mathura",
-    top: 42, 
-    left: 44,
+    top: 47, 
+    left: 46,
     size: "md",
     color: "blue",
     description: "The ancient and spiritually vibrant birthplace of Lord Krishna. Steeped in deep religious significance, Mathura stood as a major focal point of culture, devotion, and historical legacy, remaining inextricably linked with the miraculous early life of Krishna and the ultimate downfall of the tyrannical ruler Kansa."
