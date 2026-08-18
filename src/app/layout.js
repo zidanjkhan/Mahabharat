@@ -20,6 +20,9 @@ export const metadata = {
     description: "Explore the epic world of Aryavarta, regional lore, and dynasty lineage.",
     type: "website",
   },
+  other: {
+    "google-site-verification": "PASTE_YOUR_GOOGLE_CODE_HERE",
+  },
 };
 
 export default function RootLayout({ children }) {
