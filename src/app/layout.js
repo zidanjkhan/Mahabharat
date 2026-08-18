@@ -12,16 +12,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Interactive Mahabharata Map & Family Tree | Aryavarta Exploration",
+  title: "Interactive Mahabharata Map & Dynasty Family Tree | Aryavarta Exploration",
   description: "Explore the epic world of Aryavarta through an interactive Mahabharata map, regional lore chronicles, and a detailed Kuru dynasty family tree.",
   keywords: ["Mahabharata map", "Aryavarta map", "Mahabharata family tree", "Kuru dynasty", "interactive epic map"],
   openGraph: {
     title: "Interactive Mahabharata Map & Family Tree",
     description: "Explore the epic world of Aryavarta, regional lore, and dynasty lineage.",
     type: "website",
-  },
-  other: {
-    "google-site-verification": "1i2CO4sDAgN5dg96uOqOGdskl_fEI-TaUlJbTA9kV_c",
   },
 };
 
@@ -31,6 +28,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <meta name="google-site-verification" content="1i2CO4sDAgN5dg96uOqOGdskl_fEI-TaUlJbTA9kV_c" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
