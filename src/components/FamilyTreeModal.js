@@ -1,31 +1,48 @@
 // src/components/FamilyTreeModal.js
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CharacterBox from "./CharacterBox";
 import { HLine, VLine } from "./RelationshipLines";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { characterData } from "@/data/characterData";
+import { useMobile } from "./MobileTouchHandler";
 
-// Helper component: Supports both Desktop Hover and Mobile Tap/Click
-function DivineBox({ x, y, name, title, description, imageUrl }) {
+// Helper component: Supports Desktop Hover & Mobile Tap-to-Toggle with Double-Tap for Sidebar
+function DivineBox({ x, y, name, title, description, imageUrl, onSelect }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { isMobile } = useMobile();
+  const lastTapRef = useRef(0);
 
-  // Toggle state for mobile tapping
-  const handleClick = (e) => {
+  const handleInteraction = (e) => {
     e.stopPropagation();
-    setShowTooltip((prev) => !prev);
+    if (isMobile) {
+      const now = Date.now();
+      const DOUBLE_TAP_DELAY = 300; // ms
+
+      if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+        // Double Tap -> Open Sidebar
+        if (onSelect) onSelect();
+        lastTapRef.current = 0;
+      } else {
+        // Single Tap -> Toggle Tooltip / Expansion
+        setShowTooltip((prev) => !prev);
+        lastTapRef.current = now;
+      }
+    } else {
+      // PC Click -> Open Sidebar immediately
+      if (onSelect) onSelect();
+    }
   };
 
   return (
     <div 
       className="absolute z-35 flex flex-col items-center pointer-events-auto cursor-pointer group"
       style={{ left: `${x}px`, top: `${y}px`, transform: 'translate(-50%, -50%)' }}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-      onClick={handleClick}
+      onMouseEnter={() => !isMobile && setShowTooltip(true)} // PC Hover
+      onMouseLeave={() => !isMobile && setShowTooltip(false)} // PC Un-hover
+      onClick={handleInteraction} // Unified click/tap handler
     >
-      {/* Container: Always a circle, scales up on hover or active mobile state */}
       <div className={`w-14 h-14 ${showTooltip ? 'w-24 h-24' : ''} group-hover:w-24 group-hover:h-24 rounded-full bg-[#070b14] border-2 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.5)] overflow-hidden relative transition-all duration-300 ease-in-out flex items-center justify-center`}>
         {imageUrl ? (
           <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
@@ -36,20 +53,17 @@ function DivineBox({ x, y, name, title, description, imageUrl }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-transparent opacity-60"></div>
         
-        {/* Name label appears clearly inside on hover or mobile click */}
         <div className={`absolute inset-0 flex items-center justify-center text-center p-1 ${showTooltip ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 bg-black/40`}>
           <span className="text-[10px] font-bold font-serif text-amber-200 uppercase tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
             {name}
           </span>
         </div>
 
-        {/* Small text label visible when minimized */}
         <span className={`absolute text-[9px] font-bold font-serif text-amber-200 uppercase tracking-tighter ${showTooltip ? 'opacity-0' : 'opacity-100'} group-hover:opacity-0 transition-opacity duration-200 drop-shadow-[0_2px_4px_rgba(0,0,0,1)]`}>
           {name.slice(0, 3)}
         </span>
       </div>
 
-      {/* Tooltip Popup */}
       {showTooltip && (
         <div className="absolute bottom-full mb-3 w-48 p-3 bg-[#070b14]/95 border border-amber-500/50 rounded-lg shadow-2xl backdrop-blur-md z-50 text-center animate-in fade-in zoom-in-95 duration-200 pointer-events-none">
           <span className="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest block mb-0.5">
@@ -73,7 +87,7 @@ export default function FamilyTreeModal({
   const [showHeader, setShowHeader] = useState(true);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  // Handle header fade-in/out timer on modal open (Fades out after 1 second)
+  // Handle header fade-out timer on modal open
   useEffect(() => {
     if (showFamilyTree) {
       setShowHeader(true);
@@ -141,51 +155,41 @@ export default function FamilyTreeModal({
           <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }}>
             <div className="relative w-[1900px] h-[2100px]">
               <div className="absolute top-100 left-0 w-full h-full">
-                {/* =========================================
-                    LAYER 1: RELATIONSHIP LINES (z-0)
-                    ========================================= */}
+                
+                {/* RELATIONSHIP LINES */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
-                  {/* --- GENERATION 1 TO 2 --- */}
                   <HLine x={150} y={150} width={250} />
                   <VLine x={275} y={150} height={310} />
-
                   <HLine x={400} y={150} width={450} />
                   <VLine x={625} y={150} height={130} />
                   <HLine x={520} y={280} width={210} />
                   <VLine x={520} y={280} height={180} />
                   <VLine x={730} y={280} height={180} />
-
                   <VLine x={850} y={150} height={80} />
                   <HLine x={850} y={230} width={450} />
                   <VLine x={1300} y={230} height={230} />
 
-                  {/* --- GENERATION 2 TO 3 (Niyoga) --- */}
                   <VLine x={1300} y={460} height={140} dotted={true} />
                   <HLine x={520} y={600} width={1080} dotted={true} />
                   <VLine x={520} y={599} height={50} dotted={true} />
                   <VLine x={950} y={599} height={50} dotted={true} />
                   <VLine x={1600} y={599} height={50} dotted={true} />
 
-                  {/* --- GENERATION 3 TO 4 --- */}
                   <VLine x={520} y={760} height={280} />
                   <VLine x={950} y={760} height={280} />
                   <VLine x={1600} y={760} height={280} />
 
-                  {/* --- GENERATION 4 MARRIAGES --- */}
                   <HLine x={300} y={1040} width={220} />
                   <HLine x={720} y={1040} width={230} />
                   <HLine x={950} y={1040} width={370} />
 
-                  {/* --- GENERATION 4 TO 5 DESCENT --- */}
                   <VLine x={410} y={1040} height={280} />
                   <HLine x={300} y={1320} width={220} />
                   <VLine x={300} y={1320} height={160} />
                   <VLine x={520} y={1320} height={160} />
                   
-                  {/* --- DRONACHARYA TO ASHWATHAMA LINE --- */}
                   <VLine x={-50} y={1140} height={300} />
 
-                  {/* --- CLEANED DIVINE BOON CONNECTIONS (Kunti to Karna) --- */}
                   <VLine x={720} y={1140} height={50} dotted={true} divine={true} />
                   <VLine x={770} y={1190} height={130} dotted={true} divine={true} />
                   <HLine x={120} y={1190} width={650} dotted={true} divine={true} />
@@ -200,7 +204,6 @@ export default function FamilyTreeModal({
                   <VLine x={1340} y={1320} height={160} dotted={true} divine={true} />
                   <VLine x={1540} y={1320} height={160} dotted={true} divine={true} />
 
-                  {/* --- PANDAVAS DESCENT & DRAUPADI CONNECTION BAR --- */}
                   <VLine x={820} y={1590} height={50} />
                   <VLine x={990} y={1590} height={160} />
                   <VLine x={1160} y={1590} height={160} />
@@ -209,398 +212,58 @@ export default function FamilyTreeModal({
                   <VLine x={1740} y={1590} height={50} />
                   <HLine x={820} y={1640} width={920} />
 
-                  {/* --- GHATOTKACHA & ABHIMANYU DESCENT --- */}
                   <VLine x={990} y={1640} height={170} />
                   <VLine x={1160} y={1640} height={170} />
                 </div>
 
-                {/* =========================================
-                    LAYER 2: CHARACTER BOXES (z-20)
-                    ========================================= */}
+                {/* CHARACTER BOXES */}
+                <CharacterBox name="Ganga" title="River Goddess" gender="female" x={150} y={150} description="Shantanu's first wife and mother to Bhishma." imageUrl="/depiction/Ganga.png" onSelect={() => handleCharacterClick("Ganga")} />
+                <CharacterBox name="Shantanu" title="King of Hastinapur" gender="male" x={400} y={150} description="The grand patriarch of the Kuru dynasty." imageUrl="/depiction/Shantanu.jfif" onSelect={() => handleCharacterClick("Shantanu")} />
+                <CharacterBox name="Satyavati" title="The Fisher Queen" gender="female" x={850} y={150} description="Shantanu's second wife." imageUrl="/depiction/Satyavati.jfif" onSelect={() => handleCharacterClick("Satyavati")} />
 
-                {/* GENERATION 1 (Y = 150) */}
-                <CharacterBox
-                  name="Ganga"
-                  title="River Goddess"
-                  gender="female"
-                  x={150}
-                  y={150}
-                  description="Shantanu's first wife and mother to Bhishma."
-                  imageUrl="/depiction/Ganga.png"
-                  onSelect={() => handleCharacterClick("Ganga")}
-                />
-                <CharacterBox
-                  name="Shantanu"
-                  title="King of Hastinapur"
-                  gender="male"
-                  x={400}
-                  y={150}
-                  description="The grand patriarch of the Kuru dynasty."
-                  imageUrl="/depiction/Shantanu.jfif"
-                  onSelect={() => handleCharacterClick("Shantanu")}
-                />
-                <CharacterBox
-                  name="Satyavati"
-                  title="The Fisher Queen"
-                  gender="female"
-                  x={850}
-                  y={150}
-                  description="Shantanu's second wife."
-                  imageUrl="/depiction/Satyavati.jfif"
-                  onSelect={() => handleCharacterClick("Satyavati")}
-                />
+                <CharacterBox name="Bhishma" title="Supreme Commander (Pitamaha)" gender="male" x={275} y={460} variant="commander" description="Took a terrible vow of celibacy and led the Kaurava army for the first 10 days." imageUrl="/depiction/Bhishma.jfif" onSelect={() => handleCharacterClick("Bhishma")} />
+                <CharacterBox name="Chitrangada" title="The Eldest Son" gender="male" x={520} y={460} description="Died young in battle without heirs." imageUrl="/depiction/Chitrangada.jfif" onSelect={() => handleCharacterClick("Chitrangada")} />
+                <CharacterBox name="Vichitravirya" title="The Fragile King" gender="male" x={730} y={460} description="Died childless, requiring the Niyoga intervention." imageUrl="/depiction/Vichitravirya.jfif" onSelect={() => handleCharacterClick("Vichitravirya")} />
+                <CharacterBox name="Vyasa" title="The Great Sage" gender="male" x={1300} y={460} description="Satyavati's firstborn. Surrogate father via Niyoga." imageUrl="/depiction/Vyasa.jfif" onSelect={() => handleCharacterClick("Vyasa")} />
 
-                {/* GENERATION 2 (Y = 460) */}
-                <CharacterBox
-                  name="Bhishma"
-                  title="Supreme Commander (Pitamaha)"
-                  gender="male"
-                  x={275}
-                  y={460}
-                  variant="commander"
-                  description="Took a terrible vow of celibacy and led the Kaurava army for the first 10 days."
-                  imageUrl="/depiction/Bhishma.jfif"
-                  onSelect={() => handleCharacterClick("Bhishma")}
-                />
-                <CharacterBox
-                  name="Chitrangada"
-                  title="The Eldest Son"
-                  gender="male"
-                  x={520}
-                  y={460}
-                  description="Died young in battle without heirs."
-                  imageUrl="/depiction/Chitrangada.jfif"
-                  onSelect={() => handleCharacterClick("Chitrangada")}
-                />
-                <CharacterBox
-                  name="Vichitravirya"
-                  title="The Fragile King"
-                  gender="male"
-                  x={730}
-                  y={460}
-                  description="Died childless, requiring the Niyoga intervention."
-                  imageUrl="/depiction/Vichitravirya.jfif"
-                  onSelect={() => handleCharacterClick("Vichitravirya")}
-                />
-                <CharacterBox
-                  name="Vyasa"
-                  title="The Great Sage"
-                  gender="male"
-                  x={1300}
-                  y={460}
-                  description="Satyavati's firstborn. Surrogate father via Niyoga."
-                  imageUrl="/depiction/Vyasa.jfif"
-                  onSelect={() => handleCharacterClick("Vyasa")}
-                />
+                <CharacterBox name="Ambika" title="First Widow" gender="female" x={520} y={760} description="Mother of Dhritarashtra." imageUrl="/depiction/Ambika.jfif" onSelect={() => handleCharacterClick("Ambika")} />
+                <CharacterBox name="Ambalika" title="Second Widow" gender="female" x={950} y={760} description="Mother of Pandu." imageUrl="/depiction/Amba.jfif" onSelect={() => handleCharacterClick("Ambalika")} />
+                <CharacterBox name="Handmaiden" title="The Maid" gender="female" x={1600} y={760} description="Sent in place of the terrified queens. Mother of Vidura." imageUrl="/depiction/Handmaiden.jfif" onSelect={() => handleCharacterClick("Handmaiden")} />
 
-                {/* GENERATION 3 (Y = 760) */}
-                <CharacterBox
-                  name="Ambika"
-                  title="First Widow"
-                  gender="female"
-                  x={520}
-                  y={760}
-                  description="Mother of Dhritarashtra."
-                  imageUrl="/depiction/Ambika.jfif"
-                  onSelect={() => handleCharacterClick("Ambika")}
-                />
-                <CharacterBox
-                  name="Ambalika"
-                  title="Second Widow"
-                  gender="female"
-                  x={950}
-                  y={760}
-                  description="Mother of Pandu."
-                  imageUrl="/depiction/Amba.jfif"
-                  onSelect={() => handleCharacterClick("Ambalika")}
-                />
-                <CharacterBox
-                  name="Handmaiden"
-                  title="The Maid"
-                  gender="female"
-                  x={1600}
-                  y={760}
-                  description="Sent in place of the terrified queens. Mother of Vidura."
-                  imageUrl="/depiction/Handmaiden.jfif"
-                  onSelect={() => handleCharacterClick("Handmaiden")}
-                />
+                <CharacterBox name="Shakuni" title="The Deceiver" gender="male" x={120} y={1040} description="Gandhari's brother and the main antagonist of the Mahabharata." imageUrl="/depiction/Shakuni.jfif" onSelect={() => handleCharacterClick("Shakuni")} />
+                <CharacterBox name="Gandhari" title="Blindfolded Queen" gender="female" x={300} y={1040} description="Wife of Dhritarashtra." imageUrl="/depiction/Gandhari.jfif" onSelect={() => handleCharacterClick("Gandhari")} />
+                <CharacterBox name="Dhritarashtra" title="The Blind King" gender="male" x={520} y={1040} description="Father of the Kauravas." imageUrl="/depiction/Dhritarashtra.jfif" onSelect={() => handleCharacterClick("Dhritarashtra")} />
+                <CharacterBox name="Kunti" title="First Queen" gender="female" x={720} y={1040} description="Mother of Karna and the eldest Pandavas." imageUrl="/depiction/Kunti.png" onSelect={() => handleCharacterClick("Kunti")} />
+                <CharacterBox name="Pandu" title="The Pale King" gender="male" x={950} y={1040} description="Ruled Hastinapur but died due to a curse." imageUrl="/depiction/Pandu.jfif" onSelect={() => handleCharacterClick("Pandu")} />
+                <CharacterBox name="Madri" title="Second Queen" gender="female" x={1250} y={1040} description="Pandu's second wife. Mother to the twins." imageUrl="/depiction/Madri.jfif" onSelect={() => handleCharacterClick("Madri")} />
+                <CharacterBox name="Vidura" title="Prime Minister" gender="male" x={1600} y={1040} description="The wisest man in Hastinapur." imageUrl="/depiction/Vidhura.jfif" onSelect={() => handleCharacterClick("Vidura")} />
+                <CharacterBox name="Dronacharya" title="Master of Arms" gender="male" x={-50} y={1040} description="Royal preceptor of both the Kauravas and Pandavas." imageUrl="/depiction/Dronacharya.jfif" onSelect={() => handleCharacterClick("Dronacharya")} />
 
-                {/* GENERATION 4 (Y = 1040) */}
-                <CharacterBox
-                  name="Shakuni"
-                  title="The Deceiver"
-                  gender="male"
-                  x={120}
-                  y={1040}
-                  description="Gandhari's brother and the main antagonist of the Mahabharata."
-                  imageUrl="/depiction/Shakuni.jfif"
-                  onSelect={() => handleCharacterClick("Shakuni")}
-                />
-                <CharacterBox
-                  name="Gandhari"
-                  title="Blindfolded Queen"
-                  gender="female"
-                  x={300}
-                  y={1040}
-                  description="Wife of Dhritarashtra."
-                  imageUrl="/depiction/Gandhari.jfif"
-                  onSelect={() => handleCharacterClick("Gandhari")}
-                />
-                <CharacterBox
-                  name="Dhritarashtra"
-                  title="The Blind King"
-                  gender="male"
-                  x={520}
-                  y={1040}
-                  description="Father of the Kauravas."
-                  imageUrl="/depiction/Dhritarashtra.jfif"
-                  onSelect={() => handleCharacterClick("Dhritarashtra")}
-                />
-                <CharacterBox
-                  name="Kunti"
-                  title="First Queen"
-                  gender="female"
-                  x={720}
-                  y={1040}
-                  description="Mother of Karna and the eldest Pandavas."
-                  imageUrl="/depiction/Kunti.png"
-                  onSelect={() => handleCharacterClick("Kunti")}
-                />
-                <CharacterBox
-                  name="Pandu"
-                  title="The Pale King"
-                  gender="male"
-                  x={950}
-                  y={1040}
-                  description="Ruled Hastinapur but died due to a curse."
-                  imageUrl="/depiction/Pandu.jfif"
-                  onSelect={() => handleCharacterClick("Pandu")}
-                />
-                <CharacterBox
-                  name="Madri"
-                  title="Second Queen"
-                  gender="female"
-                  x={1250}
-                  y={1040}
-                  description="Pandu's second wife. Mother to the twins."
-                  imageUrl="/depiction/Madri.jfif"
-                  onSelect={() => handleCharacterClick("Madri")}
-                />
-                <CharacterBox
-                  name="Vidura"
-                  title="Prime Minister"
-                  gender="male"
-                  x={1600}
-                  y={1040}
-                  description="The wisest man in Hastinapur."
-                  imageUrl="/depiction/Vidhura.jfif"
-                  onSelect={() => handleCharacterClick("Vidura")}
-                />
-                <CharacterBox
-                  name="Dronacharya"
-                  title="Master of Arms"
-                  gender="male"
-                  x={-50}
-                  y={1040}
-                  description="Royal preceptor of both the Kauravas and Pandavas."
-                  imageUrl="/depiction/Dronacharya.jfif"
-                  onSelect={() => handleCharacterClick("Dronacharya")}
-                />
+                <CharacterBox name="Lord Krishna" title="The Supreme Guide & Strategist" gender="male" x={650} y={1330} width="168px" height="236px" variant="divine" description="The supreme avatar of Vishnu who served as Arjuna's charioteer." imageUrl="/depiction/Krishna.jfif" onSelect={() => handleCharacterClick("Lord Krishna")} />
 
-                {/* LORD KRISHNA */}
-                <CharacterBox
-                  name="Lord Krishna"
-                  title="The Supreme Guide & Strategist"
-                  gender="male"
-                  x={650}
-                  y={1330}
-                  width="168px"
-                  height="236px"
-                  variant="divine"
-                  description="The supreme avatar of Vishnu who served as Arjuna's charioteer."
-                  imageUrl="/depiction/Krishna.jfif"
-                  onSelect={() => handleCharacterClick("Lord Krishna")}
-                />
+                <CharacterBox name="Ashwathama" title="The Immortal Warrior" gender="male" x={-50} y={1480} description="Son of Dronacharya. Cursed with immortality and eternal wandering." imageUrl="/depiction/Ashwathama.jfif" onSelect={() => handleCharacterClick("Ashwathama")} />
+                <CharacterBox name="Karna" title="The Tragic Hero" gender="male" x={120} y={1480} description="Secretly Kunti's firstborn, raised by a charioteer family. Loyal friend of Duryodhana." imageUrl="/depiction/Karna.jfif" onSelect={() => handleCharacterClick("Karna")} />
+                <CharacterBox name="Duryodhana" title="Kaurava Prince" gender="male" x={480} y={1480} description="Eldest of the 100 Kauravas." imageUrl="/depiction/Duryodhana.png" onSelect={() => handleCharacterClick("Duryodhana")} />
+                <CharacterBox name="99 Brothers" title="The Kauravas" gender="male" x={300} y={1480} description="The remaining 99 sons of Dhritarashtra." imageUrl="/depiction/Kauravas.jfif" onSelect={() => handleCharacterClick("99 Brothers")} />
 
-                {/* GENERATION 5 (Y = 1480) */}
-                <CharacterBox
-                  name="Ashwathama"
-                  title="The Immortal Warrior"
-                  gender="male"
-                  x={-50}
-                  y={1480}
-                  description="Son of Dronacharya. Cursed with immortality and eternal wandering."
-                  imageUrl="/depiction/Ashwathama.jfif"
-                  onSelect={() => handleCharacterClick("Ashwathama")}
-                />
-                <CharacterBox
-                  name="Karna"
-                  title="The Tragic Hero"
-                  gender="male"
-                  x={120}
-                  y={1480}
-                  description="Secretly Kunti's firstborn, raised by a charioteer family. Loyal friend of Duryodhana."
-                  imageUrl="/depiction/Karna.jfif"
-                  onSelect={() => handleCharacterClick("Karna")}
-                />
-                <CharacterBox
-                  name="Duryodhana"
-                  title="Kaurava Prince"
-                  gender="male"
-                  x={480}
-                  y={1480}
-                  description="Eldest of the 100 Kauravas."
-                  imageUrl="/depiction/Duryodhana.png"
-                  onSelect={() => handleCharacterClick("Duryodhana")}
-                />
-                <CharacterBox
-                  name="99 Brothers"
-                  title="The Kauravas"
-                  gender="male"
-                  x={300}
-                  y={1480}
-                  description="The remaining 99 sons of Dhritarashtra."
-                  imageUrl="/depiction/Kauravas.jfif"
-                  onSelect={() => handleCharacterClick("99 Brothers")}
-                />
+                <CharacterBox name="Yudhisthira" title="The Just King" gender="male" x={820} y={1480} description="Eldest Pandava." imageUrl="/depiction/Yudhishthira.jfif" onSelect={() => handleCharacterClick("Yudhisthira")} />
+                <CharacterBox name="Bhima" title="The Mighty" gender="male" x={990} y={1480} description="Second Pandava." imageUrl="/depiction/Bhima.jfif" onSelect={() => handleCharacterClick("Bhima")} />
+                <CharacterBox name="Arjuna" title="The Archer" gender="male" x={1160} y={1480} description="Third Pandava." imageUrl="/depiction/Arjuna.jfif" onSelect={() => handleCharacterClick("Arjuna")} />
 
-                <CharacterBox
-                  name="Yudhisthira"
-                  title="The Just King"
-                  gender="male"
-                  x={820}
-                  y={1480}
-                  description="Eldest Pandava."
-                  imageUrl="/depiction/Yudhishthira.jfif"
-                  onSelect={() => handleCharacterClick("Yudhisthira")}
-                />
-                <CharacterBox
-                  name="Bhima"
-                  title="The Mighty"
-                  gender="male"
-                  x={990}
-                  y={1480}
-                  description="Second Pandava."
-                  imageUrl="/depiction/Bhima.jfif"
-                  onSelect={() => handleCharacterClick("Bhima")}
-                />
-                <CharacterBox
-                  name="Arjuna"
-                  title="The Archer"
-                  gender="male"
-                  x={1160}
-                  y={1480}
-                  description="Third Pandava."
-                  imageUrl="/depiction/Arjuna.jfif"
-                  onSelect={() => handleCharacterClick("Arjuna")}
-                />
+                <CharacterBox name="Nakula" title="The Handsome" gender="male" x={1340} y={1480} description="Fourth Pandava, master swordsman." imageUrl="/depiction/Nakula.jfif" onSelect={() => handleCharacterClick("Nakula")} />
+                <CharacterBox name="Sahadeva" title="The Wise" gender="male" x={1510} y={1480} description="Youngest Pandava, master of astrology." imageUrl="/depiction/Sahadeva.png" onSelect={() => handleCharacterClick("Sahadeva")} />
+                <CharacterBox name="Draupadi" title="The Queen of Pandavas" gender="female" x={1740} y={1480} description="Wife of the Pandavas, known for her intelligence and strength." imageUrl="/depiction/Draupadi.jfif" onSelect={() => handleCharacterClick("Draupadi")} />
 
-                <CharacterBox
-                  name="Nakula"
-                  title="The Handsome"
-                  gender="male"
-                  x={1340}
-                  y={1480}
-                  description="Fourth Pandava, master swordsman."
-                  imageUrl="/depiction/Nakula.jfif"
-                  onSelect={() => handleCharacterClick("Nakula")}
-                />
-                <CharacterBox
-                  name="Sahadeva"
-                  title="The Wise"
-                  gender="male"
-                  x={1510}
-                  y={1480}
-                  description="Youngest Pandava, master of astrology."
-                  imageUrl="/depiction/Sahadeva.png"
-                  onSelect={() => handleCharacterClick("Sahadeva")}
-                />
-                <CharacterBox
-                  name="Draupadi"
-                  title="The Queen of Pandavas"
-                  gender="female"
-                  x={1740}
-                  y={1480}
-                  description="Wife of the Pandavas, known for her intelligence and strength."
-                  imageUrl="/depiction/Draupadi.jfif"
-                  onSelect={() => handleCharacterClick("Draupadi")}
-                />
+                <CharacterBox name="Abhimanyu" title="The Young Warrior" gender="male" x={1160} y={1810} description="Son of Arjuna and Subhadra, known for his bravery and skill." imageUrl="/depiction/Abhimanyu.jfif" onSelect={() => handleCharacterClick("Abhimanyu")} />
+                <CharacterBox name="Ghatotkacha" title="The Mighty Warrior" gender="male" x={990} y={1810} description="Son of Bhima and Hidimba, known for his incredible strength." imageUrl="/depiction/Ghatotkacha.png" onSelect={() => handleCharacterClick("Ghatotkacha")} />
 
-                {/* Sons of Pandavas (Y = 1810) */}
-                <CharacterBox
-                  name="Abhimanyu"
-                  title="The Young Warrior"
-                  gender="male"
-                  x={1160}
-                  y={1810}
-                  description="Son of Arjuna and Subhadra, known for his bravery and skill."
-                  imageUrl="/depiction/Abhimanyu.jfif"
-                  onSelect={() => handleCharacterClick("Abhimanyu")}
-                />
-                <CharacterBox
-                  name="Ghatotkacha"
-                  title="The Mighty Warrior"
-                  gender="male"
-                  x={990}
-                  y={1810}
-                  description="Son of Bhima and Hidimba, known for his incredible strength."
-                  imageUrl="/depiction/Ghatotkacha.png"
-                  onSelect={() => handleCharacterClick("Ghatotkacha")}
-                />
-
-                {/* =========================================
-                    LAYER 3: DIVINE PARENT BOXES (z-30)
-                    ========================================= */}
+                {/* DIVINE PARENT BOXES */}
                 <div className="absolute inset-0 z-30 pointer-events-none">
-                  {/* Surya (Father of Karna) */}
-                  <DivineBox 
-                    x={120} 
-                    y={1270} 
-                    name="Surya" 
-                    title="The Sun God" 
-                    description="Celestial solar deity who bestowed Karna upon Kunti." 
-                    imageUrl="/depiction/Surya.jfif"
-                  />
-
-                  {/* Dharma / Yama (Father of Yudhisthira) */}
-                  <DivineBox 
-                    x={820} 
-                    y={1335} 
-                    name="Dharma" 
-                    title="Lord of Justice" 
-                    description="God of righteousness and moral law, father of Yudhisthira." 
-                    imageUrl="/depiction/Dharma.png"
-                  />
-
-                  {/* Vayu (Father of Bhima) */}
-                  <DivineBox 
-                    x={990} 
-                    y={1335} 
-                    name="Vayu" 
-                    title="Lord of Wind" 
-                    description="Celestial deity of breath, wind, and immense strength, father of Bhima." 
-                    imageUrl="/depiction/Vayu.jfif"
-                  />
-
-                  {/* Indra (Father of Arjuna) */}
-                  <DivineBox 
-                    x={1160} 
-                    y={1335} 
-                    name="Indra" 
-                    title="King of Heavens" 
-                    description="Lord of thunder, lightning, and rain, celestial father of Arjuna." 
-                    imageUrl="/depiction/Indra.jfif"
-                  />
-
-                  {/* Ashwini Kumaras (Fathers of Nakula & Sahadeva) */}
-                  <DivineBox 
-                    x={1425} 
-                    y={1335} 
-                    name="Ashwins" 
-                    title="Twin Divine Physicians" 
-                    description="Celestial horsemen and gods of medicine, fathers of Nakula and Sahadeva." 
-                    imageUrl="/depiction/Ashwins.png"
-                  />
+                  <DivineBox x={120} y={1270} name="Surya" title="The Sun God" description="Celestial solar deity who bestowed Karna upon Kunti." imageUrl="/depiction/Surya.jfif" onSelect={() => handleCharacterClick("Surya")} />
+                  <DivineBox x={820} y={1335} name="Dharma" title="Lord of Justice" description="God of righteousness and moral law, father of Yudhisthira." imageUrl="/depiction/Dharma.png" onSelect={() => handleCharacterClick("Dharma")} />
+                  <DivineBox x={990} y={1335} name="Vayu" title="Lord of Wind" description="Celestial deity of breath, wind, and immense strength, father of Bhima." imageUrl="/depiction/Vayu.jfif" onSelect={() => handleCharacterClick("Vayu")} />
+                  <DivineBox x={1160} y={1335} name="Indra" title="King of Heavens" description="Lord of thunder, lightning, and rain, celestial father of Arjuna." imageUrl="/depiction/Indra.jfif" onSelect={() => handleCharacterClick("Indra")} />
+                  <DivineBox x={1425} y={1335} name="Ashwins" title="Twin Divine Physicians" description="Celestial horsemen and gods of medicine, fathers of Nakula and Sahadeva." imageUrl="/depiction/Ashwins.png" onSelect={() => handleCharacterClick("Ashwins")} />
                 </div>
 
               </div>

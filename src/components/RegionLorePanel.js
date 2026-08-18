@@ -1,38 +1,49 @@
-// src/components/RegionLorePanel.js
+// src/components/RegionLorePanel.jsx
 "use client";
 
-export default function RegionLorePanel({ selectedRegion }) {
-  // If no region is hovered, we can either hide it or show a default "Explore Aryavarta" prompt
-  if (!selectedRegion) {
-    return (
-      <div className="absolute top-15 left-6 z-40 w-96 p-6 bg-[#070b14]/50 backdrop-blur-md border border-amber-600/20 rounded-lg shadow-2xl pointer-events-none transition-all duration-500 opacity-60">
-        <h3 className="text-amber-500 font-serif text-lg tracking-widest uppercase mb-2">
-          Aryavarta Realm
-        </h3>
-        <p className="text-slate-400 text-sm font-serif leading-relaxed">
-          Explore the ancient kingdoms of the Mahabharat epic.
-        </p>
-      </div>
-    );
-  }
+export default function RegionLorePanel({ selectedRegion, setHoveredRegion }) {
+  if (!selectedRegion) return null;
 
   return (
-    <div className="absolute top-24 left-6 z-40 w-96 p-6 bg-[#070b14]/90 backdrop-blur-md border border-amber-500/40 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] pointer-events-none transition-all duration-300 animate-fadeIn">
-      {/* Region Title */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-        <h3 className="text-amber-400 font-serif font-bold text-xl tracking-widest uppercase">
-          {selectedRegion.name}
-        </h3>
-        <span className="text-xs font-mono text-amber-600 uppercase tracking-wider px-2 py-0.5 border border-amber-600/30 rounded">
-          Kingdom
-        </span>
-      </div>
+    <div 
+      className="absolute top-6 left-6 z-40 w-80 sm:w-[420px] max-w-[90vw] pointer-events-auto animate-in fade-in slide-in-from-top-6 duration-300"
+      onMouseEnter={() => {
+        if (setHoveredRegion) setHoveredRegion(selectedRegion);
+      }}
+      onMouseLeave={() => {
+        if (setHoveredRegion) setHoveredRegion(null);
+      }}
+    >
+      {/* Main Container Wrapper with rich drop shadow and pure organic shape outline */}
+      <div className="relative w-full p-8 sm:p-10 flex flex-col justify-between min-h-[260px] filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.95)]">
+        
+        {/* Custom Parchment Image Asset (Transparent edges intact with no blocky background) */}
+        <img
+          src="/paper.png"
+          alt="Ancient Region Parchment"
+          className="absolute inset-0 w-full h-full object-fill pointer-events-none z-10"
+        />
 
-      {/* History / Fun Facts description */}
-      <p className="text-slate-300 text-sm font-serif leading-relaxed">
-        {selectedRegion.description ||
-          "A cornerstone kingdom of the Mahabharat epic, witnessing critical councils, royal coronations, and pivotal shifts in dharma."}
-      </p>
+        {/* Content Layer */}
+        <div className="relative z-20 flex flex-col h-full">
+          
+          {/* Header Section with Tag */}
+          <div className="flex justify-between items-center border-b border-[#5c351b]/40 pb-2 mb-3">
+            <h3 className="text-[#3b1505] font-serif font-black text-xl sm:text-2xl uppercase tracking-wider">
+              {selectedRegion.name}
+            </h3>
+            <span className="text-[10px] font-bold font-serif uppercase tracking-[0.2em] px-2 py-1 bg-[#5c351b]/15 border border-[#5c351b]/30 text-[#5c351b] rounded">
+              Kingdom
+            </span>
+          </div>
+
+          {/* Description Body */}
+          <div className="font-serif text-xs sm:text-sm leading-relaxed text-[#261005] font-medium text-justify overflow-y-auto max-h-[180px] pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#5c3a21]/40 [&::-webkit-scrollbar-thumb]:rounded-full">
+            {selectedRegion.description || "A peaceful, agrarian, and well-governed region steeped in epic lore and historic encounters of the great era."}
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }

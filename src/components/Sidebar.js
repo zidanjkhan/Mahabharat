@@ -67,10 +67,10 @@ export default function Sidebar({
             </button>
 
             {/* Content Layer with expanded left/right padding */}
-            <div className="relative z-20 w-full h-full flex flex-col px-16 sm:px-28 pt-20 pb-25 overflow-hidden">
+            <div className="relative z-20 w-full h-full flex flex-col px-16 sm:px-28 pt-20 pb-32 overflow-hidden">
               
               {/* Header Section inside the manuscript (Replaced subtitle, deep bronze-red title for maximum visibility) */}
-              <div className="flex flex-col items-center border-b border-[#5c351b]/50 pb-4 mb-6 shrink-0 text-center">
+              <div className="flex flex-col items-center border-b border-[#5c351b]/50 pt-3 pb-2 mb-2 shrink-0 text-center">
                 <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.3em] text-[#422600]">
                   {currentData.era}
                 </span>
@@ -80,7 +80,7 @@ export default function Sidebar({
               </div>
 
               {/* Scrollable Ancient Text Body (Clean sans-serif or crisp font for ultimate legibility, deep dark brown-black tone) */}
-              <div className="flex-1 overflow-y-auto pr-4 sm:pr-6 font-sans text-sm sm:text-base leading-relaxed sm:leading-[2] text-justify text-[#261005] font-semibold selection:bg-amber-900/30 whitespace-pre-wrap [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#5c3a21]/50 [&::-webkit-scrollbar-thumb]:rounded-full">
+              <div className="flex-1 overflow-y-auto mb-4 pr-4 sm:pr-6 font-sans text-sm sm:text-base leading-relaxed sm:leading-[2] text-justify text-[#261005] font-semibold selection:bg-amber-900/30 whitespace-pre-wrap [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#5c3a21]/50 [&::-webkit-scrollbar-thumb]:rounded-full">
                 {currentData.deepLore}
               </div>
 

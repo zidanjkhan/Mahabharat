@@ -13,8 +13,11 @@ export default function MobileTouchHandler({ children }) {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+      const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      const isSmall = window.innerWidth < 1024;
+      setIsMobile(hasTouch || isSmall);
     };
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -22,7 +25,7 @@ export default function MobileTouchHandler({ children }) {
 
   return (
     <MobileContext.Provider value={{ isMobile }}>
-      <div className={`w-full h-full relative ${isMobile ? 'mobile-touch-active' : ''}`}>
+      <div className="w-full h-full relative" style={{ touchAction: 'auto' }}>
         {children}
       </div>
     </MobileContext.Provider>
