@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import WaveTimelineSlider from "../components/WaveTimelineSlider"; // NEW WAVY SLIDER
 import Place from "../components/Place";
 import MapHoverPin from "../components/MapHoverPin";
 import Sidebar from "../components/Sidebar";
@@ -11,14 +10,17 @@ import Navbar from "../components/Navbar";
 import FloatingMenu from "../components/FloatingMenu";
 import FamilyTreeModal from "../components/FamilyTreeModal";
 import RegionLorePanel from "../components/RegionLorePanel";
-import GlobalSearchModal from "../components/GlobalSearchModal"; // NEW GLOBAL SEARCH MODAL
+import GlobalSearchModal from "../components/GlobalSearchModal"; 
+import CinematicCardDeck from "../components/CinematicCardDeck";
+import ChapterDrawer from "../components/ChapterDrawer"; 
 import MobileTouchHandler, {
   useMobile,
-} from "../components/MobileTouchHandler"; // MOBILE TOUCH HANDLER
+} from "../components/MobileTouchHandler"; 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import { timelineData } from "../data/scriptures";
 import { mapLocations } from "../data/mapLocations";
+import { kurukshetraWarData } from "../data/kurukshetraData";
 
 // Dedicated map content component to safely use the mobile hook
 function MapContent({
@@ -51,14 +53,11 @@ function MapContent({
             color={pin.color}
             onClick={() => {
               if (isMobile) {
-                // On phone: tap toggles the lore panel preview
                 setHoveredRegion(hoveredRegion?.id === pin.id ? null : pin);
               } else {
-                // On PC: click opens the sidebar
                 setShowSidebar(true);
               }
             }}
-            // PC Hover: immediately activates RegionLorePanel without tapping
             onMouseEnter={() => {
               setHoveredRegion(pin);
             }}
@@ -106,14 +105,23 @@ export default function Home() {
   const [showFamilyTree, setShowFamilyTree] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); 
 
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  const currentData = timelineData[activeEra];
+  // KURUKSHETRA WAR MODE STATE
+  const [isWarMode, setIsWarMode] = useState(false);
+  const [warDayIndex, setWarDayIndex] = useState(0);
+
+  // Choose data source based on whether war mode is active
+  const currentData = isWarMode 
+    ? { ...kurukshetraWarData[warDayIndex], pins: [] } 
+    : timelineData[activeEra];
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
       setActiveEra(item.index);
+      setIsWarMode(false);
       setShowSidebar(true);
       setShowPopup(false);
     } else if (item.type === "location") {
@@ -125,18 +133,27 @@ export default function Home() {
   };
 
   const handleSelectChapter = (index) => {
-    setActiveEra(index);
-    setShowSidebar(true);
-    setShowPopup(false);
+    if (isWarMode) {
+      setWarDayIndex(index);
+    } else {
+      setActiveEra(index);
+      setShowPopup(false);
+    }
   };
 
   return (
     <main className="w-screen h-screen bg-slate-950 overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
+      
+      {/* MAP STAYS UNTOUCHED IN THE BACKGROUND */}
       <MobileTouchHandler>
         <div
           className="absolute inset-0 z-0 w-full h-full"
           onMouseEnter={() => setIsMapHovered(true)}
           onMouseLeave={() => setIsMapHovered(false)}
+          onClick={() => {
+            // 👈 Clicking anywhere on the map background will collapse the left chapter drawer
+            if (isDrawerOpen) setIsDrawerOpen(false);
+          }}
         >
           <TransformWrapper
             initialScale={0.5}
@@ -172,20 +189,76 @@ export default function Home() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      <FloatingMenu setShowFamilyTree={setShowFamilyTree} />
-
-      <Sidebar
-        showSidebar={showSidebar}
-        setShowSidebar={setShowSidebar}
-        showPopup={showPopup}
-        setShowPopup={setShowPopup}
-        currentData={currentData}
+      {/* FLOATING MENU (Houses both Family Tree and Chapters Drawer buttons) */}
+      <FloatingMenu 
+        setShowFamilyTree={setShowFamilyTree} 
+        setShowDrawer={setIsDrawerOpen} 
       />
 
-      <WaveTimelineSlider
-        chapters={timelineData}
-        currentChapterIndex={activeEra}
+      {/* SIDEBAR */}
+      <div className="relative h-full z-50">
+        <Sidebar
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          showPopup={showPopup}
+          setShowPopup={setShowPopup}
+          currentData={currentData}
+          isWarMode={isWarMode}
+          hasPrevChapter={activeEra > 0}
+          hasNextChapter={activeEra < timelineData.length - 1}
+          onPrevChapter={() => {
+            if (activeEra > 0) {
+              setActiveEra(activeEra - 1);
+              setShowPopup(false);
+            }
+          }}
+          onNextChapter={() => {
+            if (activeEra < timelineData.length - 1) {
+              setActiveEra(activeEra + 1);
+              setShowPopup(false);
+            }
+          }}
+          onOpenKurukshetra={(dayIdx = 0) => {
+            setIsWarMode(true);
+            setWarDayIndex(dayIdx);
+            setShowSidebar(true);
+          }}
+          onSwitchBackToChapters={() => {
+            setIsWarMode(false);
+            setActiveEra(0);
+          }}
+        />
+      </div>
+
+      {/* CINEMATIC CARD DECK AT THE BOTTOM */}
+      <CinematicCardDeck
+        chapters={isWarMode ? kurukshetraWarData : timelineData}
+        currentChapterIndex={isWarMode ? warDayIndex : activeEra}
         onSelectChapter={handleSelectChapter}
+        isWarMode={isWarMode}
+        onEnterWar={() => {
+          setIsWarMode(true);
+          setWarDayIndex(0);
+        }}
+        onSwitchBackToChapters={() => setIsWarMode(false)}
+        onOpenSidebar={() => setShowSidebar(true)}
+      />
+
+      {/* STANDALONE CHAPTER DRAWER MODAL */}
+      <ChapterDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        chapters={isWarMode ? kurukshetraWarData : timelineData}
+        currentChapterIndex={isWarMode ? warDayIndex : activeEra}
+        onSelectChapter={(index) => {
+          handleSelectChapter(index);
+          setShowSidebar(true); // 👈 Directly opens sidebar on right without closing the drawer
+        }}
+        onEnterWar={() => {
+          setIsWarMode(true);
+          setWarDayIndex(0);
+          setShowSidebar(true);
+        }}
       />
 
       <FamilyTreeModal

@@ -1,0 +1,281 @@
+// src/components/CinematicCardDeck.js
+
+"use client";
+
+import { useState, useRef } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { useMobile } from "./MobileTouchHandler";
+
+export default function CinematicCardDeck({
+  chapters,
+  currentChapterIndex,
+  onSelectChapter,
+  isWarMode,
+  onEnterWar,
+  onSwitchBackToChapters,
+  onOpenSidebar,
+}) {
+  const { isMobile } = useMobile();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [slideDir, setSlideDir] = useState(0); // -1 for sliding right, 1 for sliding left
+
+  // Lock ref to block sidebar triggers during/immediately after clicking side cards
+  const isSwitchingRef = useRef(false);
+  const lockTimeoutRef = useRef(null);
+
+  const currentItem = chapters[currentChapterIndex];
+  const prevItem = currentChapterIndex > 0 ? chapters[currentChapterIndex - 1] : null;
+  const nextItem = currentChapterIndex < chapters.length - 1 ? chapters[currentChapterIndex + 1] : null;
+
+  // Extends/refreshes the lockout window.
+  const armSwitchLock = () => {
+    isSwitchingRef.current = true;
+    if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
+    lockTimeoutRef.current = setTimeout(() => {
+      isSwitchingRef.current = false;
+    }, 650);
+  };
+
+  // Triggers synchronized sliding animation across the entire deck
+  const handleCardSwitch = (targetIndex, direction, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    armSwitchLock();
+
+    setSlideDir(direction);
+    onSelectChapter(targetIndex);
+
+    setTimeout(() => setSlideDir(0), 300);
+  };
+
+  const handleMainCardClick = (e) => {
+    e.stopPropagation();
+    if (isSwitchingRef.current) return;
+    onOpenSidebar();
+  };
+
+  const handlePhoneClick = (e) => {
+    e.stopPropagation();
+    if (isSwitchingRef.current) return;
+    if (!isExpanded) {
+      setIsExpanded(true);
+    } else {
+      onOpenSidebar();
+    }
+  };
+
+  // Shared handlers for the arrow buttons / side preview cards.
+  const makeSwitchHandler = (targetIndex, direction) => ({
+    onPointerUp: (e) => handleCardSwitch(targetIndex, direction, e),
+    onClick: (e) => e.preventDefault(),
+    style: { touchAction: "manipulation" },
+  });
+
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center pointer-events-auto">
+
+      {/* Exit War Button */}
+      {isWarMode && (
+        <button
+          onClick={onSwitchBackToChapters}
+          className="absolute -left-36 px-4 py-3 bg-amber-950/85 hover:bg-amber-900 border border-amber-500/50 rounded-2xl text-amber-200 text-xs font-bold uppercase tracking-wider shadow-2xl backdrop-blur-xl transition cursor-pointer"
+        >
+          &larr; Exit War
+        </button>
+      )}
+
+      {/* CONTAINER WRAPPER */}
+      <motion.div
+        animate={{ x: slideDir * 25 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        className="relative flex items-center justify-center"
+      >
+
+        {/* --- LEFT PREVIOUS ARROW (Pill Mode) --- */}
+        {!isWarMode && currentChapterIndex > 0 && (
+          <motion.button
+            animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
+            pointerEvents={isExpanded ? "none" : "auto"}
+            {...makeSwitchHandler(currentChapterIndex - 1, -1)}
+            className="absolute -left-16 w-10 h-10 rounded-2xl bg-slate-950/85 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-xl backdrop-blur-xl hover:bg-slate-900 hover:scale-110 transition-all cursor-pointer text-base font-bold z-30"
+            title="Previous Chapter"
+          >
+            &larr;
+          </motion.button>
+        )}
+
+        {/* --- SYNCHRONIZED SIDE PREVIEW CARDS (CLICKABLE) --- */}
+        <AnimatePresence mode="popLayout">
+          {isExpanded && (
+            <motion.div
+              key={`deck-${currentChapterIndex}`}
+              initial={{ opacity: 0, x: slideDir * 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: slideDir * -40 }}
+              transition={{ type: "spring", stiffness: 320, damping: 28, delay: 0.10 }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
+            >
+              {/* Previous Chapter Card Preview */}
+              {prevItem && (
+                <motion.div
+                  whileHover={{ scale: 0.98, x: -4 }}
+                  onMouseEnter={() => !isMobile && setIsExpanded(true)}
+                  onMouseLeave={() => !isMobile && setIsExpanded(false)}
+                  {...makeSwitchHandler(currentChapterIndex - 1, -1)}
+                  className="absolute -left-28 sm:-left-36 top-[-15px] w-56 sm:w-64 h-80 bg-slate-950/90 border border-slate-700/40 rounded-3xl p-3 flex flex-col justify-between -rotate-4 scale-95 opacity-75 hover:opacity-100 shadow-2xl pointer-events-auto cursor-pointer backdrop-blur-sm group/prev"
+                >
+                  <div className="text-[9px] uppercase tracking-widest text-amber-500/70 font-bold px-2">Previous Chapter</div>
+                  <div className="relative w-full h-28 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                    <Image src={prevItem.image || "/MapMain.png"} alt={prevItem.title} fill className="object-cover opacity-70 group-hover/prev:scale-105 transition" />
+                  </div>
+                  <h5 className="text-xs font-serif font-bold text-slate-300 line-clamp-1 px-1">{prevItem.title}</h5>
+                  <span className="text-[9px] text-amber-400 font-semibold px-2 pb-1">&larr; Click to slide</span>
+                </motion.div>
+              )}
+
+              {/* Next Chapter Card Preview */}
+              {nextItem && (
+                <motion.div
+                  whileHover={{ scale: 0.98, x: 4 }}
+                  onMouseEnter={() => !isMobile && setIsExpanded(true)}
+                  onMouseLeave={() => !isMobile && setIsExpanded(false)}
+                  {...makeSwitchHandler(currentChapterIndex + 1, 1)}
+                  className="absolute -right-28 sm:-right-36 top-[-15px] w-56 sm:w-64 h-80 bg-slate-950/90 border border-slate-700/40 rounded-3xl p-3 flex flex-col justify-between rotate-4 scale-95 opacity-75 hover:opacity-100 shadow-2xl pointer-events-auto cursor-pointer backdrop-blur-sm group/next"
+                >
+                  <div className="text-[9px] uppercase tracking-widest text-amber-500/70 font-bold px-2 text-right">Next Chapter</div>
+                  <div className="relative w-full h-28 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                    <Image src={nextItem.image || "/MapMain.png"} alt={nextItem.title} fill className="object-cover opacity-70 group-hover/next:scale-105 transition" />
+                  </div>
+                  <h5 className="text-[10px] font-serif font-bold text-slate-300 line-clamp-1 px-1 text-right">{nextItem.title}</h5>
+                  <span className="text-[9px] text-amber-400 font-semibold px-2 pb-1 text-right">Click to slide &rarr;</span>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* --- MAIN FOREGROUND ACTIVE CARD (MODERN DYNAMIC STYLING) --- */}
+        <motion.div
+          layout
+          onMouseEnter={() => !isMobile && setIsExpanded(true)}
+          onMouseLeave={() => !isMobile && setIsExpanded(false)}
+          onClick={isMobile ? handlePhoneClick : handleMainCardClick}
+          animate={{
+            width: isExpanded ? 345 : 280,
+            height: isExpanded ? 420 : 64,
+            borderRadius: isExpanded ? 32 : 16,
+          }}
+          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          className="relative cursor-pointer shadow-[0_30px_90px_rgba(0,0,0,0.95)] backdrop-blur-3xl border border-amber-500/40 bg-gradient-to-b from-slate-900/95 via-slate-950/95 to-slate-950 z-20 overflow-hidden flex flex-col justify-between p-4 group/card"
+        >
+          {/* Subtle Ambient Top Lighting Effect */}
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent opacity-75 pointer-events-none" />
+
+          {/* STATE 1: COLLAPSED PILL VIEW */}
+          {!isExpanded && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-3 h-full px-2"
+            >
+              <div className={`w-2.5 h-2.5 rounded-full shrink-0 animate-pulse ${isWarMode ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,1)]" : "bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,1)]"}`} />
+              <div className="flex flex-col text-left overflow-hidden flex-1">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-slate-400 font-bold truncate">
+                  {isWarMode ? currentItem.era : `Chapter ${currentChapterIndex + 1}`}
+                </span>
+                <span className="text-sm font-serif font-bold text-amber-100 group-hover/card:text-amber-300 transition truncate">
+                  {currentItem.title}
+                </span>
+              </div>
+              <span className="text-[9px] text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30 shrink-0">
+                {isMobile ? "Tap" : "Hover Deck"}
+              </span>
+            </motion.div>
+          )}
+
+          {/* STATE 2: EXPANDED ACTIVE CARD WITH SYNCHRONIZED SLIDE ANIMATION */}
+          {isExpanded && (
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={currentChapterIndex}
+                initial={{ opacity: 0, x: slideDir * 80, scale: 0.92, rotate: slideDir * 3 }}
+                animate={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, x: slideDir * -80, scale: 0.92, rotate: slideDir * -3 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.10 }}
+                className="flex flex-col h-full justify-between relative w-full"
+              >
+                {/* Header with Sleek Badge */}
+                <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-amber-400 px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                    {isWarMode ? currentItem.era : `Chapter ${currentChapterIndex + 1} / ${chapters.length}`}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-light tracking-wide italic">
+                    {isMobile ? "Tap card for sidebar" : "Click card for sidebar"}
+                  </span>
+                </div>
+
+                {/* Cinematic Image Frame with Vignette & Border-Radius */}
+                <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-amber-500/30 my-2 shadow-[0_10px_25px_rgba(0,0,0,0.6)] bg-slate-900 group/img">
+                  <Image
+                    src={currentItem.image || "/MapMain.png"}
+                    alt={currentItem.title}
+                    fill
+                    className="object-cover opacity-95 transition-transform duration-700 group-hover/img:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-85" />
+                </div>
+
+                {/* Title & Summary */}
+                <div className="flex flex-col text-center space-y-1.5 px-1">
+                  <h4 className="text-base font-serif font-bold text-amber-100 group-hover/card:text-amber-300 transition line-clamp-2 leading-snug">
+                    {currentItem.title}
+                  </h4>
+                  <p className="text-xs text-slate-300 line-clamp-2 font-light leading-relaxed">
+                    {currentItem.summary}
+                  </p>
+                </div>
+
+                {/* Modern Pill Footer Prompt */}
+                <div className="pt-2.5 border-t border-slate-800/80 text-center">
+                  <div className="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] uppercase tracking-[0.2em] text-amber-300 font-semibold shadow-sm">
+                    {isMobile ? "Tap to open sidebar drawer" : "Click to view full sidebar"}
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </motion.div>
+
+        {/* --- RIGHT NEXT ARROW (Pill Mode) --- */}
+        {!isWarMode && currentChapterIndex < chapters.length - 1 && (
+          <motion.button
+            animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
+            pointerEvents={isExpanded ? "none" : "auto"}
+            {...makeSwitchHandler(currentChapterIndex + 1, 1)}
+            className="absolute -right-16 w-10 h-10 rounded-2xl bg-slate-950/85 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-xl backdrop-blur-xl hover:bg-slate-900 hover:scale-110 transition-all cursor-pointer text-base font-bold z-30"
+            title="Next Chapter"
+          >
+            &rarr;
+          </motion.button>
+        )}
+
+      </motion.div>
+
+      {/* Special Kurukshetra War Trigger if at the end of normal chapters */}
+      {!isWarMode && currentChapterIndex === chapters.length - 1 && (
+        <button
+          onClick={onEnterWar}
+          className="absolute -right-28 px-5 py-3.5 rounded-2xl bg-red-900/90 hover:bg-red-950 border border-red-500/60 text-white text-xs font-bold uppercase tracking-widest shadow-2xl backdrop-blur-xl transition cursor-pointer flex items-center gap-1.5"
+        >
+          <span>War</span> &rarr;
+        </button>
+      )}
+
+    </div>
+  );
+}
