@@ -11,6 +11,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Recommended Next.js viewport configuration for mobile responsiveness
+export const viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: false,
+};
+
 export const metadata = {
   title: "Interactive Mahabharata Map & Dynasty Family Tree | Aryavarta Exploration",
   description: "Explore the epic world of Aryavarta through an interactive Mahabharata map, regional lore chronicles, and a detailed Kuru dynasty family tree.",

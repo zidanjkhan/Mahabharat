@@ -5,7 +5,6 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMobile } from "./MobileTouchHandler";
 
 export default function CinematicCardDeck({
   chapters,
@@ -16,11 +15,9 @@ export default function CinematicCardDeck({
   onSwitchBackToChapters,
   onOpenSidebar,
 }) {
-  const { isMobile } = useMobile();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [slideDir, setSlideDir] = useState(0); // -1 for sliding right, 1 for sliding left
+  const [slideDir, setSlideDir] = useState(0);
 
-  // Lock ref to block sidebar triggers during/immediately after clicking side cards
   const isSwitchingRef = useRef(false);
   const lockTimeoutRef = useRef(null);
 
@@ -28,7 +25,6 @@ export default function CinematicCardDeck({
   const prevItem = currentChapterIndex > 0 ? chapters[currentChapterIndex - 1] : null;
   const nextItem = currentChapterIndex < chapters.length - 1 ? chapters[currentChapterIndex + 1] : null;
 
-  // Extends/refreshes the lockout window.
   const armSwitchLock = () => {
     isSwitchingRef.current = true;
     if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
@@ -37,7 +33,6 @@ export default function CinematicCardDeck({
     }, 650);
   };
 
-  // Triggers synchronized sliding animation across the entire deck
   const handleCardSwitch = (targetIndex, direction, e) => {
     if (e) {
       e.preventDefault();
@@ -45,10 +40,8 @@ export default function CinematicCardDeck({
     }
 
     armSwitchLock();
-
     setSlideDir(direction);
     onSelectChapter(targetIndex);
-
     setTimeout(() => setSlideDir(0), 300);
   };
 
@@ -58,26 +51,42 @@ export default function CinematicCardDeck({
     onOpenSidebar();
   };
 
-  const handlePhoneClick = (e) => {
-    e.stopPropagation();
-    if (isSwitchingRef.current) return;
-    if (!isExpanded) {
-      setIsExpanded(true);
-    } else {
-      onOpenSidebar();
-    }
-  };
-
-  // Shared handlers for the arrow buttons / side preview cards.
   const makeSwitchHandler = (targetIndex, direction) => ({
     onPointerUp: (e) => handleCardSwitch(targetIndex, direction, e),
-    onClick: (e) => e.preventDefault(),
+    onClick: (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    },
     style: { touchAction: "manipulation" },
   });
 
-  return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center pointer-events-auto">
+  // Handle horizontal swipe for changing chapters
+  const handleHorizontalDragEnd = (e, info) => {
+    const swipeThreshold = 50;
+    if (info.offset.x > swipeThreshold && currentChapterIndex > 0) {
+      handleCardSwitch(currentChapterIndex - 1, -1);
+    } else if (info.offset.x < -swipeThreshold && currentChapterIndex < chapters.length - 1) {
+      handleCardSwitch(currentChapterIndex + 1, 1);
+    }
+  };
 
+  // Handle vertical slide/drag gesture to expand or collapse
+  const handleVerticalDragEnd = (e, info) => {
+    const verticalThreshold = 40;
+    if (info.offset.y < -verticalThreshold) {
+      // Swiped/Slid Up -> Expand card
+      setIsExpanded(true);
+    } else if (info.offset.y > verticalThreshold) {
+      // Swiped/Slid Down -> Collapse card
+      setIsExpanded(false);
+    }
+  };
+
+  return (
+    <div 
+      className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center pointer-events-auto"
+      onMouseLeave={() => setIsExpanded(false)}
+    >
       {/* Exit War Button */}
       {isWarMode && (
         <button
@@ -94,8 +103,7 @@ export default function CinematicCardDeck({
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className="relative flex items-center justify-center"
       >
-
-        {/* --- LEFT PREVIOUS ARROW (Pill Mode) --- */}
+        {/* --- LEFT PREVIOUS ARROW --- */}
         {!isWarMode && currentChapterIndex > 0 && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
@@ -108,7 +116,7 @@ export default function CinematicCardDeck({
           </motion.button>
         )}
 
-        {/* --- SYNCHRONIZED SIDE PREVIEW CARDS (CLICKABLE) --- */}
+        {/* --- SYNCHRONIZED SIDE PREVIEW CARDS --- */}
         <AnimatePresence mode="popLayout">
           {isExpanded && (
             <motion.div
@@ -119,12 +127,10 @@ export default function CinematicCardDeck({
               transition={{ type: "spring", stiffness: 320, damping: 28, delay: 0.10 }}
               className="absolute inset-0 flex items-center justify-center pointer-events-none z-0"
             >
-              {/* Previous Chapter Card Preview */}
               {prevItem && (
                 <motion.div
                   whileHover={{ scale: 0.98, x: -4 }}
-                  onMouseEnter={() => !isMobile && setIsExpanded(true)}
-                  onMouseLeave={() => !isMobile && setIsExpanded(false)}
+                  onMouseEnter={() => setIsExpanded(true)}
                   {...makeSwitchHandler(currentChapterIndex - 1, -1)}
                   className="absolute -left-28 sm:-left-36 top-[-15px] w-56 sm:w-64 h-80 bg-slate-950/90 border border-slate-700/40 rounded-3xl p-3 flex flex-col justify-between -rotate-4 scale-95 opacity-75 hover:opacity-100 shadow-2xl pointer-events-auto cursor-pointer backdrop-blur-sm group/prev"
                 >
@@ -137,12 +143,10 @@ export default function CinematicCardDeck({
                 </motion.div>
               )}
 
-              {/* Next Chapter Card Preview */}
               {nextItem && (
                 <motion.div
                   whileHover={{ scale: 0.98, x: 4 }}
-                  onMouseEnter={() => !isMobile && setIsExpanded(true)}
-                  onMouseLeave={() => !isMobile && setIsExpanded(false)}
+                  onMouseEnter={() => setIsExpanded(true)}
                   {...makeSwitchHandler(currentChapterIndex + 1, 1)}
                   className="absolute -right-28 sm:-right-36 top-[-15px] w-56 sm:w-64 h-80 bg-slate-950/90 border border-slate-700/40 rounded-3xl p-3 flex flex-col justify-between rotate-4 scale-95 opacity-75 hover:opacity-100 shadow-2xl pointer-events-auto cursor-pointer backdrop-blur-sm group/next"
                 >
@@ -158,19 +162,29 @@ export default function CinematicCardDeck({
           )}
         </AnimatePresence>
 
-        {/* --- MAIN FOREGROUND ACTIVE CARD (MODERN DYNAMIC STYLING) --- */}
+        {/* --- MAIN FOREGROUND ACTIVE CARD WITH DUAL DRAG SUPPORT --- */}
         <motion.div
           layout
-          onMouseEnter={() => !isMobile && setIsExpanded(true)}
-          onMouseLeave={() => !isMobile && setIsExpanded(false)}
-          onClick={isMobile ? handlePhoneClick : handleMainCardClick}
+          drag
+          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+          dragElastic={0.15}
+          onDragEnd={(e, info) => {
+            // Determine whether the primary drag motion was horizontal or vertical
+            if (Math.abs(info.offset.x) > Math.abs(info.offset.y)) {
+              handleHorizontalDragEnd(e, info);
+            } else {
+              handleVerticalDragEnd(e, info);
+            }
+          }}
+          onMouseEnter={() => setIsExpanded(true)}
+          onClick={handleMainCardClick}
           animate={{
             width: isExpanded ? 345 : 280,
             height: isExpanded ? 420 : 64,
             borderRadius: isExpanded ? 32 : 16,
           }}
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
-          className="relative cursor-pointer shadow-[0_30px_90px_rgba(0,0,0,0.95)] backdrop-blur-3xl border border-amber-500/40 bg-gradient-to-b from-slate-900/95 via-slate-950/95 to-slate-950 z-20 overflow-hidden flex flex-col justify-between p-4 group/card"
+          className="relative cursor-pointer shadow-[0_30px_90px_rgba(0,0,0,0.95)] backdrop-blur-3xl border border-amber-500/40 bg-gradient-to-b from-slate-900/95 via-slate-950/95 to-slate-950 z-20 overflow-hidden flex flex-col justify-between p-4 group/card select-none"
         >
           {/* Subtle Ambient Top Lighting Effect */}
           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent opacity-75 pointer-events-none" />
@@ -193,12 +207,12 @@ export default function CinematicCardDeck({
                 </span>
               </div>
               <span className="text-[9px] text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-xl border border-amber-500/30 shrink-0">
-                {isMobile ? "Tap" : "Hover Deck"}
+                Slide Up / Hover
               </span>
             </motion.div>
           )}
 
-          {/* STATE 2: EXPANDED ACTIVE CARD WITH SYNCHRONIZED SLIDE ANIMATION */}
+          {/* STATE 2: EXPANDED ACTIVE CARD */}
           {isExpanded && (
             <AnimatePresence mode="popLayout">
               <motion.div
@@ -215,17 +229,17 @@ export default function CinematicCardDeck({
                     {isWarMode ? currentItem.era : `Chapter ${currentChapterIndex + 1} / ${chapters.length}`}
                   </span>
                   <span className="text-[10px] text-slate-400 font-light tracking-wide italic">
-                    {isMobile ? "Tap card for sidebar" : "Click card for sidebar"}
+                    Slide down to close / Click for sidebar
                   </span>
                 </div>
 
-                {/* Cinematic Image Frame with Vignette & Border-Radius */}
+                {/* Cinematic Image Frame */}
                 <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-amber-500/30 my-2 shadow-[0_10px_25px_rgba(0,0,0,0.6)] bg-slate-900 group/img">
                   <Image
                     src={currentItem.image || "/MapMain.png"}
                     alt={currentItem.title}
                     fill
-                    className="object-cover opacity-95 transition-transform duration-700 group-hover/img:scale-105"
+                    className="object-cover opacity-95 transition-transform duration-700 group-hover/img:scale-105 pointer-events-none"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-85" />
                 </div>
@@ -243,7 +257,7 @@ export default function CinematicCardDeck({
                 {/* Modern Pill Footer Prompt */}
                 <div className="pt-2.5 border-t border-slate-800/80 text-center">
                   <div className="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-[10px] uppercase tracking-[0.2em] text-amber-300 font-semibold shadow-sm">
-                    {isMobile ? "Tap to open sidebar drawer" : "Click to view full sidebar"}
+                    Click to view full sidebar
                   </div>
                 </div>
               </motion.div>
@@ -251,7 +265,7 @@ export default function CinematicCardDeck({
           )}
         </motion.div>
 
-        {/* --- RIGHT NEXT ARROW (Pill Mode) --- */}
+        {/* --- RIGHT NEXT ARROW --- */}
         {!isWarMode && currentChapterIndex < chapters.length - 1 && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
@@ -263,10 +277,9 @@ export default function CinematicCardDeck({
             &rarr;
           </motion.button>
         )}
-
       </motion.div>
 
-      {/* Special Kurukshetra War Trigger if at the end of normal chapters */}
+      {/* Special Kurukshetra War Trigger */}
       {!isWarMode && currentChapterIndex === chapters.length - 1 && (
         <button
           onClick={onEnterWar}
@@ -275,7 +288,6 @@ export default function CinematicCardDeck({
           <span>War</span> &rarr;
         </button>
       )}
-
     </div>
   );
 }

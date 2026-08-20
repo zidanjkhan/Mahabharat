@@ -17,7 +17,7 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[60] flex items-center justify-start pointer-events-none">
+      <div className="fixed inset-0 z-[40] flex items-center justify-start pointer-events-none">
         
         {/* Drawer Sliding From Left with higher z-index */}
         <motion.div
@@ -59,9 +59,8 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
             <div
               onClick={() => {
                 onEnterWar();
-                // onClose() removed so drawer stays open
               }}
-              className="p-4 rounded-xl bg-gradient-to-r from-red-950/80 to-slate-950 border border-red-500/40 hover:border-red-500 flex items-center justify-between cursor-pointer group transition-all shadow-lg mb-4"
+              className="p-4 rounded-xl bg-gradient-to-r from-red-950/80 to-slate-950 border border-red-500/40 hover:border-red-500 flex items-center justify-center cursor-pointer group transition-all shadow-lg mb-4"
             >
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-red-400">Special Mode</span>
@@ -79,7 +78,6 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
                   key={originalIndex}
                   onClick={() => {
                     onSelectChapter(originalIndex);
-                    // ❌ onClose() is removed here! Drawer will stay open on screen.
                   }}
                   className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                     isSelected 

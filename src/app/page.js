@@ -1,7 +1,7 @@
 // src/app/page.js
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Place from "../components/Place";
 import MapHoverPin from "../components/MapHoverPin";
@@ -13,25 +13,18 @@ import RegionLorePanel from "../components/RegionLorePanel";
 import GlobalSearchModal from "../components/GlobalSearchModal"; 
 import CinematicCardDeck from "../components/CinematicCardDeck";
 import ChapterDrawer from "../components/ChapterDrawer"; 
-import MobileTouchHandler, {
-  useMobile,
-} from "../components/MobileTouchHandler"; 
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import { timelineData } from "../data/scriptures";
 import { mapLocations } from "../data/mapLocations";
 import { kurukshetraWarData } from "../data/kurukshetraData";
 
-// Dedicated map content component to safely use the mobile hook
+// Dedicated map content component (Strictly PC/Desktop mode)
 function MapContent({
-  showSidebar,
   setShowSidebar,
-  hoveredRegion,
   setHoveredRegion,
   currentData,
 }) {
-  const { isMobile } = useMobile();
-
   return (
     <div className="relative w-[3840px] h-[2160px]">
       <Image
@@ -51,19 +44,9 @@ function MapContent({
             left={pin.left}
             size={pin.size}
             color={pin.color}
-            onClick={() => {
-              if (isMobile) {
-                setHoveredRegion(hoveredRegion?.id === pin.id ? null : pin);
-              } else {
-                setShowSidebar(true);
-              }
-            }}
-            onMouseEnter={() => {
-              setHoveredRegion(pin);
-            }}
-            onMouseLeave={() => {
-              setHoveredRegion(null);
-            }}
+            onClick={() => setShowSidebar(true)}
+            onMouseEnter={() => setHoveredRegion(pin)}
+            onMouseLeave={() => setHoveredRegion(null)}
           />
         ))}
 
@@ -76,19 +59,9 @@ function MapContent({
             left={pin.left}
             size={pin.size}
             color={pin.color}
-            onClick={() => {
-              if (isMobile) {
-                setHoveredRegion(hoveredRegion?.name === pin.name ? null : pin);
-              } else {
-                setShowSidebar(true);
-              }
-            }}
-            onMouseEnter={() => {
-              if (!isMobile) setHoveredRegion(pin);
-            }}
-            onMouseLeave={() => {
-              if (!isMobile) setHoveredRegion(null);
-            }}
+            onClick={() => setShowSidebar(true)}
+            onMouseEnter={() => setHoveredRegion(pin)}
+            onMouseLeave={() => setHoveredRegion(null)}
           />
         ))}
       </div>
@@ -108,6 +81,24 @@ export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false); 
 
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [initialScale, setInitialScale] = useState(0.5);
+
+  // Dynamically calculate scale so the massive map fits mobile screens perfectly on load
+  useEffect(() => {
+    const updateScale = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setInitialScale(0.22); // Perfect fit for small phones
+      } else if (width < 1024) {
+        setInitialScale(0.35); // Tablets
+      } else {
+        setInitialScale(0.5);  // Desktop
+      }
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
 
   // KURUKSHETRA WAR MODE STATE
   const [isWarMode, setIsWarMode] = useState(false);
@@ -137,45 +128,47 @@ export default function Home() {
       setWarDayIndex(index);
     } else {
       setActiveEra(index);
-      setShowPopup(false);
     }
   };
 
+  const handleDrawerSelectChapter = (index) => {
+    handleSelectChapter(index);
+    setShowSidebar(true);
+  };
+
   return (
-    <main className="w-screen h-screen bg-slate-950 overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
+    <main className="w-full h-[100dvh] bg-slate-950 overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
       
       {/* MAP STAYS UNTOUCHED IN THE BACKGROUND */}
-      <MobileTouchHandler>
-        <div
-          className="absolute inset-0 z-0 w-full h-full"
-          onMouseEnter={() => setIsMapHovered(true)}
-          onMouseLeave={() => setIsMapHovered(false)}
-          onClick={() => {
-            // 👈 Clicking anywhere on the map background will collapse the left chapter drawer
-            if (isDrawerOpen) setIsDrawerOpen(false);
-          }}
+      <div
+        className="absolute inset-0 z-0 w-full h-full"
+        onMouseEnter={() => setIsMapHovered(true)}
+        onMouseLeave={() => setIsMapHovered(false)}
+      >
+        <TransformWrapper
+          initialScale={0.5}
+          minScale={0.5}
+          maxScale={4}
+          centerOnInit={true}
+          limitToBounds={true}
         >
-          <TransformWrapper
-            initialScale={0.5}
-            minScale={0.5}
-            maxScale={4}
-            centerOnInit={true}
-            limitToBounds={true}
-          >
-            <TransformComponent
-              wrapperStyle={{ width: "100vw", height: "100vh" }}
-            >
-              <MapContent
-                showSidebar={showSidebar}
-                setShowSidebar={setShowSidebar}
-                hoveredRegion={hoveredRegion}
-                setHoveredRegion={setHoveredRegion}
-                currentData={currentData}
-              />
-            </TransformComponent>
-          </TransformWrapper>
-        </div>
-      </MobileTouchHandler>
+          <TransformComponent wrapperStyle={{ width: "100vw", height: "100vh" }}>
+            <MapContent
+              setShowSidebar={setShowSidebar}
+              setHoveredRegion={setHoveredRegion}
+              currentData={currentData}
+            />
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
+
+      {/* BACKGROUND CLICK DETECTOR TO CLOSE DRAWER WHEN CLICKING OUTSIDE */}
+      {isDrawerOpen && (
+        <div 
+          className="absolute inset-0 z-35 bg-transparent pointer-events-auto"
+          onClick={() => setIsDrawerOpen(false)}
+        />
+      )}
 
       <RegionLorePanel
         selectedRegion={hoveredRegion}
@@ -189,46 +182,44 @@ export default function Home() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      {/* FLOATING MENU (Houses both Family Tree and Chapters Drawer buttons) */}
+      {/* FLOATING MENU */}
       <FloatingMenu 
         setShowFamilyTree={setShowFamilyTree} 
         setShowDrawer={setIsDrawerOpen} 
       />
 
       {/* SIDEBAR */}
-      <div className="relative h-full z-50">
-        <Sidebar
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-          showPopup={showPopup}
-          setShowPopup={setShowPopup}
-          currentData={currentData}
-          isWarMode={isWarMode}
-          hasPrevChapter={activeEra > 0}
-          hasNextChapter={activeEra < timelineData.length - 1}
-          onPrevChapter={() => {
-            if (activeEra > 0) {
-              setActiveEra(activeEra - 1);
-              setShowPopup(false);
-            }
-          }}
-          onNextChapter={() => {
-            if (activeEra < timelineData.length - 1) {
-              setActiveEra(activeEra + 1);
-              setShowPopup(false);
-            }
-          }}
-          onOpenKurukshetra={(dayIdx = 0) => {
-            setIsWarMode(true);
-            setWarDayIndex(dayIdx);
-            setShowSidebar(true);
-          }}
-          onSwitchBackToChapters={() => {
-            setIsWarMode(false);
-            setActiveEra(0);
-          }}
-        />
-      </div>
+      <Sidebar
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+        showPopup={showPopup}
+        setShowPopup={setShowPopup}
+        currentData={currentData}
+        isWarMode={isWarMode}
+        hasPrevChapter={activeEra > 0}
+        hasNextChapter={activeEra < timelineData.length - 1}
+        onPrevChapter={() => {
+          if (activeEra > 0) {
+            setActiveEra(activeEra - 1);
+            setShowPopup(false);
+          }
+        }}
+        onNextChapter={() => {
+          if (activeEra < timelineData.length - 1) {
+            setActiveEra(activeEra + 1);
+            setShowPopup(false);
+          }
+        }}
+        onOpenKurukshetra={(dayIdx = 0) => {
+          setIsWarMode(true);
+          setWarDayIndex(dayIdx);
+          setShowSidebar(true);
+        }}
+        onSwitchBackToChapters={() => {
+          setIsWarMode(false);
+          setActiveEra(0);
+        }}
+      />
 
       {/* CINEMATIC CARD DECK AT THE BOTTOM */}
       <CinematicCardDeck
@@ -251,8 +242,7 @@ export default function Home() {
         chapters={isWarMode ? kurukshetraWarData : timelineData}
         currentChapterIndex={isWarMode ? warDayIndex : activeEra}
         onSelectChapter={(index) => {
-          handleSelectChapter(index);
-          setShowSidebar(true); // 👈 Directly opens sidebar on right without closing the drawer
+          handleDrawerSelectChapter(index);
         }}
         onEnterWar={() => {
           setIsWarMode(true);

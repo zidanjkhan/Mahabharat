@@ -4,6 +4,7 @@ export const timelineData = [
 {
     era: "Chapter 1",
     title: "Shantanu & Ganga",
+    sidebarImage: "/depiction/Parikshit.png",
     summary: "King Shantanu marries the celestial river goddess Ganga under a strict condition: he must never question her origin or actions. True to her warning, she shocks the kingdom by drowning their first seven newborn sons to free cursed celestial beings. When she attempts to drown the eighth, Shantanu finally breaks his vow, prompting Ganga to reveal the truth, spare the child, and vanish.",
     deepLore: `The tale of the Mahabharat unfolds with a ruler named Shantanu. One day, while wandering through a forest beside the banks of river Ganga, he encountered an enchanting woman emerging from the waters. Captivated by her beauty, the king found himself irresistibly drawn to this mysterious figure and sought to learn more about her. 
 

@@ -14,9 +14,12 @@ export default function CharacterBox({
   variant = "default",
   width,
   height,
-  onSelect
+  onSelect,
+  activeMobileCharacter,
+  setActiveMobileCharacter
 }) {
   const [hovered, setHovered] = useState(false);
+  const isMobileActive = activeMobileCharacter === name;
 
   const genderColors = {
     male: "border-blue-600/50 text-blue-400 group-hover:border-blue-400",
@@ -29,10 +32,31 @@ export default function CharacterBox({
     default: genderColors[gender] || genderColors.male,
   };
 
+  const handleClick = (e) => {
+    e.stopPropagation();
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+
+    if (isTouchDevice) {
+      if (!isMobileActive) {
+        // First tap on mobile: Open this character, automatically close others
+        if (setActiveMobileCharacter) setActiveMobileCharacter(name);
+      } else {
+        // Second tap on mobile: Open sidebar profile
+        if (onSelect) onSelect({ name, title, description, imageUrl, gender });
+        if (setActiveMobileCharacter) setActiveMobileCharacter(null);
+      }
+    } else {
+      // PC Click: Open sidebar profile immediately
+      if (onSelect) onSelect({ name, title, description, imageUrl, gender });
+    }
+  };
+
+  const isVisible = hovered || isMobileActive;
+
   return (
     <div 
       className={`absolute group cursor-pointer flex items-center justify-center transition-all duration-300 ${
-        hovered ? "z-50" : "z-20"
+        isVisible ? "z-50 scale-180" : "z-20 scale-100"
       }`}
       style={{ 
         left: `${x}px`, 
@@ -43,11 +67,13 @@ export default function CharacterBox({
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onSelect && onSelect({ name, title, description, imageUrl, gender })}
+      onClick={handleClick}
     >
       
       {/* THE CHARACTER NODE */}
-      <div className={`w-full h-full bg-[#0f172a]/95 backdrop-blur-md border-2 rounded-lg shadow-2xl flex flex-col justify-end p-3 ${variantStyles[variant]} transition-all duration-300 ease-in-out group-hover:bg-[#1e293b] group-hover:scale-150 overflow-hidden relative`}>
+      <div className={`w-full h-full bg-[#0f172a]/95 backdrop-blur-md border-2 rounded-lg shadow-2xl flex flex-col justify-end p-3 ${variantStyles[variant]} transition-all duration-300 ease-in-out ${
+        isVisible ? "bg-[#1e293b]" : "group-hover:bg-[#1e293b]"
+      } overflow-hidden relative`}>
         
         {variant === "divine" && (
           <div className="absolute inset-0 bg-gradient-to-t from-cyan-950/80 via-transparent to-cyan-500/20 pointer-events-none animate-pulse"></div>
@@ -70,8 +96,10 @@ export default function CharacterBox({
         </span>
       </div>
 
-      {/* TOOLTIP: Cleanly positioned on the right */}
-      <div className="absolute left-[110%] top-1/2 -translate-y-1/2 w-80 bg-[#070b14]/95 border border-amber-500/60 backdrop-blur-md rounded-lg p-5 shadow-[0_20px_50px_rgba(0,0,0,0.95)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none z-50">
+      {/* TOOLTIP: Appears on PC hover or Mobile first tap */}
+      <div className={`absolute left-[110%] top-1/2 -translate-y-1/2 w-80 bg-[#070b14]/95 border border-amber-500/60 backdrop-blur-md rounded-lg p-5 shadow-[0_20px_50px_rgba(0,0,0,0.95)] transition-all duration-300 pointer-events-none z-50 ${
+        isVisible ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}>
         <div className="text-amber-400 text-xs font-extrabold uppercase tracking-widest mb-2 border-b border-slate-800 pb-2">
           {title}
         </div>
