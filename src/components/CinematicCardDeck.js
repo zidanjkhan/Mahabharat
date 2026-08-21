@@ -25,6 +25,9 @@ export default function CinematicCardDeck({
   const prevItem = currentChapterIndex > 0 ? chapters[currentChapterIndex - 1] : null;
   const nextItem = currentChapterIndex < chapters.length - 1 ? chapters[currentChapterIndex + 1] : null;
 
+  // Safe validation check to completely prevent empty string / undefined src errors
+  const hasImage = (src) => typeof src === "string" && src.trim() !== "";
+
   const armSwitchLock = () => {
     isSwitchingRef.current = true;
     if (lockTimeoutRef.current) clearTimeout(lockTimeoutRef.current);
@@ -136,7 +139,9 @@ export default function CinematicCardDeck({
                 >
                   <div className="text-[9px] uppercase tracking-widest text-amber-500/70 font-bold px-2">Previous Chapter</div>
                   <div className="relative w-full h-28 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
-                    <Image src={prevItem.image || "/MapMain.png"} alt={prevItem.title} fill className="object-cover opacity-70 group-hover/prev:scale-105 transition" />
+                    {hasImage(prevItem.cardImg) && (
+                      <Image src={prevItem.cardImg} alt={prevItem.title} fill className="object-cover opacity-70 group-hover/prev:scale-105 transition" />
+                    )}
                   </div>
                   <h5 className="text-xs font-serif font-bold text-slate-300 line-clamp-1 px-1">{prevItem.title}</h5>
                   <span className="text-[9px] text-amber-400 font-semibold px-2 pb-1">&larr; Click to slide</span>
@@ -152,7 +157,9 @@ export default function CinematicCardDeck({
                 >
                   <div className="text-[9px] uppercase tracking-widest text-amber-500/70 font-bold px-2 text-right">Next Chapter</div>
                   <div className="relative w-full h-28 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
-                    <Image src={nextItem.image || "/MapMain.png"} alt={nextItem.title} fill className="object-cover opacity-70 group-hover/next:scale-105 transition" />
+                    {hasImage(nextItem.cardImg) && (
+                      <Image src={nextItem.cardImg} alt={nextItem.title} fill className="object-cover opacity-70 group-hover/next:scale-105 transition" />
+                    )}
                   </div>
                   <h5 className="text-[10px] font-serif font-bold text-slate-300 line-clamp-1 px-1 text-right">{nextItem.title}</h5>
                   <span className="text-[9px] text-amber-400 font-semibold px-2 pb-1 text-right">Click to slide &rarr;</span>
@@ -169,7 +176,6 @@ export default function CinematicCardDeck({
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragElastic={0.15}
           onDragEnd={(e, info) => {
-            // Determine whether the primary drag motion was horizontal or vertical
             if (Math.abs(info.offset.x) > Math.abs(info.offset.y)) {
               handleHorizontalDragEnd(e, info);
             } else {
@@ -233,15 +239,17 @@ export default function CinematicCardDeck({
                   </span>
                 </div>
 
-                {/* Cinematic Image Frame */}
-                <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-amber-500/30 my-2 shadow-[0_10px_25px_rgba(0,0,0,0.6)] bg-slate-900 group/img">
-                  <Image
-                    src={currentItem.image || "/MapMain.png"}
-                    alt={currentItem.title}
-                    fill
-                    className="object-cover opacity-95 transition-transform duration-700 group-hover/img:scale-105 pointer-events-none"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-85" />
+                {/* Adaptive Cinematic Image Frame (Adjusted max-height to prevent button overflow) */}
+                <div className="w-full flex justify-center my-1">
+                  <div className="rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_10px_25px_rgba(0,0,0,0.8)] bg-black inline-block max-w-full group/img">
+                    {hasImage(currentItem.cardImg || currentItem.image) && (
+                      <img
+                        src={currentItem.cardImg || currentItem.image}
+                        alt={currentItem.title}
+                        className="w-auto h-auto max-w-full max-h-[190px] object-contain transition-transform duration-700 group-hover/img:scale-105 pointer-events-none block mx-auto"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {/* Title & Summary */}

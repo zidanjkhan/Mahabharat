@@ -38,7 +38,7 @@ export default function Sidebar({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={{ left: 0.05, right: 0.5 }}
         onDragEnd={handleDragEnd}
-        className="absolute top-0 right-0 h-full w-[90vw] md:w-[480px] bg-slate-900/95 opacity-80 border-l border-slate-700 shadow-2xl backdrop-blur-md z-50 p-8 flex flex-col justify-center overflow-y-auto cursor-grab active:cursor-grabbing"
+        className="absolute top-0 right-0 h-full w-[90vw] md:w-[480px] bg-slate-900/70 opacity-100 border-l border-slate-700 shadow-2xl backdrop-blur-none z-50 p-8 flex flex-col justify-center overflow-y-auto cursor-grab active:cursor-grabbing"
       >
         <button
           onClick={() => setShowSidebar(false)}
@@ -56,15 +56,16 @@ export default function Sidebar({
           </h2>
         </div>
 
-        {/* --- CHAPTER SIDEBAR IMAGE SECTION --- */}
+        {/* --- CHAPTER SIDEBAR IMAGE SECTION (Dynamic Width/Height) --- */}
         {currentData.sidebarImage && (
-          <div className="w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-amber-500/30 mb-6 shadow-xl relative shrink-0">
-            <img
-              src={currentData.sidebarImage}
-              alt={currentData.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+          <div className="w-full flex justify-center mb-6">
+            <div className="rounded-lg overflow-hidden border border-amber-500/40 shadow-[0_15px_40px_rgba(0,0,0,1)] bg-black inline-block max-w-full">
+              <img
+                src={currentData.sidebarImage}
+                alt={currentData.title}
+                className="w-auto h-auto max-w-full max-h-[380px] object-contain block mx-auto"
+              />
+            </div>
           </div>
         )}
 
@@ -127,7 +128,6 @@ export default function Sidebar({
       {/* --- DEEP LORE ANCIENT MANUSCRIPT MODAL --- */}
       {showPopup && (
         <div className="absolute inset-0 z-80 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
-          
           {/* ========================================= */}
           {/* 1. PC / DESKTOP VIEW (Landscape proportions) */}
           {/* ========================================= */}
@@ -173,7 +173,7 @@ export default function Sidebar({
           </div>
 
           {/* ========================================= */}
-          {/* 2. MOBILE / PHONE VIEW (Same image, tuned padding) */}
+          {/* 2. MOBILE / PHONE VIEW */}
           {/* ========================================= */}
           <div className="flex sm:hidden relative w-full max-w-md aspect-[3/4] max-h-[85vh] flex-col items-center justify-center my-auto">
             <img
@@ -188,7 +188,6 @@ export default function Sidebar({
               ✕
             </button>
             
-            {/* Tuned padding and margins so text aligns inside the manuscript frame on phones */}
             <div className="relative z-20 w-full h-full flex flex-col px-14 pt-13 pb-21 overflow-hidden">
               <div className="flex flex-col items-center border-b border-[#5c351b]/50 pt-1 pb-1 mb-1 shrink-0 text-center">
                 <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-[#422600]">
@@ -218,7 +217,6 @@ export default function Sidebar({
               )}
             </div>
           </div>
-
         </div>
       )}
     </>
