@@ -1,7 +1,7 @@
 // src/app/page.js
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react"; // <-- ADDED: useRef imported for map focusing
 import Image from "next/image";
 import Place from "../components/Place";
 import MapHoverPin from "../components/MapHoverPin";
@@ -32,6 +32,7 @@ function MapContent({
         alt="Map of Aryavarta"
         fill
         className="object-cover opacity-80 contrast-125 saturate-50"
+        style={{ imageRendering: "-webkit-optimize-contrast" }}
         priority
       />
       <div className="absolute inset-0 z-10">
@@ -83,6 +84,9 @@ export default function Home() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [initialScale, setInitialScale] = useState(0.5);
 
+  // --- ADDED: Reference to control zoom & pan programmatically ---
+  const transformComponentRef = useRef(null);
+
   // Dynamically calculate scale so the massive map fits mobile screens perfectly on load
   useEffect(() => {
     const updateScale = () => {
@@ -108,6 +112,37 @@ export default function Home() {
   const currentData = isWarMode 
     ? { ...kurukshetraWarData[warDayIndex], pins: [] } 
     : timelineData[activeEra];
+
+  // --- ADDED: Dynamic Map Subtle Pan & Center Focus Effect ---
+  useEffect(() => {
+    // Check if the current chapter/day has a designated active pin coordinate
+    const activePin = currentData.pins && currentData.pins.length > 0 ? currentData.pins[0] : null;
+    
+    if (transformComponentRef.current && activePin) {
+      const { setTransform } = transformComponentRef.current;
+      
+      // Map canvas total dimensions are 3840px by 2160px
+      const mapWidth = 3840;
+      const mapHeight = 2160;
+      
+      // Calculate pixel coordinates from percentage pins
+      const pinPixelX = (activePin.left / 100) * mapWidth;
+      const pinPixelY = (activePin.top / 100) * mapHeight;
+      
+      // Balanced zoom scale (0.85 gives a clean overview while perfectly centering the pin)
+      const targetScale = 0.85;
+      
+      // Compute window center offset to center the pin on screen seamlessly
+      const windowX = window.innerWidth / 2;
+      const windowY = window.innerHeight / 2;
+      
+      const targetX = windowX - pinPixelX * targetScale;
+      const targetY = windowY - pinPixelY * targetScale;
+      
+      // Smoothly animate the map camera to the target position and scale
+      setTransform(targetX, targetY, targetScale, 600, "easeOut");
+    }
+  }, [activeEra, warDayIndex, isWarMode]);
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
@@ -145,7 +180,9 @@ export default function Home() {
         onMouseEnter={() => setIsMapHovered(true)}
         onMouseLeave={() => setIsMapHovered(false)}
       >
+        {/* --- ADDED: ref attached to TransformWrapper for dynamic zooming & panning --- */}
         <TransformWrapper
+          ref={transformComponentRef}
           initialScale={0.5}
           minScale={0.5}
           maxScale={4}
