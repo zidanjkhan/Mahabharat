@@ -12,7 +12,7 @@ export const mapLocations = [
   {
     id: "indraprastha",
     name: "Indraprastha",
-    top: 38, left: 45,
+    top: 41, left: 45,
     size: "lg",
     color: "blue",
     description: "The magnificent capital city of the Pandavas, built on the banks of the Yamuna. Known for its opulent palaces, grand architecture, and vibrant cultural life, Indraprastha served as a symbol of prosperity and power during the epic's events."
@@ -20,8 +20,8 @@ export const mapLocations = [
   {
     id: "kurukshetra",
     name: "Kurukshetra",
-    top: 29, 
-    left: 40,
+    top: 31, 
+    left: 41,
     size: "lg",
     color: "red",
     description: "Revered eternally as the sacred 'Land of Dharma' and chosen as the ultimate theater of war. It was upon this vast and hallowed plain that the monumental 18-day epic war was fiercely contested between the Kauravas and Pandavas, and where Lord Krishna imparted the profound, timeless spiritual wisdom of the Bhagavad Gita to the hesitating warrior Arjuna."
@@ -29,7 +29,7 @@ export const mapLocations = [
   {
     id: "dwarka",
     name: "Dwarka",
-    top: 60, 
+    top: 61.5, 
     left: 23,
     size: "lg",
     color: "blue",
@@ -38,8 +38,8 @@ export const mapLocations = [
   {
     id: "mathura",
     name: "Mathura",
-    top: 47, 
-    left: 46,
+    top: 51, 
+    left: 37,
     size: "md",
     color: "blue",
     description: "The ancient and spiritually vibrant birthplace of Lord Krishna. Steeped in deep religious significance, Mathura stood as a major focal point of culture, devotion, and historical legacy, remaining inextricably linked with the miraculous early life of Krishna and the ultimate downfall of the tyrannical ruler Kansa."
@@ -47,7 +47,7 @@ export const mapLocations = [
   {
     id: "magadha",
     name: "Magadha",
-    top: 56, 
+    top: 64.3, 
     left: 68,
     size: "lg",
     color: "red",
@@ -55,9 +55,9 @@ export const mapLocations = [
   },
   {
     id: "kasi",
-    name: "Kasi",
-    top: 51, 
-    left: 61.5,
+    name: "Kashi",
+    top: 52, 
+    left: 59,
     size: "lg",
     color: "emerald",
     description: "The eternal holy city of spiritual illumination, deep philosophical inquiry, and timeless heritage. Renowned far and wide across Aryavarta for its unmatched centers of scholarship, rich traditional culture, and an aura of divine grace that attracted sages, kings, and seekers from all corners of the realm."
@@ -65,7 +65,7 @@ export const mapLocations = [
   {
     id: "panchala",
     name: "Panchala",
-    top: 42, 
+    top: 44, 
     left: 56.5,
     size: "lg",
     color: "amber",
@@ -73,9 +73,9 @@ export const mapLocations = [
   },
   {
     id: "gandhara",
-    name: "Gandhara (Taxila)",
-    top: 10.5, 
-    left: 33,
+    name: "Gandhara",
+    top: 12, 
+    left: 29,
     size: "md",
     color: "red",
     description: "A strategic northwestern realm governed by King Subala and famously recognized as the homeland of the brilliant yet deeply vindictive prince Shakuni. It was from the intellectual and cultural hub of Gandhara that Shakuni's calculated strategies and enduring bitter schemes ultimately catalyzed the great war."
@@ -83,8 +83,8 @@ export const mapLocations = [
   {
     id: "kamboja",
     name: "Kamboha",
-    top: 10, 
-    left: 27,
+    top: 27, 
+    left: 19,
     size: "md",
     color: "amber",
     description: "A rugged and fiercely independent northern territory celebrated across the subcontinent for producing the finest, most resilient breeds of warhorses. Its elite cavalry units and skilled horsemen were highly sought-after military assets that actively participated in the massive deployments of the epic conflict."
@@ -92,8 +92,8 @@ export const mapLocations = [
   {
     id: "matsya",
     name: "Matsya",
-    top: 44, 
-    left: 38,
+    top: 47, 
+    left: 45,
     size: "md",
     color: "blue",
     description: "A peaceful, agrarian, and well-governed kingdom led by the benevolent King Virata. Matsya earned its immortal place in the epic by generously providing a safe, clandestine haven where the Pandavas successfully concealed their identities and lived in disguise during their final mandatory year of exile."
@@ -101,8 +101,8 @@ export const mapLocations = [
   {
     id: "anga",
     name: "Anga",
-    top: 48.5, 
-    left: 73,
+    top: 51, 
+    left: 70.3,
     size: "lg",
     color: "amber",
     description: "A wealthy and strategically vital territory gifted directly by Duryodhana to elevate the status of Karna during the royal tournament. This bold political move forged an unbreakable, legendary bond of personal brotherhood and fierce loyalty that anchored Karna's life and actions until his final breath on the battlefield."
@@ -110,8 +110,8 @@ export const mapLocations = [
   {
     id: "pragjyotisha",
     name: "Pragjyotisha",
-    top: 36, 
-    left: 92,
+    top: 37, 
+    left: 91,
     size: "lg",
     color: "red",
     description: "A formidable eastern frontier stronghold nestled in the deep hills and valleys, ruled by the immensely powerful and intimidating demon king Bhagadatta. Pragjyotisha was heavily feared for its vast resources and particularly for commanding a massive, terrifying division of armored war elephants in combat."
@@ -119,8 +119,8 @@ export const mapLocations = [
   {
     id: "saurashtra",
     name: "Saurashtra",
-    top: 66, 
-    left: 27,
+    top: 68, 
+    left: 28,
     size: "md",
     color: "blue",
     description: "A thriving and picturesque coastal peninsula situated directly adjacent to Dwaraka. Saurashtra shared deep commercial, maritime, and cultural ties with the Yadava kingdom, acting as a crucial western hub for trade, seafaring, and regional diplomacy."
@@ -128,8 +128,8 @@ export const mapLocations = [
   {
     id: "chedi",
     name: "Chedi",
-    top: 57, 
-    left: 53,
+    top: 64, 
+    left: 51.5,
     size: "md",
     color: "red",
     description: "A prominent central kingdom historically governed by the valiant yet ill-fated King Shishupala. Chedi became synonymous with tragic hubris due to Shishupala's relentless, lifelong animosity toward Lord Krishna, which culminated in his dramatic downfall during the grand Rajasuya Yajna."

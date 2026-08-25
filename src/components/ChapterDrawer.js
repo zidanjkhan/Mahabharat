@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapterIndex, onSelectChapter, onEnterWar }) {
+export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapterIndex, onSelectChapter, onEnterWar, isWarMode, onExitWar }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   if (!isOpen) return null;
@@ -18,7 +18,7 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[40] flex items-center justify-start pointer-events-none">
-        
+
         {/* Drawer Sliding From Left with higher z-index */}
         <motion.div
           initial={{ x: "-100%" }}
@@ -27,7 +27,7 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
           transition={{ type: "spring", damping: 30, stiffness: 300 }}
           className="relative w-full max-w-md h-full bg-slate-900 border-r border-amber-500/30 shadow-2xl flex flex-col overflow-hidden text-slate-200 pointer-events-auto z-10"
         >
-          
+
           {/* Header */}
           <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
             <div>
@@ -55,29 +55,46 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
 
           {/* Chapter List / Grid */}
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {/* Special Kurukshetra War Shortcut Card at the Top */}
+            
+            {/* Dynamic War Mode / Go Back Shortcut Card at the Top */}
             <div
               onClick={() => {
-                onEnterWar();
+                if (isWarMode) {
+                  if (onExitWar) onExitWar();
+                } else {
+                  if (onEnterWar) onEnterWar();
+                }
+                onClose(); // Automatically close drawer on click
               }}
-              className="p-4 rounded-xl bg-gradient-to-r from-red-950/80 to-slate-950 border border-red-500/40 hover:border-red-500 flex items-center justify-center cursor-pointer group transition-all shadow-lg mb-4"
+              className={`p-4 rounded-xl border flex items-center justify-center cursor-pointer group transition-all shadow-lg mb-4 ${
+                isWarMode
+                  ? "bg-gradient-to-r from-amber-950/80 to-slate-950 border-amber-500/40 hover:border-amber-500"
+                  : "bg-gradient-to-r from-red-950/80 to-slate-950 border-red-500/40 hover:border-red-500"
+              }`}
             >
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-red-400">Special Mode</span>
-                <h4 className="text-base font-serif font-bold text-white group-hover:text-red-300 transition">Enter Kurukshetra War Chronicles &rarr;</h4>
+                <span className={`text-xs font-bold uppercase tracking-widest ${isWarMode ? "text-amber-400" : "text-red-400"}`}>
+                  {isWarMode ? "Active Timeline" : "Special Mode"}
+                </span>
+                <h4 className="text-base font-serif font-bold text-white group-hover:text-amber-200 transition">
+                  {isWarMode ? "← Go back to previous chapters" : "Enter Kurukshetra War Chronicles"}
+                </h4>
               </div>
-              <span className="px-3 py-1 rounded bg-red-900/60 text-red-200 text-xs font-bold">18 Days</span>
+              <span className={`px-3 py-1 rounded text-xs font-bold ml-auto ${isWarMode ? "bg-amber-900/60 text-amber-200" : "bg-red-900/60 text-red-200"}`}>
+                {isWarMode ? "Exit" : "18 Days"}
+              </span>
             </div>
 
             {filteredChapters.map((chapter, idx) => {
               const originalIndex = chapters.indexOf(chapter);
-              const isSelected = currentChapterIndex === originalIndex;
+              const isSelected = !isWarMode && currentChapterIndex === originalIndex;
 
               return (
                 <div
                   key={originalIndex}
                   onClick={() => {
                     onSelectChapter(originalIndex);
+                    onClose(); 
                   }}
                   className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
                     isSelected 

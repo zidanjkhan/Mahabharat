@@ -1,7 +1,7 @@
 // src/app/page.js
 "use client";
 
-import { useState, useEffect, useRef } from "react"; // <-- ADDED: useRef imported for map focusing
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Place from "../components/Place";
 import MapHoverPin from "../components/MapHoverPin";
@@ -14,6 +14,7 @@ import GlobalSearchModal from "../components/GlobalSearchModal";
 import CinematicCardDeck from "../components/CinematicCardDeck";
 import ChapterDrawer from "../components/ChapterDrawer";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import MapAnimationOverlay from "@/components/MapAnimationOverlay";
 
 import { timelineData } from "../data/scriptures";
 import { mapLocations } from "../data/mapLocations";
@@ -26,17 +27,31 @@ function MapContent({
   setHoveredRegion,
   currentData,
   isWarMode,
+  activeEra,
+  warDayIndex,
 }) {
+  const previousPin = !isWarMode && activeEra > 0
+    ? timelineData[activeEra - 1]?.pins?.[0]
+    : null;
+
   return (
     <div className="relative w-[3840px] h-[2160px]">
       <img
         src="/MainMap1.png"
         alt="Map of Aryavarta"
-        // REMOVED `fill` from here
         className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-125 saturate-50"
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
       <WarAtmosphereOverlay isWarMode={isWarMode} />
+      
+      {/* Map Animation Overlay now lives inside the canvas container to track map scaling and panning */}
+      <MapAnimationOverlay
+        currentData={currentData}
+        previousPin={previousPin}
+        isWarMode={isWarMode}
+        warDayIndex={warDayIndex}
+      />
+
       <div className="absolute inset-0 z-10">
         {/* 1. INDEPENDENT MAP HOVER LOCATIONS */}
         {mapLocations.map((pin) => (
@@ -86,7 +101,6 @@ export default function Home() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [initialScale, setInitialScale] = useState(0.5);
 
-  // --- ADDED: Reference to control zoom & pan programmatically ---
   const transformComponentRef = useRef(null);
 
   // Dynamically calculate scale so the massive map fits mobile screens perfectly on load
@@ -94,11 +108,11 @@ export default function Home() {
     const updateScale = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setInitialScale(0.22); // Perfect fit for small phones
+        setInitialScale(0.22);
       } else if (width < 1024) {
-        setInitialScale(0.35); // Tablets
+        setInitialScale(0.35);
       } else {
-        setInitialScale(0.5); // Desktop
+        setInitialScale(0.5);
       }
     };
     updateScale();
@@ -115,9 +129,8 @@ export default function Home() {
     ? { ...kurukshetraWarData[warDayIndex], pins: [] }
     : timelineData[activeEra];
 
-  // --- ADDED: Dynamic Map Subtle Pan & Center Focus Effect ---
+  // Dynamic Map Subtle Pan & Center Focus Effect
   useEffect(() => {
-    // Check if the current chapter/day has a designated active pin coordinate
     const activePin =
       currentData.pins && currentData.pins.length > 0
         ? currentData.pins[0]
@@ -126,26 +139,21 @@ export default function Home() {
     if (transformComponentRef.current && activePin) {
       const { setTransform } = transformComponentRef.current;
 
-      // Map canvas total dimensions are 3840px by 2160px
       const mapWidth = 3840;
       const mapHeight = 2160;
 
-      // Calculate pixel coordinates from percentage pins
       const pinPixelX = (activePin.left / 100) * mapWidth;
       const pinPixelY = (activePin.top / 100) * mapHeight;
 
-      // Balanced zoom scale (0.85 gives a clean overview while perfectly centering the pin)
       const targetScale = 0.85;
 
-      // Compute window center offset to center the pin on screen seamlessly
       const windowX = window.innerWidth / 2;
       const windowY = window.innerHeight / 2;
 
       const targetX = windowX - pinPixelX * targetScale;
       const targetY = windowY - pinPixelY * targetScale;
 
-      // Smoothly animate the map camera to the target position and scale
-      setTransform(targetX, targetY, targetScale, 600, "easeOut");
+      setTransform(targetX, targetY, targetScale, 5000, "easeOut");
     }
   }, [activeEra, warDayIndex, isWarMode]);
 
@@ -178,29 +186,33 @@ export default function Home() {
 
   return (
     <main className="w-full h-[100dvh] bg-slate-950 overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
-      {/* MAP STAYS UNTOUCHED IN THE BACKGROUND */}
+      {/* MAP CONTAINER */}
+      {/* MAP CONTAINER */}
       <div
-        className="absolute inset-0 z-0 w-full h-full"
+        className="absolute inset-0 z-0 w-full h-full bg-slate-950 overflow-hidden"
         onMouseEnter={() => setIsMapHovered(true)}
         onMouseLeave={() => setIsMapHovered(false)}
       >
-        {/* --- ADDED: ref attached to TransformWrapper for dynamic zooming & panning --- */}
         <TransformWrapper
           ref={transformComponentRef}
-          initialScale={0.5}
-          minScale={0.5}
+          initialScale={initialScale}
+          minScale={initialScale}
           maxScale={4}
-          centerOnInit={true}
+          centerOnInit={false}
           limitToBounds={true}
+          landingAnimationType="easeOut"
         >
           <TransformComponent
-            wrapperStyle={{ width: "100vw", height: "100vh" }}
+            wrapperStyle={{ width: "100vw", height: "100vh", position: "absolute", inset: 0 }}
+            contentStyle={{ width: "3840px", height: "2160px" }}
           >
             <MapContent
               setShowSidebar={setShowSidebar}
               setHoveredRegion={setHoveredRegion}
               currentData={currentData}
               isWarMode={isWarMode}
+              activeEra={activeEra}
+              warDayIndex={warDayIndex}
             />
           </TransformComponent>
         </TransformWrapper>
@@ -279,10 +291,10 @@ export default function Home() {
         onOpenSidebar={() => setShowSidebar(true)}
       />
 
-      {/* STANDALONE CHAPTER DRAWER MODAL */}
       <ChapterDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+        isWarMode={isWarMode}
         chapters={isWarMode ? kurukshetraWarData : timelineData}
         currentChapterIndex={isWarMode ? warDayIndex : activeEra}
         onSelectChapter={(index) => {
@@ -291,7 +303,13 @@ export default function Home() {
         onEnterWar={() => {
           setIsWarMode(true);
           setWarDayIndex(0);
-          setShowSidebar(true);
+          setIsDrawerOpen(false);
+          setShowSidebar(false);
+        }}
+        onExitWar={() => {
+          setIsWarMode(false);
+          setIsDrawerOpen(false);
+          setShowSidebar(false);
         }}
       />
 

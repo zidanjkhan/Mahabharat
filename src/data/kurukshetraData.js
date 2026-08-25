@@ -194,5 +194,49 @@ Discovered by the Pandavas, Duryodhana was stung by bitter taunts from Bhima reg
 
 That night, a vengeful Ashwatthama, Kripa, and Kritavarma crept into the sleeping Pandava camp, massacring the Upapandavas and Dhrishtadyumna in cold blood. When tracked down, Ashwatthama unleashed the ultimate Brahmashira astra toward Uttara's womb, but Krishna intervened, saving the unborn child. Punished with an immortal, festering curse to wander the earth alone, Ashwatthama faded into history as the epic Kurukshetra war officially concluded with Yudhisthira crowned king.`,
     pins: [{ name: "Samantapanchaka Lake", top: 33, left: 47, color: "red", size: "lg" }]
+  },
+  {
+    era: "Chapter 36",
+    sidebarImage: "/ch/ch36.png",
+    cardImg: "/ch/ch36.png",
+    title: "The Assault on Virata & The Return of Arjuna",
+    summary: "Emboldened by Kichaka's death, neighboring King Su Sharma and the Kauravas launch a two-pronged invasion of Matsya to steal cattle. Prince Uttar of Virata rides out to battle with the disguised Arjuna (Brihannala) as his charioteer, while the Pandavas reveal their true identities to defend the realm.",
+    deepLore: `Following the mysterious death of Kichaka, King Su Sharma of Trigarta—who held a deep grudge against Matsya—allied with Duryodhana to launch a coordinated two-pronged invasion against King Virata's kingdom. While Su Sharma attacked from the south, Kaurava forces swept in from the north to plunder the royal cattle. 
+
+In the palace, young Prince Uttar boasted of his martial prowess, but when faced with the looming battle, he panicked and froze. Seeing this, Arjuna—still serving his final days of hiding disguised as the eunuch dancing teacher Brihannala—offered to act as Uttar's charioteer. Guiding the chariot to the outskirts of the city where the Pandavas had concealed their divine weapons in a Shami tree, Arjuna reclaimed his celestial bow, Gandiva. Revealing his true identity, Arjuna unleashed devastating attacks that forced the entire Kaurava army and Su Sharma to retreat in utter disarray.`,
+    pins: [{ name: "Outskirts of Virata City", top: 37, left: 42, color: "orange", size: "md" }]
+  },
+  {
+    era: "Chapter 37",
+    sidebarImage: "/ch/ch37.png",
+    cardImg: "/ch/ch37.png",
+    title: "Prelude to War: Alliance & Diplomacy",
+    summary: "With their 13-year exile successfully concluded and their identity discovery prevented just in time, the Pandavas prepare for inevitable conflict. Both factions travel to Dwaraka to seek Lord Krishna's alliance, leading to Krishna's pivotal choice between his vast army and his personal unarmed guidance.",
+    deepLore: `Having completed their 13-year exile—including the crucial final year in disguise at Virata's court without being discovered—the Pandavas officially laid claim to the restoration of Indraprastha. However, Duryodhana, consumed by arrogance and unyielding jealousy, flatly refused to cede even an inch of land without a war. 
+
+Both Duryodhana and Arjuna rushed to Dwaraka to secure Lord Krishna's military backing. Duryodhana arrived first and seated himself at Krishna's head, while Arjuna humbly sat at his feet. When Krishna awoke, he offered them a choice: his invincible Narayani army on one side, or himself on the other—unarmed and committed not to fight. Arjuna unhesitatingly chose Krishna as his guide, leaving Duryodhana overjoyed to claim the massive army. Meanwhile, emissaries and peace talks led by Krishna to Hastinapur ultimately failed against Duryodhana's stubborn defiance.`,
+    pins: [{ name: "Dwaraka Kingdom", top: 70, left: 18, color: "blue", size: "md" }]
+  },
+  {
+    era: "Chapter 38",
+    sidebarImage: "/ch/ch38.png",
+    cardImg: "/ch/ch38.png",
+    title: "The Tragic Vow of Mother Kunti & Karna",
+    summary: "Before the drums of war echo across the land, Queen Kunti seeks out Karna along the banks of the Ganges. She reveals the long-guarded secret of his birth—that he is her firstborn son—and begs him to switch sides, leading to a poignant vow between mother and son.",
+    deepLore: `Recognizing the immense bloodshed ahead, Queen Kunti's heart grew heavy with dread regarding the fate of her sons. Knowing Karna's true identity as her firstborn son—born of the Sun God Surya before her marriage and abandoned in a basket—she walked down to the riverbank where Karna offered his daily prayers. 
+
+Revealing herself as his biological mother, Kunti implored Karna to unite with his younger Pandava brothers and claim his rightful place as king. Karna expressed profound gratitude for her disclosure, but resolutely refused to betray Duryodhana, who had honored him when the world scorned him. However, out of deep love for his mother, Karna made a solemn promise: he would spare the lives of Yudhisthira, Bhima, Nakula, and Sahadeva, ensuring that Kunti would always retain five living sons, directing his lethal rivalry solely toward Arjuna.`,
+    pins: [{ name: "Banks of the Ganges", top: 40, left: 65, color: "amber", size: "md" }]
+  },
+  {
+    era: "Chapter 39",
+    sidebarImage: "/ch/ch39.png",
+    cardImg: "/ch/ch39.png",
+    title: "The Array of Armies at Kurukshetra",
+    summary: "Both factions finalize their commanders and codes of conduct as millions of soldiers march toward the sacred plains of Kurukshetra. Grandfather Bhishma is appointed supreme commander of the Kauravas, while Dhrishtadyumna leads the Pandava host under righteous rules of engagement.",
+    deepLore: `With diplomacy completely exhausted, millions of warriors from across ancient India mobilized toward the vast, sacred plain of Kurukshetra. The Kauravas appointed the invincible Grandfather Bhishma as their supreme commander, though Bhishma stipulated that Karna would not fight under his direct command due to their past friction. 
+
+The Pandavas chose Dhrishtadyumna—born specifically to slay Drona—as their military commander-in-chief. Before hostilities erupted, both armies mutually established strict ethical rules of engagement: combat would only occur from sunrise to sunset, fleeing or unarmed soldiers could not be attacked, and multiple warriors were strictly forbidden from ganging up on a single opponent. With these solemn parameters locked, the monumental stage was set for the 18-day war.`,
+    pins: [{ name: "Kurukshetra Battlefield", top: 35, left: 48, color: "red", size: "lg" }]
   }
 ];

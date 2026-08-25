@@ -94,7 +94,7 @@ export default function CinematicCardDeck({
       {isWarMode && (
         <button
           onClick={onSwitchBackToChapters}
-          className="absolute -left-36 px-4 py-3 bg-amber-950/85 hover:bg-amber-900 border border-amber-500/50 rounded-2xl text-amber-200 text-xs font-bold uppercase tracking-wider shadow-2xl backdrop-blur-xl transition cursor-pointer"
+          className="absolute -left-30 px-4 py-3 bg-amber-950/85 hover:bg-amber-900 border border-amber-500/50 rounded-2xl text-amber-200 text-xs font-bold uppercase tracking-wider shadow-2xl backdrop-blur-xl transition cursor-pointer"
         >
           &larr; Exit War
         </button>
