@@ -17,9 +17,6 @@ export default function MapAnimationOverlay({
   // Check if the pin is identical to prevent useless zero-distance animations
   const isSameLocation = previousPin && previousPin.top === currentPin.top && previousPin.left === currentPin.left;
 
-  // Optional check: If you want to identify if it's moving backward, 
-  // we can check if previousPin matches a location further down. For now, 
-  // we completely omit the trail when going backward or when it's the same location.
   const routeKey = previousPin && !isSameLocation
     ? `${previousPin.top}-${previousPin.left}-${currentPin.top}-${currentPin.left}` 
     : Math.random();
@@ -53,6 +50,26 @@ export default function MapAnimationOverlay({
     );
   }
 
+  // Calculate smart path: Use a subtle curve or straight line based on distance to avoid awkward loops for nearby points
+  const getPathString = (p1, p2) => {
+    if (!p1 || !p2) return "";
+    const dx = p2.left - p1.left;
+    const dy = p2.top - p1.top;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // If locations are very close, use a much lighter natural curve instead of a wide arc
+    if (distance < 15) {
+      const midX = (p1.left + p2.left) / 2 - dy * 0.15;
+      const midY = (p1.top + p2.top) / 2 + dx * 0.15;
+      return `M ${p1.left} ${p1.top} Q ${midX} ${midY}, ${p2.left} ${p2.top}`;
+    }
+
+    // Default balanced arc for distant locations
+    return `M ${p1.left} ${p1.top} Q 50 46, ${p2.left} ${p2.top}`;
+  };
+
+  const dynamicPath = previousPin ? getPathString(previousPin, currentPin) : "";
+
   return (
     <div className="absolute inset-0 pointer-events-none z-25 overflow-hidden">
       
@@ -68,14 +85,14 @@ export default function MapAnimationOverlay({
 
             <path
               id={`scrollArc-${routeKey}`}
-              d={`M ${previousPin.left} ${previousPin.top} Q 50 46, ${currentPin.left} ${currentPin.top}`}
+              d={dynamicPath}
               fill="none"
             />
           </defs>
 
           {/* Static Footpath / Dashed Track */}
           <path
-            d={`M ${previousPin.left} ${previousPin.top} Q 50 46, ${currentPin.left} ${currentPin.top}`}
+            d={dynamicPath}
             fill="none"
             stroke="#d97706"
             strokeWidth="0.3"
@@ -86,7 +103,7 @@ export default function MapAnimationOverlay({
 
           {/* The Animated Calligraphy Reveal */}
           <motion.path
-            d={`M ${previousPin.left} ${previousPin.top} Q 50 46, ${currentPin.left} ${currentPin.top}`}
+            d={dynamicPath}
             fill="none"
             stroke="url(#calligraphyInk)"
             strokeWidth="0.25" 

@@ -30,9 +30,10 @@ function MapContent({
   activeEra,
   warDayIndex,
 }) {
-  const previousPin = !isWarMode && activeEra > 0
-    ? timelineData[activeEra - 1]?.pins?.[0]
-    : null;
+  // Updated: Allow previous pin tracking during war mode using kurukshetraWarData as well
+  const previousPin = isWarMode
+    ? (warDayIndex > 0 ? kurukshetraWarData[warDayIndex - 1]?.pins?.[0] : null)
+    : (!isWarMode && activeEra > 0 ? timelineData[activeEra - 1]?.pins?.[0] : null);
 
   return (
     <div className="relative w-[3840px] h-[2160px]">
@@ -43,7 +44,7 @@ function MapContent({
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
       <WarAtmosphereOverlay isWarMode={isWarMode} />
-      
+
       {/* Map Animation Overlay now lives inside the canvas container to track map scaling and panning */}
       <MapAnimationOverlay
         currentData={currentData}
@@ -69,7 +70,7 @@ function MapContent({
         ))}
 
         {/* 2. SLIDER-DRIVEN PINS */}
-        {currentData.pins.map((pin, index) => (
+        {currentData?.pins && currentData.pins.map((pin, index) => (
           <Place
             key={`slider-pin-${index}`}
             name={pin.name}
@@ -124,15 +125,15 @@ export default function Home() {
   const [isWarMode, setIsWarMode] = useState(false);
   const [warDayIndex, setWarDayIndex] = useState(0);
 
-  // Choose data source based on whether war mode is active
+  // Choose data source based on whether war mode is active (Preserve pins if they exist in kurukshetraWarData)
   const currentData = isWarMode
-    ? { ...kurukshetraWarData[warDayIndex], pins: [] }
+    ? kurukshetraWarData[warDayIndex]
     : timelineData[activeEra];
 
-  // Dynamic Map Subtle Pan & Center Focus Effect
+  // Dynamic Map Subtle Pan & Center Focus Effect (Triggers on warDayIndex changes too)
   useEffect(() => {
     const activePin =
-      currentData.pins && currentData.pins.length > 0
+      currentData?.pins && currentData.pins.length > 0
         ? currentData.pins[0]
         : null;
 
@@ -185,25 +186,40 @@ export default function Home() {
   };
 
   return (
-    <main className="w-full h-[100dvh] bg-slate-950 overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
+    <main className="w-full h-[100dvh] bg- overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
       {/* MAP CONTAINER */}
-      {/* MAP CONTAINER */}
+
       <div
         className="absolute inset-0 z-0 w-full h-full bg-slate-950 overflow-hidden"
         onMouseEnter={() => setIsMapHovered(true)}
         onMouseLeave={() => setIsMapHovered(false)}
       >
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Image
+            src="/map-background.png" 
+            alt="Ancient Leather Backdrop"
+            fill
+            priority
+            className="object-cover opacity-90"
+          />
+        </div>
         <TransformWrapper
           ref={transformComponentRef}
           initialScale={initialScale}
-          minScale={initialScale}
+          minScale={0.65}
           maxScale={4}
-          centerOnInit={false}
+          centerOnInit={true}
           limitToBounds={true}
-          landingAnimationType="easeOut"
+          alignmentAnimation={{ disabled: false }}
         >
           <TransformComponent
-            wrapperStyle={{ width: "100vw", height: "100vh", position: "absolute", inset: 0 }}
+            wrapperStyle={{
+              width: "100vw",
+              height: "100vh",
+              position: "absolute",
+              top: 0,
+              left: 0,
+            }}
             contentStyle={{ width: "3840px", height: "2160px" }}
           >
             <MapContent

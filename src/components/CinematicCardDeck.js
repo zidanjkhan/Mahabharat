@@ -94,7 +94,7 @@ export default function CinematicCardDeck({
       {isWarMode && (
         <button
           onClick={onSwitchBackToChapters}
-          className="absolute -left-30 px-4 py-3 bg-amber-950/85 hover:bg-amber-900 border border-amber-500/50 rounded-2xl text-amber-200 text-xs font-bold uppercase tracking-wider shadow-2xl backdrop-blur-xl transition cursor-pointer"
+          className="absolute -left-45 px-4 py-3 bg-amber-950/20 hover:bg-amber-900 border border-amber-500/50 rounded-2xl text-amber-200 text-xs font-bold uppercase tracking-wider shadow-2xl backdrop-blur-none transition cursor-pointer"
         >
           &larr; Exit War
         </button>
@@ -106,14 +106,14 @@ export default function CinematicCardDeck({
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className="relative flex items-center justify-center"
       >
-        {/* --- LEFT PREVIOUS ARROW --- */}
-        {!isWarMode && currentChapterIndex > 0 && (
+        {/* --- LEFT PREVIOUS ARROW (Enabled for both chapters and war mode) --- */}
+        {currentChapterIndex > 0 && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
             pointerEvents={isExpanded ? "none" : "auto"}
             {...makeSwitchHandler(currentChapterIndex - 1, -1)}
             className="absolute -left-16 w-10 h-10 rounded-2xl bg-slate-950/85 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-xl backdrop-blur-xl hover:bg-slate-900 hover:scale-110 transition-all cursor-pointer text-base font-bold z-30"
-            title="Previous Chapter"
+            title="Previous"
           >
             &larr;
           </motion.button>
@@ -235,11 +235,11 @@ export default function CinematicCardDeck({
                     {isWarMode ? currentItem.era : `Chapter ${currentChapterIndex + 1} / ${chapters.length}`}
                   </span>
                   <span className="text-[10px] text-slate-400 font-light tracking-wide italic">
-                    Slide down to close / Click for sidebar
+                    Slide down to close / Click for full story
                   </span>
                 </div>
 
-                {/* Adaptive Cinematic Image Frame (Adjusted max-height to prevent button overflow) */}
+                {/* Adaptive Cinematic Image Frame */}
                 <div className="w-full flex justify-center my-1">
                   <div className="rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_10px_25px_rgba(0,0,0,0.8)] bg-black inline-block max-w-full group/img">
                     {hasImage(currentItem.cardImg || currentItem.image) && (
@@ -273,14 +273,14 @@ export default function CinematicCardDeck({
           )}
         </motion.div>
 
-        {/* --- RIGHT NEXT ARROW --- */}
-        {!isWarMode && currentChapterIndex < chapters.length - 1 && (
+        {/* --- RIGHT NEXT ARROW (Enabled for both chapters and war mode) --- */}
+        {currentChapterIndex < chapters.length - 1 && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
             pointerEvents={isExpanded ? "none" : "auto"}
             {...makeSwitchHandler(currentChapterIndex + 1, 1)}
             className="absolute -right-16 w-10 h-10 rounded-2xl bg-slate-950/85 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-xl backdrop-blur-xl hover:bg-slate-900 hover:scale-110 transition-all cursor-pointer text-base font-bold z-30"
-            title="Next Chapter"
+            title="Next"
           >
             &rarr;
           </motion.button>
