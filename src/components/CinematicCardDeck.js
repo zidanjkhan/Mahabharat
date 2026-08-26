@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -14,6 +14,7 @@ export default function CinematicCardDeck({
   onEnterWar,
   onSwitchBackToChapters,
   onOpenSidebar,
+  onExpandChange,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [slideDir, setSlideDir] = useState(0);
@@ -84,6 +85,12 @@ export default function CinematicCardDeck({
       setIsExpanded(false);
     }
   };
+
+  useEffect(() => {
+    if (onExpandChange) {
+      onExpandChange(isExpanded);
+    }
+  }, [isExpanded, onExpandChange]);
 
   return (
     <div 

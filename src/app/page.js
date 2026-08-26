@@ -63,7 +63,6 @@ function MapContent({
             left={pin.left}
             size={pin.size}
             color={pin.color}
-            onClick={() => setShowSidebar(true)}
             onMouseEnter={() => setHoveredRegion(pin)}
             onMouseLeave={() => setHoveredRegion(null)}
           />
@@ -78,7 +77,6 @@ function MapContent({
             left={pin.left}
             size={pin.size}
             color={pin.color}
-            onClick={() => setShowSidebar(true)}
             onMouseEnter={() => setHoveredRegion(pin)}
             onMouseLeave={() => setHoveredRegion(null)}
           />
@@ -103,6 +101,7 @@ export default function Home() {
   const [initialScale, setInitialScale] = useState(0.5);
 
   const transformComponentRef = useRef(null);
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
 
   // Dynamically calculate scale so the massive map fits mobile screens perfectly on load
   useEffect(() => {
@@ -130,7 +129,7 @@ export default function Home() {
     ? kurukshetraWarData[warDayIndex]
     : timelineData[activeEra];
 
-  // Dynamic Map Subtle Pan & Center Focus Effect (Triggers on warDayIndex changes too)
+  // Dynamic Map Pan & Focus Effect (Separate mobile layout adjustment for top-offset & broader zoom-out)
   useEffect(() => {
     const activePin =
       currentData?.pins && currentData.pins.length > 0
@@ -146,17 +145,21 @@ export default function Home() {
       const pinPixelX = (activePin.left / 100) * mapWidth;
       const pinPixelY = (activePin.top / 100) * mapHeight;
 
-      const targetScale = 0.85;
+      const isPhone = window.innerWidth < 1024;
+
+      // Make targetScale wider/more zoomed-out on mobile so animations have breathing room
+      const targetScale = 0.75;
 
       const windowX = window.innerWidth / 2;
-      const windowY = window.innerHeight / 2;
+      // If it's a phone, shift windowY higher up (e.g., 28% from top instead of 50% center) so the pin rests higher
+      const windowY = isCardExpanded ? window.innerHeight * 0.27 : window.innerHeight / 2;
 
       const targetX = windowX - pinPixelX * targetScale;
       const targetY = windowY - pinPixelY * targetScale;
 
       setTransform(targetX, targetY, targetScale, 5000, "easeOut");
     }
-  }, [activeEra, warDayIndex, isWarMode]);
+  }, [activeEra, warDayIndex, isWarMode, isCardExpanded]);
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
@@ -206,7 +209,7 @@ export default function Home() {
         <TransformWrapper
           ref={transformComponentRef}
           initialScale={initialScale}
-          minScale={0.65}
+          minScale={0.45}
           maxScale={4}
           centerOnInit={true}
           limitToBounds={true}
@@ -305,6 +308,7 @@ export default function Home() {
         }}
         onSwitchBackToChapters={() => setIsWarMode(false)}
         onOpenSidebar={() => setShowSidebar(true)}
+        onExpandChange={setIsCardExpanded}
       />
 
       <ChapterDrawer
