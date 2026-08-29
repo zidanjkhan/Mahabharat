@@ -66,18 +66,34 @@ export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
         {/* 1.1 Chapters Button (Top - Reduced) */}
         <button
           onClick={(e) => { e.stopPropagation(); handleButtonPress("chapters", () => setShowDrawer(true)); }}
-          className={`relative group bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-xl border-y-2 border-r-2 border-l-0 shadow-[inset_0_2px_5px_rgba(255,255,255,0.1),_0_10px_30px_rgba(0,0,0,1)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
-            activeButton === "chapters" ? "w-48 h-14 rounded-r-full border-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.5)]" : "w-14 h-17 rounded-r-full border-amber-700 hover:w-35 hover:h-17 hover:border-amber-500 hover:shadow-[0_0_25px_rgba(245,158,11,0.3)]"
+          className={`relative group bg-gradient-to-r from-slate-900/40 via-slate-900/70 to-slate-900 backdrop-blur-none shadow-[inset_0_2px_5px_rgba(255,255,255,0.1),_0_10px_30px_rgba(0,0,0,1)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
+            activeButton === "chapters" ? "w-48 h-14 rounded-r-full shadow-[0_0_30px_rgba(245,158,11,0.5)]" : "w-14 h-17 rounded-r-full hover:w-35 hover:h-17 hover:shadow-[0_0_25px_rgba(245,158,11,0.3)]"
           } ${isArmoryOpen ? "opacity-0 pointer-events-none absolute" : ""}`}
         >
-          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "chapters" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
+          {/* Static Thin Border */}
+          <div className={`absolute inset-0 rounded-r-full pointer-events-none border-y border-r border-l-0 transition-colors duration-700 ${activeButton === "chapters" ? "border-amber-500" : "border-amber-700/30 group-hover:border-amber-500"}`} />
+
+          {/* Sharp Animated Trail (Starts at 0deg, 4s spin) */}
+          <div 
+            className="absolute inset-0 rounded-r-full pointer-events-none z-0"
+            style={{
+              padding: "2px 3px 1px 0px",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 w-[300%] aspect-square -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_75%,#fbbf24_100%)]" />
+          </div>
+
+          <div className={`absolute inset-0 mr-3 flex items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "chapters" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
             <span className="text-lg text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">📜</span>
           </div>
           <div className={`absolute top-0 left-0 w-30 h-17 flex items-center transition-opacity duration-500 delay-200 ease-in ${activeButton === "chapters" ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
             <div className="w-12 flex items-center justify-center flex-shrink-0">
                <span className="text-lg text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">📜</span>
             </div>
-            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4">
+            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4 z-10">
               <span className="text-xs font-serif font-bold text-amber-300 tracking-wider uppercase">Chapters</span>
               <span className="text-[9px] font-sans text-slate-400 tracking-widest uppercase">Chronicles</span>
             </div>
@@ -87,11 +103,27 @@ export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
         {/* 1.2 Dynasty Lineage Button (Middle - Increased 15%) */}
         <button
           onClick={(e) => { e.stopPropagation(); handleButtonPress("familyTree", () => setShowFamilyTree(true)); }}
-          className={`relative group bg-gradient-to-r from-[#1c1106] via-slate-800 to-slate-900 backdrop-blur-xl border-y-2 border-r-2 border-l-0 shadow-[inset_0_2px_5px_rgba(255,255,255,0.2),_0_0_15px_rgba(245,158,11,0.2)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
-            activeButton === "familyTree" ? "w-72 h-24 rounded-r-full border-amber-300 shadow-[0_0_40px_rgba(245,158,11,0.7)]" : "w-20 h-32 rounded-r-full border-amber-500 hover:w-68 hover:h-24 hover:border-amber-400 hover:shadow-[0_0_35px_rgba(245,158,11,0.5)]"
+          className={`relative group bg-gradient-to-r from-[#1c110685] via-slate-800/70 to-slate-900 shadow-[inset_0_2px_5px_rgba(255,255,255,0.2),_0_0_15px_rgba(245,158,11,0.2)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
+            activeButton === "familyTree" ? "w-72 h-24 rounded-r-full shadow-[0_0_40px_rgba(245,158,11,0.7)]" : "w-20 h-32 rounded-r-full hover:w-68 hover:h-24 hover:shadow-[0_0_35px_rgba(245,158,11,0.5)]"
           } ${isArmoryOpen ? "opacity-0 pointer-events-none absolute" : ""}`}
         >
-          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "familyTree" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
+          {/* Static Thin Border */}
+          <div className={`absolute inset-0 rounded-r-full pointer-events-none border-y border-r border-l-0 transition-colors duration-700 ${activeButton === "familyTree" ? "border-amber-300" : "border-amber-700/30 group-hover:border-amber-400"}`} />
+
+          {/* Sharp Animated Trail (Golden, Starts at 120deg, 5s spin) */}
+          <div 
+            className="absolute inset-0 rounded-r-full pointer-events-none z-0"
+            style={{
+              padding: "2px 3px 1px 0px",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 w-[300%] aspect-square -translate-x-1/2 -translate-y-1/2 animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_120deg,transparent_75%,#fcd34d_100%)]" />
+          </div>
+
+          <div className={`absolute inset-0 mr-4 flex items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "familyTree" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
             <svg className="w-8 h-8 text-amber-300 drop-shadow-[0_0_12px_rgba(251,191,36,1)]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
               <circle cx="12" cy="5" r="3"></circle>
               <circle cx="6" cy="16" r="3"></circle>
@@ -110,7 +142,7 @@ export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
                  <path d="M13.5 7.5L16 13.5"></path>
                </svg>
             </div>
-            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4">
+            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4 z-10">
               <span className="text-[14px] font-serif font-bold text-amber-300 tracking-widest uppercase drop-shadow-sm">Dynasty Lineage</span>
               <span className="text-[11px] font-sans text-amber-500/80 tracking-widest uppercase">Royal Bloodlines</span>
             </div>
@@ -126,18 +158,34 @@ export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
               else setIsArmoryOpen(true);
             });
           }}
-          className={`relative group bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-xl border-y-2 border-r-2 border-l-0 shadow-[inset_0_2px_5px_rgba(255,255,255,0.1),_0_10px_30px_rgba(0,0,0,1)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
-            activeButton === "arsenal" ? "w-48 h-14 rounded-r-full border-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.5)]" : "w-14 h-17 rounded-r-full border-amber-700 hover:w-50 hover:h-17 hover:border-amber-500 hover:shadow-[0_0_25px_rgba(245,158,11,0.3)]"
+          className={`relative group bg-gradient-to-r from-slate-900/40 via-slate-900/70 to-slate-900 shadow-[inset_0_2px_5px_rgba(255,255,255,0.1),_0_10px_30px_rgba(0,0,0,1)] transition-all duration-700 ease-in-out overflow-hidden cursor-pointer pointer-events-auto ${
+            activeButton === "arsenal" ? "w-48 h-14 rounded-r-full shadow-[0_0_30px_rgba(245,158,11,0.5)]" : "w-14 h-17 rounded-r-full hover:w-50 hover:h-17 hover:shadow-[0_0_25px_rgba(245,158,11,0.3)]"
           } ${isArmoryOpen ? "opacity-0 scale-50 pointer-events-none absolute" : ""}`}
         >
-          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "arsenal" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
+          {/* Static Thin Border */}
+          <div className={`absolute inset-0 rounded-r-full pointer-events-none border-y border-r border-l-0 transition-colors duration-700 ${activeButton === "arsenal" ? "border-amber-700" : "border-amber-700/30 group-hover:border-amber-500"}`} />
+
+          {/* Sharp Animated Trail (Starts at 240deg, 4.5s spin) */}
+          <div 
+            className="absolute inset-0 rounded-r-full pointer-events-none z-0"
+            style={{
+              padding: "2px 3px 1px 0px",
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude"
+            }}
+          >
+            <div className="absolute top-1/2 left-1/2 w-[300%] aspect-square -translate-x-1/2 -translate-y-1/2 animate-[spin_4.5s_linear_infinite] bg-[conic-gradient(from_240deg,transparent_75%,#fbbf24_100%)]" />
+          </div>
+
+          <div className={`absolute inset-0 flex mr-3 items-center justify-center transition-opacity duration-300 ease-out ${activeButton === "arsenal" ? "opacity-0" : "opacity-100 group-hover:opacity-0"}`}>
             <span className="text-lg text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">⚔️</span>
           </div>
           <div className={`absolute top-0 left-0 w-48 h-14 flex items-center transition-opacity duration-500 delay-200 ease-in ${activeButton === "arsenal" ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
             <div className="w-12 flex items-center justify-center flex-shrink-0">
                <span className="text-lg text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">⚔️</span>
             </div>
-            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4">
+            <div className="flex flex-col justify-center whitespace-nowrap text-left pr-4 z-10">
               <span className="text-xs font-serif font-bold text-amber-300 tracking-wider uppercase">Ancient Arsenal</span>
               <span className="text-[9px] font-sans text-slate-400 tracking-widest uppercase">Legendary Astras</span>
             </div>
