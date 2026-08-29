@@ -15,6 +15,7 @@ import CinematicCardDeck from "../components/CinematicCardDeck";
 import ChapterDrawer from "../components/ChapterDrawer";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapAnimationOverlay from "@/components/MapAnimationOverlay";
+import IntroAnimation from "../components/IntroAnimation";
 
 import { timelineData } from "../data/scriptures";
 import { mapLocations } from "../data/mapLocations";
@@ -29,31 +30,34 @@ function MapContent({
   isWarMode,
   activeEra,
   warDayIndex,
+  isIntroPlaying
 }) {
-  // Updated: Allow previous pin tracking during war mode using kurukshetraWarData as well
   const previousPin = isWarMode
     ? (warDayIndex > 0 ? kurukshetraWarData[warDayIndex - 1]?.pins?.[0] : null)
     : (!isWarMode && activeEra > 0 ? timelineData[activeEra - 1]?.pins?.[0] : null);
 
   return (
     <div className="relative w-[3840px] h-[2160px]">
+      
+      {/* THE MAP IMAGE */}
       <img
         src="/MainMap1.png"
         alt="Map of Aryavarta"
         className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-125 saturate-50"
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
+      
       <WarAtmosphereOverlay isWarMode={isWarMode} />
 
-      {/* Map Animation Overlay now lives inside the canvas container to track map scaling and panning */}
-      <MapAnimationOverlay
-        currentData={currentData}
-        previousPin={previousPin}
-        isWarMode={isWarMode}
-        warDayIndex={warDayIndex}
-      />
+      {/* Pins and Overlays (Faded out during the intro sketch phase) */}
+      <div className={`absolute inset-0 z-10 transition-opacity duration-[2000ms] ease-in ${isIntroPlaying ? "opacity-0" : "opacity-100"}`}>
+        <MapAnimationOverlay
+          currentData={currentData}
+          previousPin={previousPin}
+          isWarMode={isWarMode}
+          warDayIndex={warDayIndex}
+        />
 
-      <div className="absolute inset-0 z-10">
         {/* 1. INDEPENDENT MAP HOVER LOCATIONS */}
         {mapLocations.map((pin) => (
           <MapHoverPin
@@ -87,6 +91,8 @@ function MapContent({
 }
 
 export default function Home() {
+  const [introState, setIntroState] = useState("waiting");
+
   const [activeEra, setActiveEra] = useState(0);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -103,7 +109,6 @@ export default function Home() {
   const transformComponentRef = useRef(null);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
 
-  // Dynamically calculate scale so the massive map fits mobile screens perfectly on load
   useEffect(() => {
     const updateScale = () => {
       const width = window.innerWidth;
@@ -120,17 +125,15 @@ export default function Home() {
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  // KURUKSHETRA WAR MODE STATE
   const [isWarMode, setIsWarMode] = useState(false);
   const [warDayIndex, setWarDayIndex] = useState(0);
 
-  // Choose data source based on whether war mode is active (Preserve pins if they exist in kurukshetraWarData)
   const currentData = isWarMode
     ? kurukshetraWarData[warDayIndex]
     : timelineData[activeEra];
 
-  // Dynamic Map Pan & Focus Effect (Separate mobile layout adjustment for top-offset & broader zoom-out)
   useEffect(() => {
+    if (introState === "waiting") return;
     const activePin =
       currentData?.pins && currentData.pins.length > 0
         ? currentData.pins[0]
@@ -146,12 +149,8 @@ export default function Home() {
       const pinPixelY = (activePin.top / 100) * mapHeight;
 
       const isPhone = window.innerWidth < 1024;
-
-      // Make targetScale wider/more zoomed-out on mobile so animations have breathing room
       const targetScale = 0.75;
-
       const windowX = window.innerWidth / 2;
-      // If it's a phone, shift windowY higher up (e.g., 28% from top instead of 50% center) so the pin rests higher
       const windowY = isCardExpanded ? window.innerHeight * 0.27 : window.innerHeight / 2;
 
       const targetX = windowX - pinPixelX * targetScale;
@@ -159,7 +158,7 @@ export default function Home() {
 
       setTransform(targetX, targetY, targetScale, 5000, "easeOut");
     }
-  }, [activeEra, warDayIndex, isWarMode, isCardExpanded]);
+  }, [activeEra, warDayIndex, isWarMode, isCardExpanded, introState]);
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
@@ -190,8 +189,16 @@ export default function Home() {
 
   return (
     <main className="w-full h-[100dvh] bg- overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
-      {/* MAP CONTAINER */}
+      
+      {/* CINEMATIC INTRO OVERLAY */}
+      {introState !== "finished" && (
+        <IntroAnimation 
+          onStart={() => setIntroState("playing")} 
+          onComplete={() => setIntroState("finished")} 
+        />
+      )}
 
+      {/* MAP CONTAINER */}
       <div
         className="absolute inset-0 z-0 w-full h-full bg-slate-950 overflow-hidden"
         onMouseEnter={() => setIsMapHovered(true)}
@@ -232,12 +239,12 @@ export default function Home() {
               isWarMode={isWarMode}
               activeEra={activeEra}
               warDayIndex={warDayIndex}
+              isIntroPlaying={introState !== "finished"} 
             />
           </TransformComponent>
         </TransformWrapper>
       </div>
 
-      {/* BACKGROUND CLICK DETECTOR TO CLOSE DRAWER WHEN CLICKING OUTSIDE */}
       {isDrawerOpen && (
         <div
           className="absolute inset-0 z-35 bg-transparent pointer-events-auto"
@@ -245,106 +252,106 @@ export default function Home() {
         />
       )}
 
-      <RegionLorePanel
-        selectedRegion={hoveredRegion}
-        setHoveredRegion={setHoveredRegion}
-      />
+      {/* THE UI LAYER */}
+      <div className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-[2000ms] ease-in-out ${introState !== "finished" ? "opacity-0" : "opacity-100"}`}>
+        <RegionLorePanel
+          selectedRegion={hoveredRegion}
+          setHoveredRegion={setHoveredRegion}
+        />
 
-      <Navbar
-        isMapHovered={isMapHovered}
-        showSidebar={showSidebar}
-        showPopup={showPopup}
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
+        <Navbar
+          isMapHovered={isMapHovered}
+          showSidebar={showSidebar}
+          showPopup={showPopup}
+          onOpenSearch={() => setIsSearchOpen(true)}
+        />
 
-      {/* FLOATING MENU */}
-      <FloatingMenu
-        setShowFamilyTree={setShowFamilyTree}
-        setShowDrawer={setIsDrawerOpen}
-      />
+        <FloatingMenu
+          setShowFamilyTree={setShowFamilyTree}
+          setShowDrawer={setIsDrawerOpen}
+        />
 
-      {/* SIDEBAR */}
-      <Sidebar
-        showSidebar={showSidebar}
-        setShowSidebar={setShowSidebar}
-        showPopup={showPopup}
-        setShowPopup={setShowPopup}
-        currentData={currentData}
-        isWarMode={isWarMode}
-        hasPrevChapter={activeEra > 0}
-        hasNextChapter={activeEra < timelineData.length - 1}
-        onPrevChapter={() => {
-          if (activeEra > 0) {
-            setActiveEra(activeEra - 1);
-            setShowPopup(false);
-          }
-        }}
-        onNextChapter={() => {
-          if (activeEra < timelineData.length - 1) {
-            setActiveEra(activeEra + 1);
-            setShowPopup(false);
-          }
-        }}
-        onOpenKurukshetra={(dayIdx = 0) => {
-          setIsWarMode(true);
-          setWarDayIndex(dayIdx);
-          setShowSidebar(true);
-        }}
-        onSwitchBackToChapters={() => {
-          setIsWarMode(false);
-          setActiveEra(0);
-        }}
-      />
+        <Sidebar
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          showPopup={showPopup}
+          setShowPopup={setShowPopup}
+          currentData={currentData}
+          isWarMode={isWarMode}
+          hasPrevChapter={activeEra > 0}
+          hasNextChapter={activeEra < timelineData.length - 1}
+          onPrevChapter={() => {
+            if (activeEra > 0) {
+              setActiveEra(activeEra - 1);
+              setShowPopup(false);
+            }
+          }}
+          onNextChapter={() => {
+            if (activeEra < timelineData.length - 1) {
+              setActiveEra(activeEra + 1);
+              setShowPopup(false);
+            }
+          }}
+          onOpenKurukshetra={(dayIdx = 0) => {
+            setIsWarMode(true);
+            setWarDayIndex(dayIdx);
+            setShowSidebar(true);
+          }}
+          onSwitchBackToChapters={() => {
+            setIsWarMode(false);
+            setActiveEra(0);
+          }}
+        />
 
-      {/* CINEMATIC CARD DECK AT THE BOTTOM */}
-      <CinematicCardDeck
-        chapters={isWarMode ? kurukshetraWarData : timelineData}
-        currentChapterIndex={isWarMode ? warDayIndex : activeEra}
-        onSelectChapter={handleSelectChapter}
-        isWarMode={isWarMode}
-        onEnterWar={() => {
-          setIsWarMode(true);
-          setWarDayIndex(0);
-        }}
-        onSwitchBackToChapters={() => setIsWarMode(false)}
-        onOpenSidebar={() => setShowSidebar(true)}
-        onExpandChange={setIsCardExpanded}
-      />
+        <CinematicCardDeck
+          chapters={isWarMode ? kurukshetraWarData : timelineData}
+          currentChapterIndex={isWarMode ? warDayIndex : activeEra}
+          onSelectChapter={handleSelectChapter}
+          isWarMode={isWarMode}
+          onEnterWar={() => {
+            setIsWarMode(true);
+            setWarDayIndex(0);
+          }}
+          onSwitchBackToChapters={() => setIsWarMode(false)}
+          onOpenSidebar={() => setShowSidebar(true)}
+          onExpandChange={setIsCardExpanded}
+        />
 
-      <ChapterDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        isWarMode={isWarMode}
-        chapters={isWarMode ? kurukshetraWarData : timelineData}
-        currentChapterIndex={isWarMode ? warDayIndex : activeEra}
-        onSelectChapter={(index) => {
-          handleDrawerSelectChapter(index);
-        }}
-        onEnterWar={() => {
-          setIsWarMode(true);
-          setWarDayIndex(0);
-          setIsDrawerOpen(false);
-          setShowSidebar(false);
-        }}
-        onExitWar={() => {
-          setIsWarMode(false);
-          setIsDrawerOpen(false);
-          setShowSidebar(false);
-        }}
-      />
+        <ChapterDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          isWarMode={isWarMode}
+          chapters={isWarMode ? kurukshetraWarData : timelineData}
+          currentChapterIndex={isWarMode ? warDayIndex : activeEra}
+          onSelectChapter={(index) => {
+            handleDrawerSelectChapter(index);
+          }}
+          onEnterWar={() => {
+            setIsWarMode(true);
+            setWarDayIndex(0);
+            setIsDrawerOpen(false);
+            setShowSidebar(false);
+          }}
+          onExitWar={() => {
+            setIsWarMode(false);
+            setIsDrawerOpen(false);
+            setShowSidebar(false);
+          }}
+        />
 
-      <FamilyTreeModal
-        showFamilyTree={showFamilyTree}
-        setShowFamilyTree={setShowFamilyTree}
-        selectedCharacter={selectedCharacter}
-        setSelectedCharacter={setSelectedCharacter}
-      />
+        <FamilyTreeModal
+          showFamilyTree={showFamilyTree}
+          setShowFamilyTree={setShowFamilyTree}
+          selectedCharacter={selectedCharacter}
+          setSelectedCharacter={setSelectedCharacter}
+        />
 
-      <GlobalSearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSelectResult={handleSearchResultSelect}
-      />
+        <GlobalSearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+          onSelectResult={handleSearchResultSelect}
+        />
+      </div>
     </main>
   );
 }

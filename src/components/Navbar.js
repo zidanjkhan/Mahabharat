@@ -69,14 +69,17 @@ export default function Navbar({
           <div className="absolute inset-0 opacity-20 rounded-b-[60px] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
 
           {/* Visible Sheen Sweep */}
-          <div 
-            className="absolute inset-0 overflow-hidden pointer-events-none"
-          >
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-b-[60px] z-20">
             <motion.div
-              initial={{ x: "-150%" }}
+              initial={{ x: "-100%" }}
               animate={{ x: "200%" }}
-              transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
-              className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
+              transition={{
+                repeat: Infinity,
+                duration: 2.2,
+                ease: "easeInOut",
+                repeatDelay: 2,
+              }}
+              className="h-full w-full bg-gradient-to-r from-transparent via-amber-200/35 via-white/45 to-transparent -skew-x-25"
             />
           </div>
 
