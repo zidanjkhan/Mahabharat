@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import Place from "../components/Place";
 import MapHoverPin from "../components/MapHoverPin";
 import Sidebar from "../components/Sidebar";
@@ -13,6 +14,8 @@ import RegionLorePanel from "../components/RegionLorePanel";
 import GlobalSearchModal from "../components/GlobalSearchModal";
 import CinematicCardDeck from "../components/CinematicCardDeck";
 import ChapterDrawer from "../components/ChapterDrawer";
+import { weaponsData } from "@/data/weaponsData";
+
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import MapAnimationOverlay from "@/components/MapAnimationOverlay";
 import IntroAnimation from "../components/IntroAnimation";
@@ -103,6 +106,9 @@ export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  const [selectedWeapon, setSelectedWeapon] = useState(null); 
+  const [isArmoryOpen, setIsArmoryOpen] = useState(false);
+
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [initialScale, setInitialScale] = useState(0.5);
 
@@ -161,16 +167,38 @@ export default function Home() {
   }, [activeEra, warDayIndex, isWarMode, isCardExpanded, introState]);
 
   const handleSearchResultSelect = (item) => {
+    // CHAPTER Handling
     if (item.type === "chapter") {
       setActiveEra(item.index);
       setIsWarMode(false);
       setShowSidebar(true);
       setShowPopup(false);
-    } else if (item.type === "location") {
+      setIsSearchOpen(false); // Close search
+    } 
+    // WAR DAY Handling (Kurukshetra)
+    else if (item.type === "war-day") {
+      setIsWarMode(true); // Switch map to War Mode
+      setWarDayIndex(item.index); // Open the specific day
+      setShowSidebar(true); // Open the main sidebar to show the lore
+      setShowPopup(false);
+      setIsSearchOpen(false); // Close search
+    } 
+    // LOCATION Handling
+    else if (item.type === "location") {
       setHoveredRegion(item.data);
-    } else if (item.type === "character") {
+      setIsSearchOpen(false); // Close search
+    } 
+    // CHARACTER Handling (Family Tree)
+    else if (item.type === "character") {
       setSelectedCharacter(item.data);
       setShowFamilyTree(true);
+      setIsSearchOpen(false); // Close search
+    } 
+    // WEAPON/ASTRA Handling (New Modal)
+    else if (item.type === "weapon") {
+      setSelectedWeapon(item.data); // Set the specific weapon data
+      setIsArmoryOpen(true); // Open the weapon modal
+      setIsSearchOpen(false); // Close search
     }
   };
 
@@ -276,6 +304,10 @@ export default function Home() {
           <FloatingMenu
             setShowFamilyTree={setShowFamilyTree}
             setShowDrawer={setIsDrawerOpen}
+            isArmoryOpen={isArmoryOpen}
+            setIsArmoryOpen={setIsArmoryOpen}
+            selectedWeapon={selectedWeapon}
+            setSelectedWeapon={setSelectedWeapon}
           />
         </div>
 

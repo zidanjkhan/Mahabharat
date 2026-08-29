@@ -11,10 +11,18 @@ import {
 } from "framer-motion";
 import { weaponsData } from "../data/weaponsData";
 
-export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
+export default function FloatingMenu({ 
+  setShowFamilyTree, 
+  setShowDrawer,
+  // 👇 NEW: Accepting these from page.js instead of using local state
+  isArmoryOpen,
+  setIsArmoryOpen,
+  selectedWeapon,
+  setSelectedWeapon
+}) {
   const [activeButton, setActiveButton] = useState(null);
-  const [isArmoryOpen, setIsArmoryOpen] = useState(false);
-  const [selectedWeapon, setSelectedWeapon] = useState(null);
+  
+  // REMOVED: isArmoryOpen and selectedWeapon are no longer local states here.
 
   // --- PHYSICS ENGINE FOR THE WHEEL SPIN ---
   const rotation = useMotionValue(0);
@@ -233,11 +241,9 @@ export default function FloatingMenu({ setShowFamilyTree, setShowDrawer }) {
                   }}
                   transition={{ duration: 0.5 }}
                   // Deepened the blur and shadow for a heavier glass look
-
                   className="absolute inset-0 rounded-full pointer-events-auto bg-black/60 shadow-[inset_0_0_950px_90px_rgba(0,0,0,0.9),_0_30px_60px_rgba(0,0,0,0)]"
                   style={{
                     cursor: "grab",
-
                     border: "3px solid rgba(139, 90, 43, 0.7)", // Thinner, sharper metallic border
                   }}
                 >

@@ -2,6 +2,8 @@
 import { timelineData } from "./scriptures";
 import { mapLocations } from "./mapLocations";
 import { familyTreeData } from "./familyTree";
+import { kurukshetraWarData } from "./kurukshetraData"; 
+import { weaponsData } from "./weaponsData"; 
 
 export function getSearchableItems() {
   const items = [];
@@ -42,6 +44,32 @@ export function getSearchableItems() {
           });
         });
       }
+    });
+  }
+
+  // 4. Index Kurukshetra War Days
+  if (Array.isArray(kurukshetraWarData)) {
+    kurukshetraWarData.forEach((day, index) => {
+      items.push({
+        id: `war-day-${index}`,
+        type: "war-day",
+        title: day.title, // e.g., "Duryodhana's Fall & The End of War"
+        subtitle: `Kurukshetra War — ${day.era}`, // e.g., "Kurukshetra War — Day 18"
+        index: index, // Passes the index so page.js knows which day to open
+      });
+    });
+  }
+
+  // 5. Index Astras and Divine Weapons
+  if (Array.isArray(weaponsData)) {
+    weaponsData.forEach((weapon) => {
+      items.push({
+        id: `weapon-${weapon.id}`, // Pulls the exact string ID (e.g., "vajra")
+        type: "weapon",
+        title: weapon.name, // e.g., "Vajra"
+        subtitle: `${weapon.type} — Wielded by ${weapon.wielder}`, // e.g., "Divine Weapon — Wielded by Indra / Arjuna"
+        data: weapon, // Passes the full weapon object for your modal
+      });
     });
   }
 
