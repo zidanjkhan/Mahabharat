@@ -49,7 +49,7 @@ function MapContent({
       
       <WarAtmosphereOverlay isWarMode={isWarMode} />
 
-      {/* Pins and Overlays (Faded out during the intro sketch phase) */}
+      {/* Pins and Overlays */}
       <div className={`absolute inset-0 z-10 transition-opacity duration-[2000ms] ease-in ${isIntroPlaying ? "opacity-0" : "opacity-100"}`}>
         <MapAnimationOverlay
           currentData={currentData}
@@ -254,103 +254,121 @@ export default function Home() {
 
       {/* THE UI LAYER */}
       <div className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-[2000ms] ease-in-out ${introState !== "finished" ? "opacity-0" : "opacity-100"}`}>
-        <RegionLorePanel
-          selectedRegion={hoveredRegion}
-          setHoveredRegion={setHoveredRegion}
-        />
+        
+        {/* We wrap each UI component to force them to be clickable again */}
+        <div className="pointer-events-auto">
+          <RegionLorePanel
+            selectedRegion={hoveredRegion}
+            setHoveredRegion={setHoveredRegion}
+          />
+        </div>
 
-        <Navbar
-          isMapHovered={isMapHovered}
-          showSidebar={showSidebar}
-          showPopup={showPopup}
-          onOpenSearch={() => setIsSearchOpen(true)}
-        />
+        <div className="pointer-events-auto">
+          <Navbar
+            isMapHovered={isMapHovered}
+            showSidebar={showSidebar}
+            showPopup={showPopup}
+            onOpenSearch={() => setIsSearchOpen(true)}
+          />
+        </div>
 
-        <FloatingMenu
-          setShowFamilyTree={setShowFamilyTree}
-          setShowDrawer={setIsDrawerOpen}
-        />
+        <div className="pointer-events-auto">
+          <FloatingMenu
+            setShowFamilyTree={setShowFamilyTree}
+            setShowDrawer={setIsDrawerOpen}
+          />
+        </div>
 
-        <Sidebar
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-          showPopup={showPopup}
-          setShowPopup={setShowPopup}
-          currentData={currentData}
-          isWarMode={isWarMode}
-          hasPrevChapter={activeEra > 0}
-          hasNextChapter={activeEra < timelineData.length - 1}
-          onPrevChapter={() => {
-            if (activeEra > 0) {
-              setActiveEra(activeEra - 1);
-              setShowPopup(false);
-            }
-          }}
-          onNextChapter={() => {
-            if (activeEra < timelineData.length - 1) {
-              setActiveEra(activeEra + 1);
-              setShowPopup(false);
-            }
-          }}
-          onOpenKurukshetra={(dayIdx = 0) => {
-            setIsWarMode(true);
-            setWarDayIndex(dayIdx);
-            setShowSidebar(true);
-          }}
-          onSwitchBackToChapters={() => {
-            setIsWarMode(false);
-            setActiveEra(0);
-          }}
-        />
+        <div className="pointer-events-auto">
+          <Sidebar
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+            showPopup={showPopup}
+            setShowPopup={setShowPopup}
+            currentData={currentData}
+            isWarMode={isWarMode}
+            hasPrevChapter={activeEra > 0}
+            hasNextChapter={activeEra < timelineData.length - 1}
+            onPrevChapter={() => {
+              if (activeEra > 0) {
+                setActiveEra(activeEra - 1);
+                setShowPopup(false);
+              }
+            }}
+            onNextChapter={() => {
+              if (activeEra < timelineData.length - 1) {
+                setActiveEra(activeEra + 1);
+                setShowPopup(false);
+              }
+            }}
+            onOpenKurukshetra={(dayIdx = 0) => {
+              setIsWarMode(true);
+              setWarDayIndex(dayIdx);
+              setShowSidebar(true);
+            }}
+            onSwitchBackToChapters={() => {
+              setIsWarMode(false);
+              setActiveEra(0);
+            }}
+          />
+        </div>
 
-        <CinematicCardDeck
-          chapters={isWarMode ? kurukshetraWarData : timelineData}
-          currentChapterIndex={isWarMode ? warDayIndex : activeEra}
-          onSelectChapter={handleSelectChapter}
-          isWarMode={isWarMode}
-          onEnterWar={() => {
-            setIsWarMode(true);
-            setWarDayIndex(0);
-          }}
-          onSwitchBackToChapters={() => setIsWarMode(false)}
-          onOpenSidebar={() => setShowSidebar(true)}
-          onExpandChange={setIsCardExpanded}
-        />
+        <div className="pointer-events-auto">
+          <CinematicCardDeck
+            chapters={isWarMode ? kurukshetraWarData : timelineData}
+            currentChapterIndex={isWarMode ? warDayIndex : activeEra}
+            onSelectChapter={handleSelectChapter}
+            isWarMode={isWarMode}
+            onEnterWar={() => {
+              setIsWarMode(true);
+              setWarDayIndex(0);
+            }}
+            onSwitchBackToChapters={() => setIsWarMode(false)}
+            onOpenSidebar={() => setShowSidebar(true)}
+            onExpandChange={setIsCardExpanded}
+          />
+        </div>
 
-        <ChapterDrawer
-          isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          isWarMode={isWarMode}
-          chapters={isWarMode ? kurukshetraWarData : timelineData}
-          currentChapterIndex={isWarMode ? warDayIndex : activeEra}
-          onSelectChapter={(index) => {
-            handleDrawerSelectChapter(index);
-          }}
-          onEnterWar={() => {
-            setIsWarMode(true);
-            setWarDayIndex(0);
-            setIsDrawerOpen(false);
-            setShowSidebar(false);
-          }}
-          onExitWar={() => {
-            setIsWarMode(false);
-            setIsDrawerOpen(false);
-            setShowSidebar(false);
-          }}
-        />
+        <div className="pointer-events-auto">
+          <ChapterDrawer
+            isOpen={isDrawerOpen}
+            onClose={() => setIsDrawerOpen(false)}
+            isWarMode={isWarMode}
+            chapters={isWarMode ? kurukshetraWarData : timelineData}
+            currentChapterIndex={isWarMode ? warDayIndex : activeEra}
+            onSelectChapter={(index) => {
+              handleDrawerSelectChapter(index);
+            }}
+            onEnterWar={() => {
+              setIsWarMode(true);
+              setWarDayIndex(0);
+              setIsDrawerOpen(false);
+              setShowSidebar(false);
+            }}
+            onExitWar={() => {
+              setIsWarMode(false);
+              setIsDrawerOpen(false);
+              setShowSidebar(false);
+            }}
+          />
+        </div>
 
-        <FamilyTreeModal
-          showFamilyTree={showFamilyTree}
-          setShowFamilyTree={setShowFamilyTree}
-          selectedCharacter={selectedCharacter}
-          setSelectedCharacter={setSelectedCharacter}
-        />
+        <div className="pointer-events-auto">
+          <FamilyTreeModal
+            showFamilyTree={showFamilyTree}
+            setShowFamilyTree={setShowFamilyTree}
+            selectedCharacter={selectedCharacter}
+            setSelectedCharacter={setSelectedCharacter}
+          />
+        </div>
 
-        <GlobalSearchModal
-          isOpen={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-          onSelectResult={handleSearchResultSelect}
-        />
+        <div className="pointer-events-auto">
+          <GlobalSearchModal
+            isOpen={isSearchOpen}
+            onClose={() => setIsSearchOpen(false)}
+            onSelectResult={handleSearchResultSelect}
+          />
+        </div>
       </div>
     </main>
   );
