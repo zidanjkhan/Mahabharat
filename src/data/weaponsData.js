@@ -10,6 +10,14 @@ export const weaponsData = [
     icon: "🏹" 
   },
   { 
+    id: "pashupatastra", 
+    name: "Pashupatastra", 
+    wielder: "Arjuna", 
+    type: "Supreme Astra", 
+    description: "The ultimate, world-ending weapon of Lord Shiva. Capable of destroying the entire universe and rewriting creation, it can be discharged by mind, eyes, words, or a bow. Arjuna acquired it after severe penance and a fierce physical battle with Shiva in the guise of a hunter. Knowing its cataclysmic nature, Arjuna never deployed it in the Kurukshetra war.",
+    icon: "🔱" 
+  },
+  { 
     id: "vijaya", 
     name: "Vijaya Dhanush", 
     wielder: "Karna / Parashurama", 
@@ -43,14 +51,6 @@ export const weaponsData = [
   },
 
   // --- THE SUPREME ASTRAS (WEAPONS OF MASS DESTRUCTION) ---
-  { 
-    id: "pashupatastra", 
-    name: "Pashupatastra", 
-    wielder: "Arjuna", 
-    type: "Supreme Astra", 
-    description: "The ultimate, world-ending weapon of Lord Shiva. Capable of destroying the entire universe and rewriting creation, it can be discharged by mind, eyes, words, or a bow. Arjuna acquired it after severe penance and a fierce physical battle with Shiva in the guise of a hunter. Knowing its cataclysmic nature, Arjuna never deployed it in the Kurukshetra war.",
-    icon: "🔱" 
-  },
   { 
     id: "brahmastra", 
     name: "Brahmastra", 
