@@ -1,7 +1,7 @@
 // src/components/FloatingMenu.js
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   m,
   LazyMotion,
@@ -69,6 +69,23 @@ export default function FloatingMenu({
       action();
     }
   };
+
+  // Tracks if the toggle is temporarily expanded for the user to read
+  const [isToggleExpanded, setIsToggleExpanded] = useState(false);
+
+  // The "Peek" Timer
+  useEffect(() => {
+    // Triggers when the Armory opens OR when you close a weapon details slider
+    if (isArmoryOpen && !selectedWeapon) {
+      setIsToggleExpanded(true); // Open the pill
+      
+      const timer = setTimeout(() => {
+        setIsToggleExpanded(false); // Close it after 2.5 seconds
+      }, 2500);
+      
+      return () => clearTimeout(timer); // Cleanup if the user clicks fast
+    }
+  }, [isArmoryOpen, selectedWeapon]);
 
   const closeArmory = () => {
     setIsArmoryOpen(false);
@@ -417,54 +434,113 @@ export default function FloatingMenu({
                   })}
                 </m.div>
 
-                {/* THE LIGHT ARROW PROJECTILE (Spawned from the center chamber during Phase 3) */}
+                {/* THE LIGHT ARROW PROJECTILE (Cinematic Astra Firing Sequence) */}
                 <AnimatePresence>
                   {castPhase === 3 && (
-                    <m.div
-                      className="absolute top-1/2 left-1/2 z-50 pointer-events-none"
-                      initial={{ x: 0, opacity: 1, scaleX: 0.5 }}
-                      animate={{ x: 800, opacity: 0, scaleX: 3 }}
-                      transition={{ duration: 0.4, ease: "easeIn" }}
-                    >
-                      {/* Ethereal Arrow Streak */}
-                      <div className="w-32 h-1.5 -ml-[64px] -mt-[3px] bg-gradient-to-r from-transparent via-amber-500 to-amber-100 rounded-full shadow-[0_0_15px_#f59e0b,0_0_30px_#ea580c]" />
-                      {/* Arrowhead Spark */}
-                      <div className="absolute right-[-64px] top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full blur-[2px] shadow-[0_0_20px_#fff]" />
-                    </m.div>
+                    <div className="absolute top-1/2 left-1/2 z-[200] pointer-events-none">
+                      
+                      {/* 1. THE ORIGIN SHOCKWAVE (The "Boom" of the chamber firing) */}
+                      <m.div
+                        initial={{ scale: 0, opacity: 1, borderWidth: "8px" }}
+                        animate={{ scale: 3, opacity: 0, borderWidth: "1px" }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="absolute -ml-12 -mt-12 w-24 h-24 rounded-full border-amber-400 shadow-[0_0_30px_#ea580c]"
+                      />
+
+                      {/* 2. THE MAIN PROJECTILE (The Astra Streak) */}
+                      <m.div
+                        initial={{ x: 0, opacity: 1, scaleX: 0.2 }}
+                        // Stretches massively horizontally to simulate motion blur and speed
+                        animate={{ x: 800, opacity: [1, 1, 0], scaleX: [1, 5, 8] }} 
+                        transition={{ duration: 0.35, ease: "easeIn" }}
+                        className="absolute top-0 left-0 flex items-center"
+                        style={{ originX: 0 }} // Anchors the stretch to the back of the tail
+                      >
+                        {/* The burning atmospheric tail */}
+                        <div className="w-64 h-1 bg-gradient-to-r from-transparent via-[#ea580c] to-[#fbbf24] blur-[1px]" />
+                        
+                        {/* The superheated core streak */}
+                        <div className="absolute right-0 w-32 h-2 bg-gradient-to-r from-transparent to-[#ffffff] blur-[2px] shadow-[0_0_20px_#fbbf24,0_0_40px_#ea580c]" />
+                        
+                        {/* The piercing arrowhead (Blinding white) */}
+                        <div className="absolute right-[-10px] w-6 h-6 bg-white rounded-full blur-[3px] shadow-[0_0_30px_5px_#ffffff,0_0_60px_10px_#fbbf24]" />
+                        <div className="absolute right-[-4px] w-2 h-2 bg-white rounded-full" />
+                        
+                        {/* 3. ATMOSPHERIC DISTORTION RINGS (Energy wrapping around the tip) */}
+                        <m.div 
+                          initial={{ rotate: -45, scale: 0.2, opacity: 1 }} 
+                          animate={{ rotate: 45, scale: 2, opacity: 0 }} 
+                          transition={{ duration: 0.3, ease: "easeOut" }}
+                          className="absolute right-[-25px] top-1/2 -translate-y-1/2 w-16 h-16 border-t-[3px] border-r-[3px] border-white rounded-full blur-[1px] shadow-[0_0_15px_#fbbf24]"
+                        />
+                      </m.div>
+
+                      {/* 4. THE IMPACT FLARE (Flashes right as the sidebar opens) */}
+                      <m.div
+                        initial={{ x: 750, y: "-50%", opacity: 0, scale: 0 }}
+                        animate={{ opacity: [0, 1, 0], scale: [0.5, 4, 6] }}
+                        transition={{ delay: 0.25, duration: 0.3, ease: "easeOut" }}
+                        className="absolute top-0 right-[-800px] w-32 h-32 bg-amber-200 rounded-full blur-[40px] mix-blend-screen"
+                      />
+                      
+                    </div>
                   )}
                 </AnimatePresence>
 
                 {/* 2.3 THE METALLIC CLOSE BUTTON HUB (THE CHAMBER) */}
-                <m.div
+                <m.button
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
+                  whileHover={{ scale: 1.05 }} // Slight pop up on hover
+                  whileTap={{ scale: 0.95 }}   // Mechanical squeeze on click
                   transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
-                  className="absolute top-1/2 left-1/2 w-20 h-20 -ml-10 -mt-10 z-60 pointer-events-auto cursor-pointer"
+                  className="absolute top-1/2 left-1/2 w-20 h-20 -ml-10 -mt-10 z-60 pointer-events-auto cursor-pointer group"
                   onClick={(e) => { e.stopPropagation(); closeArmory(); }}
                   title="Close Arsenal"
                 >
-                  <div className={`w-full h-full rounded-full bg-gradient-to-br from-[#4a351f] via-[#1a1108] to-[#0a0703] border-[2px] transition-colors duration-500 shadow-[0_10px_25px_rgba(0,0,0,0.9),_inset_0_2px_4px_rgba(255,255,255,0.15)] flex items-center justify-center ${castPhase >= 2 ? "border-[#fbbf24] shadow-[0_0_40px_rgba(251,191,36,0.6)]" : "border-[#8b5a2b]"}`}>
-                    <div className={`w-8 h-8 rounded-full bg-black shadow-[inset_0_5px_15px_rgba(0,0,0,1)] border border-[#3d2914] flex items-center justify-center transition-all duration-300 ${castPhase >= 3 ? "scale-50 opacity-0" : "hover:scale-110"}`}>
-                      <span className="text-xs text-[#a67c47] font-black drop-shadow-sm pb-[1px]">✕</span>
+                  {/* Subtle idle breathing aura to invite interaction */}
+                  <div className={`absolute inset-0 rounded-full bg-amber-700/20 blur-[12px] transition-opacity duration-500 animate-[pulse_3s_ease-in-out_infinite] ${castPhase >= 2 ? "opacity-0" : "opacity-60 group-hover:opacity-100 group-hover:bg-amber-500/40"}`} />
+                  
+                  {/* The Heavy Metallic Chamber */}
+                  <div className={`relative w-full h-full rounded-full bg-gradient-to-br from-[#4a351f] via-[#1a1108] to-[#0a0703] border-[2px] transition-colors duration-500 shadow-[0_10px_25px_rgba(0,0,0,0.9),_inset_0_2px_4px_rgba(255,255,255,0.15)] flex items-center justify-center ${castPhase >= 2 ? "border-[#fbbf24] shadow-[0_0_40px_rgba(251,191,36,0.6)]" : "border-[#8b5a2b] group-hover:border-[#b47a36]"}`}>
+                    
+                    {/* The Inner Socket & X (Lights up on hover) */}
+                    <div className={`w-8 h-8 rounded-full bg-black shadow-[inset_0_5px_15px_rgba(0,0,0,1)] border flex items-center justify-center transition-all duration-300 ${castPhase >= 3 ? "scale-50 opacity-0" : "border-[#3d2914] group-hover:border-[#8b5a2b] group-hover:shadow-[inset_0_2px_10px_rgba(245,158,11,0.25)]"}`}>
+                      <span className="text-xs text-[#a67c47] font-black drop-shadow-sm pb-[1px] transition-all duration-300 group-hover:text-amber-400 group-hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]">✕</span>
                     </div>
                   </div>
-                </m.div>
+                </m.button>
 
-                {/* 2.4 SKIP ANIMATION TOGGLE */}
+                {/* 2.4 SKIP ANIMATION TOGGLE (Auto-expands on load, then hoverable) */}
                 <m.div
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[65px] z-50 pointer-events-auto"
+                  initial={{ opacity: 0, scale: 0.8 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  exit={{ opacity: 0, scale: 0.5, transition: { delay: 0, duration: 0.2 } }} /* <--- ADDED FAST EXIT */
+                  transition={{ delay: 0.8 }}
+                  className="absolute top-1/2 left-1/2 -translate-x-[-47px] translate-y-[-12px] z-50 pointer-events-auto"
                 >
-                  <button
+                  <m.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={(e) => { e.stopPropagation(); setSkipAnimation(!skipAnimation); }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 border border-[#8b5a2b]/50 shadow-[0_4px_10px_rgba(0,0,0,0.8),_inset_0_1px_1px_rgba(255,255,255,0.1)] hover:border-[#fbbf24]/70 transition-all duration-300"
+                    // Dynamically forces w-[105px] when the timer is active, otherwise falls back to the w-8 hover trick
+                    className={`group relative flex items-center h-8 bg-black/90 border border-[#8b5a2b]/50 shadow-[0_4px_10px_rgba(0,0,0,0.8),_inset_0_1px_1px_rgba(255,255,255,0.1)] hover:border-[#fbbf24]/70 transition-all duration-500 ease-in-out rounded-full overflow-hidden cursor-pointer ${isToggleExpanded ? "w-[105px]" : "w-8 hover:w-[105px]"}`}
                   >
-                    <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${skipAnimation ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" : "bg-slate-600"}`} />
-                    <span className={`text-[9px] font-sans font-bold tracking-widest uppercase transition-colors duration-300 ${skipAnimation ? "text-amber-400" : "text-slate-500"}`}>
-                      {skipAnimation ? "Instant" : "Cinematic"}
-                    </span>
-                  </button>
+                    {/* The Bulb / Dot */}
+                    <div className="absolute left-0 w-8 flex items-center justify-center flex-shrink-0">
+                      {!skipAnimation && (
+                        <div className="absolute w-2 h-2 rounded-full bg-amber-400/60 animate-ping" />
+                      )}
+                      <div className={`relative z-10 w-2 h-2 rounded-full transition-colors duration-300 ${!skipAnimation ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" : "bg-slate-600"}`} />
+                    </div>
+
+                    {/* The Text */}
+                    <div className={`flex pl-8 pr-3 whitespace-nowrap transition-opacity duration-300 ${isToggleExpanded ? "opacity-100 delay-0" : "opacity-0 group-hover:opacity-100 delay-100"}`}>
+                      <span className={`text-[9px] font-sans font-bold tracking-widest uppercase transition-colors duration-300 ${!skipAnimation ? "text-amber-400" : "text-slate-500"}`}>
+                        {!skipAnimation ? "Cinematic" : "Instant"}
+                      </span>
+                    </div>
+                  </m.button>
                 </m.div>
 
               </div>
