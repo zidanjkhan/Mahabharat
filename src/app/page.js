@@ -45,7 +45,8 @@ function MapContent({
       {/* THE MAP IMAGE */}
       <img
         src="/MainMap1.png"
-        alt="Map of Aryavarta"
+        alt="Map of Mahabharata"fetchPriority="high"
+        decoding="sync"
         className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-125 saturate-50"
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
@@ -114,6 +115,31 @@ export default function Home() {
 
   const transformComponentRef = useRef(null);
   const [isCardExpanded, setIsCardExpanded] = useState(false);
+
+  // --- THE STEALTH PRELOADER ---
+  useEffect(() => {
+    if (introState === "finished") {
+      // 1. Secretly download heavy components in the background
+      import("../components/FamilyTreeModal");
+      import("../components/ChapterDrawer");
+      import("../components/GlobalSearchModal");
+      import("../components/CinematicCardDeck");
+
+      // 2. Secretly download all chapter and war card images into browser cache
+      const prefetchImages = [
+        ...timelineData.map((d) => d.cardImg),
+        ...timelineData.map((d) => d.sidebarImage),
+        ...kurukshetraWarData.map((d) => d.cardImg),
+        ...kurukshetraWarData.map((d) => d.sidebarImage),
+      ].filter(Boolean); // Filters out any empty or missing images
+
+      // Force the browser to cache them
+      prefetchImages.forEach((url) => {
+        const img = new window.Image();
+        img.src = url;
+      });
+    }
+  }, [introState]); // This only runs when introState changes
 
   useEffect(() => {
     const updateScale = () => {

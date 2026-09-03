@@ -181,7 +181,7 @@ export default function IntroAnimation({ onStart, onComplete }) {
         <rect width="100%" height="100%" fill="#050505" mask="url(#fog-mask)" />
       </motion.svg>
 
-      {/* --- LAYER 2: SACRED GOD RAYS --- */}
+      {/* --- LAYER 2: SACRED GOD RAYS ---
       <motion.div
         className="absolute w-[200vw] h-[200vw] z-15 pointer-events-none blur-[10px]"
         style={{
@@ -198,7 +198,7 @@ export default function IntroAnimation({ onStart, onComplete }) {
           opacity: { duration: 2.5, ease: "easeInOut" },
           rotate: { duration: 10, ease: "linear" } 
         }}
-      />
+      /> */}
 
       {/* --- LAYER 3: THE IGNITION & SHOCKWAVE --- */}
       
