@@ -3,7 +3,10 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { mahabharataQuotes } from "../data/mahabharataQuotes"; // <-- Make sure this path matches your folder structure
+import { mahabharataQuotes } from "../data/mahabharataQuotes"; 
+import { timelineData } from "../data/scriptures";
+import { kurukshetraWarData } from "../data/kurukshetraData";
+import { weaponsData } from "../data/weaponsData";
 
 export default function IntroAnimation({ onStart, onComplete }) {
   const [hasStarted, setHasStarted] = useState(false);
@@ -13,8 +16,64 @@ export default function IntroAnimation({ onStart, onComplete }) {
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
+  // --- AAA TRUE PRELOAD ENGINE (Cache API) ---
+  // Automatically runs in the background when the cinematic starts
+  const executeTruePreload = async () => {
+    try {
+      const cache = await caches.open("mahabharat-saga-v1");
+
+      const allAssets = [
+        ...timelineData.map((d) => d.cardImg),
+        ...timelineData.map((d) => d.sidebarImage),
+        ...kurukshetraWarData.map((d) => d.cardImg),
+        ...kurukshetraWarData.map((d) => d.sidebarImage),
+        ...weaponsData.map((w) => w.image),
+        "/MainMap1.png",
+        "/map-background.png",
+        "/Page.png"
+      ].filter(Boolean);
+
+      const uniqueAssets = [...new Set(allAssets)];
+
+      for (const url of uniqueAssets) {
+        const existing = await cache.match(url);
+        if (!existing) {
+          try {
+            const response = await fetch(url);
+            if (response.ok) await cache.put(url, response);
+          } catch (err) {
+            // Silently ignore individual failures so the rest keep downloading
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Preload engine failed:", error);
+    }
+  };
+
+  // 1. RANDOMIZE INITIAL QUOTE ON MOUNT
+  useEffect(() => {
+    setQuoteIndex(Math.floor(Math.random() * mahabharataQuotes.length));
+  }, []);
+
+  // 2. AUTO-PLAY SLIDESHOW TIMER
+  useEffect(() => {
+    if (hasStarted) return; 
+
+    const slideTimer = setInterval(() => {
+      setDirection(1);
+      setQuoteIndex((prev) => (prev + 1) % mahabharataQuotes.length);
+    }, 6500); 
+
+    return () => clearInterval(slideTimer);
+  }, [hasStarted, quoteIndex]); 
+
+  // 3. MAIN CINEMATIC TIMERS & AUTO-PRELOAD
   useEffect(() => {
     if (!hasStarted) return;
+
+    // Trigger the silent download immediately when the cinematic starts
+    executeTruePreload();
 
     const pulseTimer = setTimeout(() => setPhase(1), 1000);
     const igniteTimer = setTimeout(() => setPhase(2), 2200);
@@ -40,7 +99,6 @@ export default function IntroAnimation({ onStart, onComplete }) {
     setQuoteIndex((prev) => (prev - 1 + mahabharataQuotes.length) % mahabharataQuotes.length);
   };
 
-  // Slider Animation Variants
   const slideVariants = {
     enter: (direction) => ({
       x: direction > 0 ? 50 : -50,
@@ -117,12 +175,12 @@ export default function IntroAnimation({ onStart, onComplete }) {
                       className="absolute flex flex-col gap-6 w-full text-center"
                     >
                       <p className="text-lg sm:text-2xl font-serif text-amber-200/90 leading-relaxed italic drop-shadow-[0_0_15px_rgba(251,191,36,0.3)] px-4">
-                        "{mahabharataQuotes[quoteIndex].translation}"
+                        "{mahabharataQuotes[quoteIndex]?.translation}"
                       </p>
                       <div className="flex items-center justify-center gap-4 opacity-70">
                         <div className="w-12 sm:w-16 h-[1px] bg-gradient-to-l from-amber-500 to-transparent" />
                         <p className="text-[10px] sm:text-xs font-sans tracking-[0.3em] text-amber-500 uppercase font-bold whitespace-nowrap">
-                          {mahabharataQuotes[quoteIndex].source}
+                          {mahabharataQuotes[quoteIndex]?.source}
                         </p>
                         <div className="w-12 sm:w-16 h-[1px] bg-gradient-to-r from-amber-500 to-transparent" />
                       </div>
@@ -139,19 +197,22 @@ export default function IntroAnimation({ onStart, onComplete }) {
 
               </div>
 
-              {/* THE IRRESISTIBLE GLOWING BUTTON */}
-              <button
-                onClick={() => {
-                  setHasStarted(true);
-                  if (onStart) onStart();
-                }}
-                className="group relative px-12 py-5 rounded-full border-[2px] bg-gradient-to-b from-[#3a2008] to-[#0a0703] transition-all duration-300 overflow-hidden btn-epic-glow hover:scale-105 cursor-pointer mt-4"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/30 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
-                <span className="relative z-10 text-amber-300 font-serif font-black tracking-[0.3em] uppercase text-sm sm:text-base drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] group-hover:text-white transition-colors duration-300">
-                  Witness the Epic
-                </span>
-              </button>
+              {/* ACTION AREA */}
+              <div className="flex flex-col items-center gap-6 mt-4">
+                {/* THE IRRESISTIBLE GLOWING BUTTON */}
+                <button
+                  onClick={() => {
+                    setHasStarted(true);
+                    if (onStart) onStart();
+                  }}
+                  className="group relative px-12 py-5 rounded-full border-[2px] bg-gradient-to-b from-[#3a2008] to-[#0a0703] transition-all duration-300 overflow-hidden btn-epic-glow hover:scale-105 cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-100/30 to-transparent translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
+                  <span className="relative z-10 text-amber-300 font-serif font-black tracking-[0.3em] uppercase text-sm sm:text-base drop-shadow-[0_0_10px_rgba(251,191,36,0.8)] group-hover:text-white transition-colors duration-300">
+                    Witness the Epic
+                  </span>
+                </button>
+              </div>
 
             </motion.div>
           </motion.div>
@@ -180,25 +241,6 @@ export default function IntroAnimation({ onStart, onComplete }) {
         </defs>
         <rect width="100%" height="100%" fill="#050505" mask="url(#fog-mask)" />
       </motion.svg>
-
-      {/* --- LAYER 2: SACRED GOD RAYS ---
-      <motion.div
-        className="absolute w-[200vw] h-[200vw] z-15 pointer-events-none blur-[10px]"
-        style={{
-          background: "repeating-conic-gradient(from 0deg, transparent 0deg 15deg, rgba(251,191,36,0.15) 15deg 30deg, transparent 30deg 45deg, rgba(255,255,255,0.1) 45deg 60deg)"
-        }}
-        initial={{ scale: 0, opacity: 0, rotate: 0 }}
-        animate={{ 
-          scale: phase >= 2 ? 1 : 0, 
-          opacity: phase === 2 ? [0, 1, 0] : 0,
-          rotate: phase >= 2 ? 45 : 0
-        }}
-        transition={{ 
-          scale: { duration: 0.1 }, 
-          opacity: { duration: 2.5, ease: "easeInOut" },
-          rotate: { duration: 10, ease: "linear" } 
-        }}
-      /> */}
 
       {/* --- LAYER 3: THE IGNITION & SHOCKWAVE --- */}
       

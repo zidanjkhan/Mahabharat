@@ -37,7 +37,8 @@ export default function Sidebar({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={{ left: 0.05, right: 0.5 }}
         onDragEnd={handleDragEnd}
-        className="absolute top-0 right-0 h-full w-[90vw] md:w-[480px] bg-[#050301] opacity-100 border-l border-[#8b5a2b]/40 shadow-[-30px_0_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl z-50 flex flex-col overflow-y-auto cursor-grab active:cursor-grabbing"
+        // FIX: Replaced w-[100vw] with w-full to guarantee exactly 100% screen width on mobile
+        className="absolute top-0 right-0 h-full w-full md:w-[510px] bg-[#050301] opacity-100 border-l border-[#8b5a2b]/40 shadow-[-30px_0_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl z-50 flex flex-col overflow-y-auto cursor-grab active:cursor-grabbing"
       >
         {/* Floating Glass Close Button */}
         <button
@@ -141,7 +142,7 @@ export default function Sidebar({
 
       {/* --- DEEP LORE ANCIENT MANUSCRIPT MODAL --- */}
       {showPopup && (
-        <div className="absolute inset-0 z-80 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
+        <div className="absolute inset-0 z-80 flex items-center justify-center bg-black/85 p-3 sm:p-6 overflow-y-auto">
           {/* THE GLIDING AUDIO PLAYER */}
           <AudioLorePlayer 
             textToRead={currentData.deepLore}

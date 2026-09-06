@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import Image from "next/image"; // <-- Added Next/Image for weapon coins
 import {
   m,
   LazyMotion,
@@ -75,15 +76,14 @@ export default function FloatingMenu({
 
   // The "Peek" Timer
   useEffect(() => {
-    // Triggers when the Armory opens OR when you close a weapon details slider
     if (isArmoryOpen && !selectedWeapon) {
-      setIsToggleExpanded(true); // Open the pill
+      setIsToggleExpanded(true); 
 
       const timer = setTimeout(() => {
-        setIsToggleExpanded(false); // Close it after 2.5 seconds
+        setIsToggleExpanded(false); 
       }, 2500);
 
-      return () => clearTimeout(timer); // Cleanup if the user clicks fast
+      return () => clearTimeout(timer); 
     }
   }, [isArmoryOpen, selectedWeapon]);
 
@@ -98,7 +98,7 @@ export default function FloatingMenu({
 
   const backgroundMantraLayer = useMemo(
     () => (
-      <g>
+      <g style={{ willChange: "transform" }}>
         <animateTransform
           attributeName="transform"
           type="rotate"
@@ -133,7 +133,7 @@ export default function FloatingMenu({
       <>
         {/* 1. MAIN FLOATING MENU BUTTONS */}
         <div
-          className={`absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-start gap-4 z-50 ${isArmoryOpen ? "pointer-events-none" : "pointer-events-auto"}`}
+          className={`absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-start gap-4 z-50 transform-gpu ${isArmoryOpen ? "pointer-events-none" : "pointer-events-auto"}`}
           onClick={() => {
             const isTouchDevice =
               window.matchMedia("(pointer: coarse)").matches;
@@ -329,8 +329,8 @@ export default function FloatingMenu({
                 />
 
                 <m.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ rotate: rotation }}
+                  className="absolute inset-0 rounded-full transform-gpu"
+                  style={{ rotate: rotation, willChange: "transform" }}
                   onPan={handlePan}
                   onPanEnd={handlePanEnd}
                   drag="y"
@@ -351,6 +351,7 @@ export default function FloatingMenu({
                     style={{
                       cursor: "grab",
                       border: "3px solid rgba(139, 90, 43, 0.7)",
+                      willChange: "transform, opacity",
                     }}
                   >
                     <div className="absolute inset-2 rounded-full border border-[#8b5a2b]/20 pointer-events-none" />
@@ -367,7 +368,7 @@ export default function FloatingMenu({
                     transition={{ duration: 0.5 }}
                     className="absolute inset-0 scale-[0.98] w-full h-full pointer-events-none"
                     viewBox="0 0 570 570"
-                    style={{ overflow: "visible" }}
+                    style={{ overflow: "visible", willChange: "transform, opacity" }}
                   >
                     <defs>
                       <path
@@ -376,7 +377,7 @@ export default function FloatingMenu({
                       />
                     </defs>
 
-                    {/* LAYER A: Ambient Background Mantra + Mandala (STRICTLY NO ROTATION CHANGES TO TEXT) */}
+                    {/* LAYER A: Ambient Background Mantra + Mandala */}
                     <m.g
                       animate={{
                         color:
@@ -389,8 +390,9 @@ export default function FloatingMenu({
                             : "drop-shadow(0 0 0px transparent)",
                       }}
                       transition={{ duration: 0.5 }}
+                      style={{ willChange: "filter, color" }}
                     >
-                      {/* THE CINEMATIC MANDALA (Isolated so it doesn't touch your text spin) */}
+                      {/* THE CINEMATIC MANDALA */}
                       <AnimatePresence>
                         {castPhase === 1 && (
                           <m.g
@@ -398,8 +400,8 @@ export default function FloatingMenu({
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.5 }}
+                            style={{ willChange: "opacity" }}
                           >
-                            {/* Native spin applied ONLY to the mandala */}
                             <animateTransform
                               attributeName="transform"
                               type="rotate"
@@ -566,7 +568,7 @@ export default function FloatingMenu({
                         )}
                       </AnimatePresence>
 
-                      {/* Your completely untouched, perfectly smooth background text layer */}
+                      {/* Untouched background text layer */}
                       {backgroundMantraLayer}
                     </m.g>
 
@@ -589,7 +591,7 @@ export default function FloatingMenu({
                             stiffness: 300,
                             damping: 20,
                           }}
-                          style={{ transformOrigin: "285px 285px" }}
+                          style={{ transformOrigin: "285px 285px", willChange: "transform" }}
                         >
                           <AnimatePresence>
                             {isCastingTarget && (
@@ -599,6 +601,7 @@ export default function FloatingMenu({
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.4 }}
                                 transform={`rotate(${baseAngle - 180} 285 285)`}
+                                style={{ willChange: "transform, opacity" }}
                               >
                                 <path
                                   d="M 215 525 Q 285 515 355 525"
@@ -641,7 +644,6 @@ export default function FloatingMenu({
                             )}
                           </AnimatePresence>
 
-                          {/* UPGRADED LAYER B: Scales up, spreads out, white core, heavy dark outline */}
                           <text
                             fontSize={isCastingTarget ? "16" : "13"}
                             fontFamily="serif"
@@ -699,17 +701,17 @@ export default function FloatingMenu({
                               ? "z-[110]"
                               : "z-10 hover:z-[120]"
                         }`}
+                        style={{ willChange: "transform, opacity" }} // <-- Force GPU
                         // THE TIMELINE DIRECTOR: Chambering
                         animate={{
                           x:
                             castingWeaponId === weapon.id && castPhase >= 2
                               ? 0
-                              : targetX, // Phase 2: Load into center chamber
+                              : targetX,
                           y:
                             castingWeaponId === weapon.id && castPhase >= 2
                               ? 0
                               : targetY,
-                          // Coin vanishes perfectly inside the chamber when Phase 3 triggers the light-arrow
                           scale:
                             castingWeaponId === weapon.id && castPhase >= 3
                               ? 0
@@ -722,7 +724,7 @@ export default function FloatingMenu({
                               : 1,
                         }}
                         transition={{
-                          duration: 0.8, // Elegant 0.8s pull to chamber
+                          duration: 0.8,
                           ease: "backInOut",
                         }}
                       >
@@ -735,7 +737,8 @@ export default function FloatingMenu({
                         />
 
                         <m.div
-                          className="absolute inset-0"
+                          className="absolute inset-0 transform-gpu"
+                          style={{ willChange: "transform, opacity" }} // <-- Force GPU
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{
@@ -750,47 +753,48 @@ export default function FloatingMenu({
                           }}
                         >
                           <m.div
-                            style={{ rotate: inverseRotation }}
+                            style={{ rotate: inverseRotation, willChange: "transform" }} // <-- Counter-rotation GPU
                             className="w-full h-full flex justify-center items-center relative group"
                           >
-                          <button
-  onMouseEnter={() => setHoveredWeaponId(weapon.id)}
-  onMouseLeave={() => setHoveredWeaponId(null)}
-  onClick={(e) => {
-    e.stopPropagation();
-    if (castPhase > 0 || selectedWeapon?.id === weapon.id) return;
-    
-    // THE UX BYPASS
-    if (skipAnimation) {
-      setSelectedWeapon(weapon);
-      return;
-    }
-    
-    setCastingWeaponId(weapon.id);
-    setCastPhase(1); // Phase 1: Glow, Scale, Spin Mandala
-    setTimeout(() => setCastPhase(2), 3500); // Phase 2: Load into chamber
-    setTimeout(() => setCastPhase(3), 4700); // Phase 3: Fire Light Arrow
-    setTimeout(() => {
-      setSelectedWeapon(weapon);
-      setCastingWeaponId(null);
-      setCastPhase(0);
-    }, 5100);
-  }}
-  className={`relative overflow-hidden w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-auto 
-    bg-black border border-[#a67c47] shadow-[0_10px_20px_rgba(0,0,0,0.9)]
-    group-hover:border-[#d4af37] 
-    ${selectedWeapon?.id === weapon.id || castingWeaponId === weapon.id ? "scale-110 !border-[#fbbf24] shadow-[0_0_30px_rgba(251,191,36,0.8)]" : ""}`}
->
-  {/* The Full-Cover Image: 100% Opacity with a slight zoom & brighten on hover */}
-  <img 
-    src={weapon.image} 
-    alt={weapon.name} 
-    className="absolute inset-0 w-full h-full object-cover z-0 transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
-  />
-  
-  {/* Lighter 3D Coin Inner Shadow: Reduced the black shadow so it doesn't darken your artwork */}
-  <div className="absolute inset-0 rounded-full z-10 pointer-events-none shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),_inset_0_-3px_6px_rgba(0,0,0,0.5)]" />
-</button>
+                            <button
+                              onMouseEnter={() => setHoveredWeaponId(weapon.id)}
+                              onMouseLeave={() => setHoveredWeaponId(null)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (
+                                  castPhase > 0 ||
+                                  selectedWeapon?.id === weapon.id
+                                )
+                                  return;
+
+                                if (skipAnimation) {
+                                  setSelectedWeapon(weapon);
+                                  return;
+                                }
+
+                                setCastingWeaponId(weapon.id);
+                                setCastPhase(1);
+                                setTimeout(() => setCastPhase(2), 3500);
+                                setTimeout(() => setCastPhase(3), 4700);
+                                setTimeout(() => {
+                                  setSelectedWeapon(weapon);
+                                  setCastingWeaponId(null);
+                                  setCastPhase(0);
+                                }, 5100);
+                              }}
+                              className={`relative overflow-hidden w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 pointer-events-auto bg-black border border-[#a67c47] shadow-[0_10px_20px_rgba(0,0,0,0.9)] group-hover:border-[#d4af37] ${selectedWeapon?.id === weapon.id || castingWeaponId === weapon.id ? "scale-110 !border-[#fbbf24] shadow-[0_0_30px_rgba(251,191,36,0.8)]" : ""}`}
+                            >
+                              {/* Replaced <img> with Next.js <Image /> */}
+                              <Image
+                                src={weapon.image}
+                                alt={weapon.name}
+                                fill
+                                sizes="48px"
+                                className="object-cover z-0 transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
+                              />
+
+                              <div className="absolute inset-0 rounded-full z-10 pointer-events-none shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),_inset_0_-3px_6px_rgba(0,0,0,0.5)]" />
+                            </button>
                           </m.div>
                         </m.div>
                       </m.div>
@@ -798,22 +802,21 @@ export default function FloatingMenu({
                   })}
                 </m.div>
 
-                {/* THE LIGHT ARROW PROJECTILE (Cinematic Astra Firing Sequence) */}
+                {/* THE LIGHT ARROW PROJECTILE */}
                 <AnimatePresence>
                   {castPhase === 3 && (
-                    <div className="absolute top-1/2 left-1/2 z-[200] pointer-events-none">
-                      {/* 1. THE ORIGIN SHOCKWAVE (The "Boom" of the chamber firing) */}
+                    <div className="absolute top-1/2 left-1/2 z-[200] pointer-events-none transform-gpu">
+                      {/* ... existing projectile animations ... */}
                       <m.div
                         initial={{ scale: 0, opacity: 1, borderWidth: "8px" }}
                         animate={{ scale: 3, opacity: 0, borderWidth: "1px" }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
+                        style={{ willChange: "transform, opacity" }}
                         className="absolute -ml-12 -mt-12 w-24 h-24 rounded-full border-amber-400 shadow-[0_0_30px_#ea580c]"
                       />
 
-                      {/* 2. THE MAIN PROJECTILE (The Astra Streak) */}
                       <m.div
                         initial={{ x: 0, opacity: 1, scaleX: 0.2 }}
-                        // Stretches massively horizontally to simulate motion blur and speed
                         animate={{
                           x: 800,
                           opacity: [1, 1, 0],
@@ -821,19 +824,12 @@ export default function FloatingMenu({
                         }}
                         transition={{ duration: 0.35, ease: "easeIn" }}
                         className="absolute top-0 left-0 flex items-center"
-                        style={{ originX: 0 }} // Anchors the stretch to the back of the tail
+                        style={{ originX: 0, willChange: "transform, opacity" }}
                       >
-                        {/* The burning atmospheric tail */}
                         <div className="w-64 h-1 bg-gradient-to-r from-transparent via-[#ea580c] to-[#fbbf24] blur-[1px]" />
-
-                        {/* The superheated core streak */}
                         <div className="absolute right-0 w-32 h-2 bg-gradient-to-r from-transparent to-[#ffffff] blur-[2px] shadow-[0_0_20px_#fbbf24,0_0_40px_#ea580c]" />
-
-                        {/* The piercing arrowhead (Blinding white) */}
                         <div className="absolute right-[-10px] w-6 h-6 bg-white rounded-full blur-[3px] shadow-[0_0_30px_5px_#ffffff,0_0_60px_10px_#fbbf24]" />
                         <div className="absolute right-[-4px] w-2 h-2 bg-white rounded-full" />
-
-                        {/* 3. ATMOSPHERIC DISTORTION RINGS (Energy wrapping around the tip) */}
                         <m.div
                           initial={{ rotate: -45, scale: 0.2, opacity: 1 }}
                           animate={{ rotate: 45, scale: 2, opacity: 0 }}
@@ -842,7 +838,6 @@ export default function FloatingMenu({
                         />
                       </m.div>
 
-                      {/* 4. THE IMPACT FLARE (Flashes right as the sidebar opens) */}
                       <m.div
                         initial={{ x: 750, y: "-50%", opacity: 0, scale: 0 }}
                         animate={{ opacity: [0, 1, 0], scale: [0.5, 4, 6] }}
@@ -851,42 +846,40 @@ export default function FloatingMenu({
                           duration: 0.3,
                           ease: "easeOut",
                         }}
+                        style={{ willChange: "transform, opacity" }}
                         className="absolute top-0 right-[-800px] w-32 h-32 bg-amber-200 rounded-full blur-[40px] mix-blend-screen"
                       />
                     </div>
                   )}
                 </AnimatePresence>
 
-                {/* 2.3 THE METALLIC CLOSE BUTTON HUB (THE CHAMBER) */}
+                {/* 2.3 THE METALLIC CLOSE BUTTON HUB */}
                 <m.button
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 1.05 }} // Slight pop up on hover
-                  whileTap={{ scale: 0.95 }} // Mechanical squeeze on click
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   transition={{
                     type: "spring",
                     stiffness: 200,
                     damping: 20,
                     delay: 0.1,
                   }}
-                  className="absolute top-1/2 left-1/2 w-20 h-20 -ml-10 -mt-10 z-60 pointer-events-auto cursor-pointer group"
+                  style={{ willChange: "transform, opacity" }} // <-- Force GPU
+                  className="absolute top-1/2 left-1/2 w-20 h-20 -ml-10 -mt-10 z-60 pointer-events-auto cursor-pointer group transform-gpu"
                   onClick={(e) => {
                     e.stopPropagation();
                     closeArmory();
                   }}
                   title="Close Arsenal"
                 >
-                  {/* Subtle idle breathing aura to invite interaction */}
                   <div
                     className={`absolute inset-0 rounded-full bg-amber-700/20 blur-[12px] transition-opacity duration-500 animate-[pulse_3s_ease-in-out_infinite] ${castPhase >= 2 ? "opacity-0" : "opacity-60 group-hover:opacity-100 group-hover:bg-amber-500/40"}`}
                   />
-
-                  {/* The Heavy Metallic Chamber */}
                   <div
                     className={`relative w-full h-full rounded-full bg-gradient-to-br from-[#4a351f] via-[#1a1108] to-[#0a0703] border-[2px] transition-colors duration-500 shadow-[0_10px_25px_rgba(0,0,0,0.9),_inset_0_2px_4px_rgba(255,255,255,0.15)] flex items-center justify-center ${castPhase >= 2 ? "border-[#fbbf24] shadow-[0_0_40px_rgba(251,191,36,0.6)]" : "border-[#8b5a2b] group-hover:border-[#b47a36]"}`}
                   >
-                    {/* The Inner Socket & X (Lights up on hover) */}
                     <div
                       className={`w-8 h-8 rounded-full bg-black shadow-[inset_0_5px_15px_rgba(0,0,0,1)] border flex items-center justify-center transition-all duration-300 ${castPhase >= 3 ? "scale-50 opacity-0" : "border-[#3d2914] group-hover:border-[#8b5a2b] group-hover:shadow-[inset_0_2px_10px_rgba(245,158,11,0.25)]"}`}
                     >
@@ -897,7 +890,7 @@ export default function FloatingMenu({
                   </div>
                 </m.button>
 
-                {/* 2.4 SKIP ANIMATION TOGGLE (Auto-expands on load, then hoverable) */}
+                {/* 2.4 SKIP ANIMATION TOGGLE */}
                 <m.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -905,9 +898,10 @@ export default function FloatingMenu({
                     opacity: 0,
                     scale: 0.5,
                     transition: { delay: 0, duration: 0.2 },
-                  }} /* <--- ADDED FAST EXIT */
+                  }}
                   transition={{ delay: 0.8 }}
-                  className="absolute top-1/2 left-1/2 -translate-x-[-47px] translate-y-[-12px] z-50 pointer-events-auto"
+                  style={{ willChange: "transform, opacity" }} // <-- Force GPU
+                  className="absolute top-1/2 left-1/2 -translate-x-[-47px] translate-y-[-12px] z-50 pointer-events-auto transform-gpu"
                 >
                   <m.button
                     whileTap={{ scale: 0.9 }}
@@ -915,10 +909,8 @@ export default function FloatingMenu({
                       e.stopPropagation();
                       setSkipAnimation(!skipAnimation);
                     }}
-                    // Dynamically forces w-[105px] when the timer is active, otherwise falls back to the w-8 hover trick
                     className={`group relative flex items-center h-8 bg-black/90 border border-[#8b5a2b]/50 shadow-[0_4px_10px_rgba(0,0,0,0.8),_inset_0_1px_1px_rgba(255,255,255,0.1)] hover:border-[#fbbf24]/70 transition-all duration-500 ease-in-out rounded-full overflow-hidden cursor-pointer ${isToggleExpanded ? "w-[105px]" : "w-8 hover:w-[105px]"}`}
                   >
-                    {/* The Bulb / Dot */}
                     <div className="absolute left-0 w-8 flex items-center justify-center flex-shrink-0">
                       {!skipAnimation && (
                         <div className="absolute w-2 h-2 rounded-full bg-amber-400/60 animate-ping" />
@@ -927,8 +919,6 @@ export default function FloatingMenu({
                         className={`relative z-10 w-2 h-2 rounded-full transition-colors duration-300 ${!skipAnimation ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" : "bg-slate-600"}`}
                       />
                     </div>
-
-                    {/* The Text */}
                     <div
                       className={`flex pl-8 pr-3 whitespace-nowrap transition-opacity duration-300 ${isToggleExpanded ? "opacity-100 delay-0" : "opacity-0 group-hover:opacity-100 delay-100"}`}
                     >
@@ -945,7 +935,7 @@ export default function FloatingMenu({
           )}
         </AnimatePresence>
 
-        {/* 3. DEDICATED WEAPON DETAILS SLIDER (CINEMATIC UPGRADE) */}
+        {/* 3. DEDICATED WEAPON DETAILS SLIDER */}
         <AnimatePresence mode="wait">
           {selectedWeapon && isArmoryOpen && (
             <m.div
@@ -957,14 +947,16 @@ export default function FloatingMenu({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedWeapon(null)}
-                className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto"
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto transform-gpu"
+                style={{ willChange: "opacity" }} // <-- Optimization
               />
               <m.div
                 initial={{ x: "100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
                 transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                className="relative w-full sm:w-[500px] h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0703] to-black border-l border-[#8b5a2b]/40 shadow-[-30px_0_80px_rgba(0,0,0,1)] pointer-events-auto overflow-y-auto"
+                className="relative w-full sm:w-[500px] h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0703] to-black border-l border-[#8b5a2b]/40 shadow-[-30px_0_80px_rgba(0,0,0,1)] pointer-events-auto overflow-y-auto transform-gpu"
+                style={{ willChange: "transform, opacity" }} // <-- Optimization
               >
                 <m.div
                   className="p-10 flex flex-col h-full relative z-10"
@@ -990,15 +982,18 @@ export default function FloatingMenu({
                         hidden: { y: -20, opacity: 0 },
                         visible: { y: 0, opacity: 1 },
                       }}
-                      className="w-full flex justify-center mb-8"
+                      className="w-full flex justify-center mb-8 transform-gpu"
+                      style={{ willChange: "transform, opacity" }}
                     >
                       <div className="relative w-full aspect-square max-h-[340px] rounded-lg overflow-hidden border border-[#a67c47]/40 shadow-[0_15px_40px_rgba(0,0,0,0.8)] bg-black">
-                        <img
+                        {/* Replaced standard <img> with optimized Next.js <Image /> */}
+                        <Image
                           src={selectedWeapon.image}
                           alt={selectedWeapon.name}
-                          className="absolute inset-0 w-full h-full object-cover object-center"
+                          fill
+                          sizes="(max-width: 640px) 100vw, 400px"
+                          className="object-cover object-center"
                         />
-                        {/* Elegant dark fade at the bottom so it blends smoothly into the text */}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0703] via-transparent to-transparent opacity-90" />
                       </div>
                     </m.div>
@@ -1008,6 +1003,7 @@ export default function FloatingMenu({
                         visible: { y: 0, opacity: 1 },
                       }}
                       className="text-4xl sm:text-5xl font-serif font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-400 to-amber-700 text-center mb-4 drop-shadow-[0_5px_15px_rgba(0,0,0,1)]"
+                      style={{ willChange: "transform, opacity" }}
                     >
                       {selectedWeapon.name}
                     </m.h2>
@@ -1017,6 +1013,7 @@ export default function FloatingMenu({
                         visible: { y: 0, opacity: 1 },
                       }}
                       className="flex flex-wrap gap-3 mb-10 w-full justify-center"
+                      style={{ willChange: "transform, opacity" }}
                     >
                       <span className="px-4 py-2 bg-black/50 border border-[#a67c47]/30 text-amber-400 text-[10px] uppercase tracking-[0.2em] rounded shadow-inner backdrop-blur-sm">
                         {selectedWeapon.type}
@@ -1034,7 +1031,8 @@ export default function FloatingMenu({
                       hidden: { y: 20, opacity: 0 },
                       visible: { y: 0, opacity: 1 },
                     }}
-                    className="relative flex-grow bg-black/40 border border-[#8b5a2b]/20 rounded-xl p-8 text-slate-300 leading-relaxed shadow-[inset_0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-sm"
+                    className="relative flex-grow bg-black/40 border border-[#8b5a2b]/20 rounded-xl p-8 text-slate-300 leading-relaxed shadow-[inset_0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-sm transform-gpu"
+                    style={{ willChange: "transform, opacity" }}
                   >
                     <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-[#a67c47]/40 rounded-tl-xl" />
                     <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-[#a67c47]/40 rounded-tr-xl" />
