@@ -298,50 +298,56 @@ export default function FamilyTreeModal({
         </p>
       </div>
 
-      {/* 1-PAGE CHARACTER PROFILE SIDEBAR */}
+      {/* 1-PAGE CHARACTER PROFILE SIDEBAR (CINEMATIC UPGRADE) */}
       {selectedCharacter && (
-        <div className="absolute top-0 right-0 w-full sm:w-[500px] h-full bg-[#070b14]/98 border-l border-amber-500/40 backdrop-blur-2xl z-[70] p-8 shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-300">
-          <div>
-            <div className="flex justify-between items-start mb-6 border-b border-slate-800 pb-4">
-              <div>
-                <span className="text-amber-400 text-xs font-extrabold uppercase tracking-widest block mb-1">
-                  {selectedCharacter.title}
-                </span>
-                <h2 className="text-slate-100 font-serif text-3xl font-bold tracking-wide">
-                  {selectedCharacter.name}
-                </h2>
-              </div>
-              <button
-                onClick={() => setSelectedCharacter(null)}
-                className="text-slate-400 hover:text-amber-400 text-2xl font-bold transition-transform hover:scale-110"
-              >
-                ✕
-              </button>
+        <div className="absolute top-0 right-0 w-full sm:w-[510px] h-full bg-[#050301] border-l border-[#8b5a2b]/40 backdrop-blur-2xl z-[70] shadow-[-30px_0_60px_rgba(0,0,0,0.9)] flex flex-col overflow-y-auto animate-in slide-in-from-right duration-300">
+          
+          {/* Floating Glass Close Button */}
+          <button
+            onClick={() => setSelectedCharacter(null)}
+            className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/40 border border-[#8b5a2b]/40 backdrop-blur-md flex items-center justify-center text-[#a67c47] hover:text-[#fbbf24] hover:border-[#fbbf24]/60 hover:bg-black/60 transition-all z-50 shadow-[0_4px_15px_rgba(0,0,0,0.5)] cursor-pointer"
+          >
+            ✕
+          </button>
+
+          {/* --- MASSIVE EDGE-TO-EDGE HERO IMAGE --- */}
+          {selectedCharacter.imageUrl ? (
+            <div className="relative w-full h-[400px] sm:h-[480px] shrink-0 pointer-events-none">
+              <img
+                src={selectedCharacter.imageUrl}
+                alt={selectedCharacter.name}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+              
+              {/* The Vignette: Heavy bottom fade, slight top fade */}
+              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#050301] via-[#050301]/70 to-transparent" />
+              <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050301]/80 to-transparent" />
             </div>
+          ) : (
+            <div className="h-24 shrink-0" />
+          )}
 
-            {selectedCharacter.imageUrl && (
-              <div className="w-full max-w-[280px] mx-auto aspect-[16/22.5] rounded-lg overflow-hidden border-2 border-amber-500/40 mb-6 shadow-[0_10px_30px_rgba(0,0,0,0.8)] relative">
-                <img
-                  src={selectedCharacter.imageUrl}
-                  alt={selectedCharacter.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-transparent opacity-80"></div>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <h3 className="text-xs uppercase tracking-[0.2em] text-amber-500 font-bold">
-                Complete Chronicle & Legacy
+          {/* --- TEXT CONTENT --- */}
+          <div className="relative px-8 pb-3 flex flex-col flex-1 z-10 -mt-24 sm:-mt-28">
+            
+            {/* Title Block pulled up over the vignette */}
+            <div className="mb-0">
+              <h3 className="text-[10px] font-black tracking-[0.3em] text-[#fbbf24] uppercase mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
+                {selectedCharacter.title}
               </h3>
-              <p className="text-slate-300 text-base leading-relaxed font-serif whitespace-pre-line">
-                {selectedCharacter.fullDescription}
-              </p>
+              <h2 className="text-3xl sm:text-4xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-[#fff6d6] via-[#fbbf24] to-[#a67c47] leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,1)]">
+                {selectedCharacter.name}
+              </h2>
             </div>
-          </div>
 
-          <div className="mt-8 pt-4 border-t border-slate-800 text-center text-xs text-slate-500 uppercase tracking-widest">
-            Mahabharata Dynasty Archives
+            {/* Lore Text (Cleaned up, no extra headers) */}
+            <p className="text-[#d1bfae] text-base leading-relaxed font-serif whitespace-pre-line text-justify drop-shadow-sm">
+              {selectedCharacter.fullDescription}
+            </p>
+
+            <div className="mt-auto pt-8 border-t border-[#8b5a2b]/20 text-center text-[10px] text-slate-500 uppercase tracking-[0.3em]">
+              Mahabharata Dynasty Archives
+            </div>
           </div>
         </div>
       )}

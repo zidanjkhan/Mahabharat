@@ -190,7 +190,7 @@ export default function CinematicCardDeck({
         <motion.div
           layout
           drag
-          style={{ willChange: "width, height, border-radius, transform" }}
+          style={{ willChange: "transform" }}
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragElastic={0.1} 
           onDragEnd={(e, info) => {
@@ -222,11 +222,11 @@ export default function CinematicCardDeck({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }} 
-              className="flex items-center gap-3 sm:gap-4 h-full px-4 sm:px-5 relative z-10 bg-gradient-to-b from-[#1a1108]/90 to-black/95"
+              className="flex items-center gap-2 sm:gap-4 h-full px-4 sm:px-5 relative z-10 bg-gradient-to-b from-[#1a1108]/90 to-black/95"
             >
               <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full shrink-0 animate-pulse ${isWarMode ? "bg-red-500 shadow-[0_0_15px_rgba(239,68,68,1)]" : "bg-[#fbbf24] shadow-[0_0_15px_rgba(251,191,36,1)]"}`} />
               
-              <div className="flex flex-col text-left overflow-hidden flex-1 justify-center">
+              <div className="flex flex-col text-left overflow-hidden flex-1 justify-center pr-2">
                 <span className="text-[8px] sm:text-[9px] uppercase tracking-widest sm:tracking-[0.25em] text-[#a67c47] font-black drop-shadow-sm truncate">
                   {isWarMode ? currentItem.era : `Chapter ${currentChapterIndex + 1}`}
                 </span>
@@ -235,8 +235,10 @@ export default function CinematicCardDeck({
                 </span>
               </div>
               
-              <span className="text-[8px] sm:text-[9px] text-amber-500 font-bold tracking-widest uppercase opacity-70 group-hover/card:opacity-100 transition-opacity">
-                <span className="hidden sm:inline">Slide </span>&uarr;
+              {/* THE FIX: Conditional Text & 'shrink-0' so it doesn't get pushed off-screen */}
+              <span className="text-[8px] sm:text-[9px] text-amber-500 font-bold tracking-widest uppercase opacity-80 group-hover/card:opacity-100 transition-opacity shrink-0 whitespace-nowrap">
+                <span className="sm:hidden">Slide Up &uarr;</span>
+                <span className="hidden sm:inline">Hover Here &uarr;</span>
               </span>
             </motion.div>
           )}

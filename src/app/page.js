@@ -49,7 +49,7 @@ function MapContent({
         src="/MainMap1.png"
         alt="Map of Mahabharata"
         fetchPriority="high"
-        decoding="sync"
+        decoding="async"
         className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-125 saturate-50"
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
@@ -218,7 +218,7 @@ export default function Home() {
       // and let the image load before we force the GPU to pan the massive 4K map.
       const panTimer = setTimeout(() => {
         setTransform(targetX, targetY, targetScale, 4000, "easeOut");
-      }, 200);
+      }, 500);
 
       // Cleanup the timer if the user rapidly scrubs through chapters
       return () => clearTimeout(panTimer);
@@ -376,17 +376,19 @@ export default function Home() {
               isWarMode={isWarMode}
               hasPrevChapter={activeEra > 0}
               hasNextChapter={activeEra < timelineData.length - 1}
-              onPrevChapter={() => {
-                if (activeEra > 0) {
-                  setActiveEra(activeEra - 1);
-                  setShowPopup(false);
-                }
-              }}
-              onNextChapter={() => {
-                if (activeEra < timelineData.length - 1) {
-                  setActiveEra(activeEra + 1);
-                  setShowPopup(false);
-                }
+              // THE FIX: Add keepPopupOpen parameter
+            onPrevChapter={(keepPopupOpen = false) => {
+              if (activeEra > 0) {
+                setActiveEra(activeEra - 1);
+                if (!keepPopupOpen) setShowPopup(false); 
+              }
+            }}
+            // THE FIX: Add keepPopupOpen parameter
+            onNextChapter={(keepPopupOpen = false) => {
+              if (activeEra < timelineData.length - 1) {
+                setActiveEra(activeEra + 1);
+                if (!keepPopupOpen) setShowPopup(false);
+              }
               }}
               onOpenKurukshetra={(dayIdx = 0) => {
                 setIsWarMode(true);

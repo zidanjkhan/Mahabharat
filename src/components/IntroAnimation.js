@@ -4,9 +4,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { mahabharataQuotes } from "../data/mahabharataQuotes"; 
-import { timelineData } from "../data/scriptures";
-import { kurukshetraWarData } from "../data/kurukshetraData";
-import { weaponsData } from "../data/weaponsData";
 
 export default function IntroAnimation({ onStart, onComplete }) {
   const [hasStarted, setHasStarted] = useState(false);
@@ -15,31 +12,6 @@ export default function IntroAnimation({ onStart, onComplete }) {
   // Slider State
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-
-  // --- AAA TRUE PRELOAD ENGINE (Aggressive RAM Preloader) ---
-  // Automatically runs in the background when the cinematic starts
-  const executeTruePreload = () => {
-    const allAssets = [
-      ...timelineData.map((d) => d.cardImg),
-      ...timelineData.map((d) => d.sidebarImage),
-      ...kurukshetraWarData.map((d) => d.cardImg),
-      ...kurukshetraWarData.map((d) => d.sidebarImage),
-      ...weaponsData.map((w) => w.image),
-      "/MainMap1.png",
-      "/map-background.png",
-      "/Page.png"
-    ].filter(Boolean);
-
-    const uniqueAssets = [...new Set(allAssets)];
-
-    // Fire all requests in parallel directly into browser RAM
-    uniqueAssets.forEach((url) => {
-      const img = new window.Image();
-      // Explicitly tell the browser's network layer to prioritize these
-      img.fetchPriority = "high"; 
-      img.src = url;
-    });
-  };
 
   // 1. RANDOMIZE INITIAL QUOTE ON MOUNT
   useEffect(() => {
@@ -58,12 +30,9 @@ export default function IntroAnimation({ onStart, onComplete }) {
     return () => clearInterval(slideTimer);
   }, [hasStarted, quoteIndex]); 
 
-  // 3. MAIN CINEMATIC TIMERS & AUTO-PRELOAD
+  // 3. MAIN CINEMATIC TIMERS (Preloader completely removed!)
   useEffect(() => {
     if (!hasStarted) return;
-
-    // Trigger the silent download immediately when the cinematic starts
-    executeTruePreload();
 
     const pulseTimer = setTimeout(() => setPhase(1), 1000);
     const igniteTimer = setTimeout(() => setPhase(2), 2200);

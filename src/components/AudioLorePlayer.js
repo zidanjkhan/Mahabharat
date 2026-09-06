@@ -12,7 +12,6 @@ export default function AudioLorePlayer({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [volume, setVolume] = useState(0.8);
   const [audioProgress, setAudioProgress] = useState(0);
   
   const isHoveringRef = useRef(false);
@@ -47,7 +46,7 @@ export default function AudioLorePlayer({
     setIsExpanded(!isExpanded);
   };
 
-  const playText = (volLevel = volume) => {
+  const playText = () => {
     const synth = window.speechSynthesis;
     synth.cancel(); 
     
@@ -56,14 +55,13 @@ export default function AudioLorePlayer({
         
         utterance.rate = 0.75; 
         utterance.pitch = 0.5; 
-        utterance.volume = volLevel; 
         
         const voices = synth.getVoices();
         const englishVoices = voices.filter(v => v.lang.startsWith('en'));
         const epicVoice = englishVoices.find(v => 
           v.name.includes('Google UK English Male') || 
-          v.name.includes('Daniel') ||                 
-          v.name.includes('David')                     
+          v.name.includes('Daniel') ||                
+          v.name.includes('David')                    
         ) || englishVoices[0]; 
 
         if (epicVoice) utterance.voice = epicVoice;
@@ -104,12 +102,6 @@ export default function AudioLorePlayer({
     } else {
       playText();
     }
-  };
-
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    // Removed the playText(newVolume) call here so it stops restarting the audio mid-sentence!
   };
 
   return (
@@ -173,7 +165,7 @@ export default function AudioLorePlayer({
               </span>
            </div>
 
-           <div className="flex-1 flex flex-col justify-center px-6 z-10 gap-3">
+           <div className="flex-1 flex flex-col justify-center px-6 z-10">
               <div className="flex items-center justify-between px-2">
                  <button onClick={(e) => { e.stopPropagation(); onPrevChapter(); }} disabled={!hasPrevChapter} className={`p-2 rounded-full transition-all ${hasPrevChapter ? "text-amber-500/70 hover:text-amber-300 hover:shadow-[0_0_10px_rgba(251,191,36,0.5)] hover:bg-slate-700/50" : "text-slate-600 opacity-50"}`}>
                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -190,20 +182,6 @@ export default function AudioLorePlayer({
                  <button onClick={(e) => { e.stopPropagation(); onNextChapter(); }} disabled={!hasNextChapter} className={`p-2 rounded-full transition-all ${hasNextChapter ? "text-amber-500/70 hover:text-amber-300 hover:shadow-[0_0_10px_rgba(251,191,36,0.5)] hover:bg-slate-700/50" : "text-slate-600 opacity-50"}`}>
                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                  </button>
-              </div>
-
-              <div className="flex items-center gap-3">
-                 <svg className="w-4 h-4 text-amber-500/70" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                 <input 
-                   type="range" 
-                   min="0" 
-                   max="1" 
-                   step="0.1" 
-                   value={volume} 
-                   onChange={handleVolumeChange}
-                   onClick={(e) => e.stopPropagation()} 
-                   className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-400" 
-                 />
               </div>
            </div>
         </div>

@@ -942,24 +942,57 @@ export default function FloatingMenu({
               key={selectedWeapon.id}
               className="fixed inset-0 z-[150] pointer-events-none flex justify-end"
             >
+              {/* Dark Background Overlay */}
               <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedWeapon(null)}
                 className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto transform-gpu"
-                style={{ willChange: "opacity" }} // <-- Optimization
+                style={{ willChange: "opacity" }} 
               />
+              
+              {/* Sidebar Container */}
               <m.div
                 initial={{ x: "100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
                 transition={{ type: "spring", stiffness: 260, damping: 30 }}
-                className="relative w-full sm:w-[500px] h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0703] to-black border-l border-[#8b5a2b]/40 shadow-[-30px_0_80px_rgba(0,0,0,1)] pointer-events-auto overflow-y-auto transform-gpu"
-                style={{ willChange: "transform, opacity" }} // <-- Optimization
+                className="relative w-full sm:w-[510px] h-full bg-[#050301] border-l border-[#8b5a2b]/40 shadow-[-30px_0_80px_rgba(0,0,0,1)] pointer-events-auto flex flex-col overflow-y-auto transform-gpu"
+                style={{ willChange: "transform, opacity" }} 
               >
-                <m.div
-                  className="p-10 flex flex-col h-full relative z-10"
+                
+                {/* Floating Glass Close Button */}
+                <button
+                  onClick={() => setSelectedWeapon(null)}
+                  className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/40 border border-[#8b5a2b]/40 backdrop-blur-md flex items-center justify-center text-[#a67c47] hover:text-[#fbbf24] hover:border-[#fbbf24]/60 hover:bg-black/60 transition-all z-50 shadow-[0_4px_15px_rgba(0,0,0,0.5)] cursor-pointer"
+                >
+                  ✕
+                </button>
+
+                {/* --- IMAGE CONTAINER (5px Top Margin & 360-Degree Vignette) --- */}
+                <m.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1, duration: 0.4 }}
+                  className="relative w-full h-[320px] sm:h-[400px] shrink-0 pointer-events-none mt-[0px]"
+                >
+                  <img
+                    src={selectedWeapon.image}
+                    alt={selectedWeapon.name}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                  />
+                  
+                  {/* The 360-Degree Vignette System */}
+                  {/* Top edge fade */}
+                  <div className="absolute inset-x-0 top-0 h-0 bg-gradient-to-b from-[#050301] to-transparent" />
+                  
+                  {/* Increased Bottom fade (Much taller and thicker to blend completely into the #050301 background) */}
+                  <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#050301] via-[#050301]/60 to-transparent" />
+                </m.div>
+
+                {/* --- TEXT CONTENT --- */}
+                <m.div 
                   initial="hidden"
                   animate="visible"
                   variants={{
@@ -969,70 +1002,34 @@ export default function FloatingMenu({
                       transition: { staggerChildren: 0.1, delayChildren: 0.2 },
                     },
                   }}
+                  className="relative px-8 pb-10 pt-4 flex flex-col flex-1 z-10"
                 >
-                  <button
-                    onClick={() => setSelectedWeapon(null)}
-                    className="absolute top-8 left-8 text-[#a67c47] hover:text-amber-300 text-xs font-bold tracking-[0.2em] uppercase transition-colors flex items-center gap-2"
+                  
+                  {/* Weapon Title */}
+                  <m.h2 
+                    variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                    className="text-3xl sm:text-4xl font-serif font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-b from-[#fff6d6] via-[#fbbf24] to-[#a67c47] text-center mb-5 drop-shadow-[0_4px_20px_rgba(0,0,0,1)]"
                   >
-                    <span className="text-lg leading-none">&larr;</span> Return
-                  </button>
-                  <div className="mt-16 flex flex-col items-center">
-                    <m.div
-                      variants={{
-                        hidden: { y: -20, opacity: 0 },
-                        visible: { y: 0, opacity: 1 },
-                      }}
-                      className="w-full flex justify-center mb-8 transform-gpu"
-                      style={{ willChange: "transform, opacity" }}
-                    >
-                      <div className="relative w-full aspect-square max-h-[340px] rounded-lg overflow-hidden border border-[#a67c47]/40 shadow-[0_15px_40px_rgba(0,0,0,0.8)] bg-black">
-                        {/* Replaced standard <img> with optimized Next.js <Image /> */}
-                        <Image
-                          src={selectedWeapon.image}
-                          alt={selectedWeapon.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, 400px"
-                          className="object-cover object-center"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0703] via-transparent to-transparent opacity-90" />
-                      </div>
-                    </m.div>
-                    <m.h2
-                      variants={{
-                        hidden: { y: 20, opacity: 0 },
-                        visible: { y: 0, opacity: 1 },
-                      }}
-                      className="text-4xl sm:text-5xl font-serif font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-b from-amber-100 via-amber-400 to-amber-700 text-center mb-4 drop-shadow-[0_5px_15px_rgba(0,0,0,1)]"
-                      style={{ willChange: "transform, opacity" }}
-                    >
-                      {selectedWeapon.name}
-                    </m.h2>
-                    <m.div
-                      variants={{
-                        hidden: { y: 20, opacity: 0 },
-                        visible: { y: 0, opacity: 1 },
-                      }}
-                      className="flex flex-wrap gap-3 mb-10 w-full justify-center"
-                      style={{ willChange: "transform, opacity" }}
-                    >
-                      <span className="px-4 py-2 bg-black/50 border border-[#a67c47]/30 text-amber-400 text-[10px] uppercase tracking-[0.2em] rounded shadow-inner backdrop-blur-sm">
-                        {selectedWeapon.type}
-                      </span>
-                      <span className="px-4 py-2 bg-black/50 border border-slate-800 text-slate-300 text-[10px] uppercase tracking-[0.2em] rounded shadow-inner backdrop-blur-sm">
-                        Wielder:{" "}
-                        <span className="font-bold text-amber-100 drop-shadow-md">
-                          {selectedWeapon.wielder}
-                        </span>
-                      </span>
-                    </m.div>
-                  </div>
-                  <m.div
-                    variants={{
-                      hidden: { y: 20, opacity: 0 },
-                      visible: { y: 0, opacity: 1 },
-                    }}
-                    className="relative flex-grow bg-black/40 border border-[#8b5a2b]/20 rounded-xl p-8 text-slate-300 leading-relaxed shadow-[inset_0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-sm transform-gpu"
-                    style={{ willChange: "transform, opacity" }}
+                    {selectedWeapon.name}
+                  </m.h2>
+
+                  {/* Tags */}
+                  <m.div 
+                    variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                    className="flex flex-wrap gap-3 mb-8 w-full justify-center"
+                  >
+                    <span className="px-4 py-2 bg-black/60 border border-[#a67c47]/30 text-amber-400 text-[10px] uppercase tracking-[0.2em] rounded-full shadow-inner backdrop-blur-sm">
+                      {selectedWeapon.type}
+                    </span>
+                    <span className="px-4 py-2 bg-black/60 border border-slate-700 text-slate-300 text-[10px] uppercase tracking-[0.2em] rounded-full shadow-inner backdrop-blur-sm">
+                      Wielder: <span className="font-bold text-amber-100 drop-shadow-md">{selectedWeapon.wielder}</span>
+                    </span>
+                  </m.div>
+
+                  {/* Description Box */}
+                  <m.div 
+                    variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                    className="relative flex-grow bg-black/40 border border-[#8b5a2b]/20 rounded-xl p-8 text-slate-200 leading-relaxed shadow-[inset_0_10px_40px_rgba(0,0,0,0.8)] backdrop-blur-sm transform-gpu"
                   >
                     <div className="absolute top-0 left-0 w-6 h-6 border-t border-l border-[#a67c47]/40 rounded-tl-xl" />
                     <div className="absolute top-0 right-0 w-6 h-6 border-t border-r border-[#a67c47]/40 rounded-tr-xl" />
@@ -1042,6 +1039,11 @@ export default function FloatingMenu({
                       {selectedWeapon.description}
                     </p>
                   </m.div>
+
+                  <div className="mt-8 pt-6 border-t border-[#8b5a2b]/20 text-center text-[10px] text-slate-500 uppercase tracking-[0.3em]">
+                    Mahabharata Armory Archives
+                  </div>
+                  
                 </m.div>
               </m.div>
             </m.div>

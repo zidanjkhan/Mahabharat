@@ -149,14 +149,10 @@ export default function Sidebar({
             hasNextChapter={hasNextChapter}
             hasPrevChapter={hasPrevChapter}
             onNextChapter={() => {
-              onNextChapter();
-              setShowSidebar(false); 
-              setShowPopup(true);    
+              onNextChapter(true); // Clean React architecture: Tell parent to keep popup open
             }}
             onPrevChapter={() => {
-              onPrevChapter();
-              setShowSidebar(false);
-              setShowPopup(true);
+              onPrevChapter(true); // Clean React architecture: Tell parent to keep popup open
             }}
           />
           {/* ========================================= */}
