@@ -6,6 +6,7 @@ export const weaponsData = [
     name: "Gandiva", 
     wielder: "Arjuna", 
     type: "Divine Bow", 
+    image: "/astra/Gandiva.png",
     description: "Forged by Lord Brahma, this indestructible celestial bow possesses 108 glowing strings. It was given to Arjuna by the water god Varuna during the burning of the Khandava Forest. It fires arrows with the terrifying roar of thunder, amplifying Arjuna's strength a thousandfold and striking fear into the Kaurava army.",
     icon: "🏹" 
   },
@@ -14,6 +15,7 @@ export const weaponsData = [
     name: "Pashupatastra", 
     wielder: "Arjuna", 
     type: "Supreme Astra", 
+    image: "/astra/Pashupatashtra.png",
     description: "The ultimate, world-ending weapon of Lord Shiva. Capable of destroying the entire universe and rewriting creation, it can be discharged by mind, eyes, words, or a bow. Arjuna acquired it after severe penance and a fierce physical battle with Shiva in the guise of a hunter. Knowing its cataclysmic nature, Arjuna never deployed it in the Kurukshetra war.",
     icon: "🔱" 
   },
@@ -22,6 +24,7 @@ export const weaponsData = [
     name: "Vijaya Dhanush", 
     wielder: "Karna / Parashurama", 
     type: "Divine Bow", 
+    image: "/astra/VijayaDhanush.png",
     description: "The personal bow of Lord Shiva, designed by Vishwakarma to destroy the city of Tripura. Passed down to Parashurama and eventually to Karna, it guarantees absolute victory to its wielder. The bowstring cannot be broken by any astra, and its arrows carry the weight of a mountain.",
     icon: "🌙" 
   },
@@ -30,6 +33,7 @@ export const weaponsData = [
     name: "Sudarshana Chakra", 
     wielder: "Krishna", 
     type: "Divine Discus", 
+    image: "/astra/SudharshanChakra.jpg",
     description: "A spinning, time-altering celestial discus forged from the sun's dust by Vishwakarma. It is the ultimate weapon of preservation and destruction. Krishna notably used it to behead Shishupala, and later manipulated it to eclipse the sun, creating a false sunset to help Arjuna kill Jayadratha.",
     icon: "🥏" 
   },
@@ -38,6 +42,7 @@ export const weaponsData = [
     name: "Kaumodaki", 
     wielder: "Krishna / Balarama", 
     type: "Divine Mace", 
+    image: "/astra/Kaumodaki.png",
     description: "The legendary gada (mace) of Lord Vishnu, bestowed upon Krishna by Varuna. It possesses the power to slay celestial demons and generates a deafening roar that shatters the morale of entire armies. It symbolizes intellect, time, and the unconquerable power of the mind.",
     icon: "🏏" 
   },
@@ -46,6 +51,7 @@ export const weaponsData = [
     name: "Vasavi Shakti", 
     wielder: "Karna", 
     type: "Divine Dart", 
+    image: "/astra/VasaviShakti.png",
     description: "A flawless, golden dart granted to Karna by Lord Indra in exchange for his divine Kavacha (armor) and Kundala (earrings). It is absolutely guaranteed to instantly kill any single living entity in creation. However, it can only be used once before returning to Indra. Karna was forced to use it to slay the rampaging illusionist Ghatotkacha, saving Arjuna from its wrath.",
     icon: "⚡" 
   },
@@ -56,6 +62,7 @@ export const weaponsData = [
     name: "Brahmastra", 
     wielder: "Multiple (Arjuna, Karna, Drona, Ashwatthama)", 
     type: "Astra", 
+    image: "/astra/Brahmastra.png",
     description: "A fearsome weapon forged by Brahma that never misses its mark. Upon impact, it annihilates the target and leaves the surrounding land barren, poisoning the earth and stopping rainfall for decades. It is summoned through deep meditation and absolute focus.",
     icon: "💥" 
   },
@@ -64,6 +71,7 @@ export const weaponsData = [
     name: "Brahmashirsha Astra", 
     wielder: "Ashwatthama / Arjuna", 
     type: "Supreme Astra", 
+    image: "/astra/BrahmashirshaAstra.png",
     description: "An evolution of the Brahmastra, holding the terrifying power of Brahma's four heads. It is four times deadlier than a standard Brahmastra. At the war's end, Ashwatthama invoked this weapon out of spite. Unable to retract it, he cowardly redirected its nuclear-like energy into the womb of Uttara to kill the unborn heir, Parikshit, whom Krishna later saved.",
     icon: "☢️" 
   },
@@ -72,6 +80,7 @@ export const weaponsData = [
     name: "Narayanastra", 
     wielder: "Ashwatthama", 
     type: "Supreme Astra", 
+    image: "/astra/Narayanastra.png",
     description: "The personal weapon of Lord Vishnu, firing millions of deadly, heat-seeking missiles simultaneously. Its intensity scales infinitely based on the target's resistance. When Ashwatthama unleashed it, Krishna ordered the entire Pandava army to drop their weapons and surrender completely—the only known countermeasure to survive its wrath.",
     icon: "☄️" 
   },
@@ -80,6 +89,7 @@ export const weaponsData = [
     name: "Vaishnavastra", 
     wielder: "Bhagadatta", 
     type: "Supreme Astra", 
+    image: "/astra/Vaishnavi.png",
     description: "An infallible weapon belonging to Lord Vishnu that brings absolute destruction to whatever it targets. King Bhagadatta fired this astra directly at Arjuna. Recognizing the unstoppable weapon, Krishna stood up in the chariot and absorbed the blow, letting it transform into a harmless garland of flowers around his neck.",
     icon: "🌺" 
   },
@@ -88,6 +98,7 @@ export const weaponsData = [
     name: "Bhargavastra", 
     wielder: "Karna", 
     type: "Astra", 
+    image: "/astra/Bhargavastra.jfif",
     description: "A terrifying weapon of Parashurama that rains millions of deadly arrows from the sky, causing mass devastation. Karna unleashed this astra on the 17th day of the war, single-handedly wiping out entire Akshauhinis (battalions) of the Pandava army and causing unprecedented panic.",
     icon: "🌧️" 
   },
@@ -98,6 +109,7 @@ export const weaponsData = [
     name: "Nagastra", 
     wielder: "Karna", 
     type: "Astra", 
+    image: "/astra/Nagayastra.png",
     description: "A deadly, venomous projectile taking the form of thousands of lethal snakes. Karna fired this specifically at Arjuna, harboring the vengeful snake Ashwasena. In a split-second maneuver, Krishna pressed the chariot deep into the earth, causing the arrow to narrowly miss Arjuna's neck, striking his celestial crown instead.",
     icon: "🐍" 
   },
@@ -106,6 +118,7 @@ export const weaponsData = [
     name: "Garudastra", 
     wielder: "Arjuna", 
     type: "Astra", 
+    image: "/astra/Garudastra.png",
     description: "The weapon of Garuda, the king of birds and mount of Vishnu. Arjuna frequently used this to perfectly counter the Nagastra, as it summons massive, celestial eagles that devour the venomous snakes summoned by the enemy.",
     icon: "🦅" 
   },
@@ -114,6 +127,7 @@ export const weaponsData = [
     name: "Agneyastra", 
     wielder: "Multiple (Arjuna, Drona)", 
     type: "Elemental Astra", 
+    image: "/astra/Agneyastra.png",
     description: "The weapon of Agni, the Fire God. When fired, it unleashes a localized inferno, burning up enemy formations and generating unquenchable flames that cannot be extinguished by normal means.",
     icon: "🔥" 
   },
@@ -122,6 +136,7 @@ export const weaponsData = [
     name: "Varunastra", 
     wielder: "Multiple", 
     type: "Elemental Astra", 
+    image: "/astra/Varunastra.png",
     description: "The weapon of Varuna, the God of Water. It unleashes torrential floods and massive waves upon the battlefield. It is the primary countermeasure used to extinguish the devastating fires of the Agneyastra.",
     icon: "🌊" 
   },
@@ -130,6 +145,7 @@ export const weaponsData = [
     name: "Vayavyastra", 
     wielder: "Arjuna / Drona", 
     type: "Elemental Astra", 
+    image: "/astra/Vayavyastra.png",
     description: "The weapon of Vayu, the Wind God. It summons catastrophic hurricanes and tornadoes, capable of blowing away entire armies, chariots, and airborne projectiles.",
     icon: "🌪️" 
   },
@@ -138,6 +154,7 @@ export const weaponsData = [
     name: "Anjalika Astra", 
     wielder: "Arjuna", 
     type: "Astra", 
+    image: "/astra/AnjalikaAstra.png",
     description: "A crescent-shaped celestial arrow of immense sharpness and divine speed. Arjuna famously invoked this specific weapon on the 17th day of the Kurukshetra war to decapitate Karna while he was attempting to lift his chariot wheel from the mud.",
     icon: "🌙" 
   },
@@ -146,6 +163,7 @@ export const weaponsData = [
     name: "Tvashtar Astra", 
     wielder: "Arjuna", 
     type: "Illusion Astra", 
+    image: "/astra/TvashtarAstra.png",
     description: "The weapon of the heavenly builder, Tvashtri. When deployed, it creates massive optical illusions on the battlefield, causing enemies to mistake their own allies for foes, resulting in chaotic infighting within the opposing army.",
     icon: "👁️" 
   },
@@ -154,6 +172,7 @@ export const weaponsData = [
     name: "Mohini Astra", 
     wielder: "Arjuna", 
     type: "Illusion Astra", 
+    image: "/astra/MohiniAstra.png",
     description: "A mesmerising weapon that creates an aura of extreme delusion. When fired, it forces the entire enemy army into a deep, hypnotic trance, effectively freezing them in place and neutralizing threats without shedding blood.",
     icon: "✨" 
   },
@@ -162,6 +181,7 @@ export const weaponsData = [
     name: "Suryastra", 
     wielder: "Arjuna", 
     type: "Elemental Astra", 
+    image: "/astra/Suryastra.png",
     description: "A blinding weapon gifted by Surya, the Sun God. It creates a brilliant, concentrated light that evaporates water and blinds the enemy forces. It can be used to dispel illusions, darkness, and fog on the battlefield.",
     icon: "☀️" 
   },
@@ -170,6 +190,7 @@ export const weaponsData = [
     name: "Parvatastra", 
     wielder: "Arjuna / Bhishma", 
     type: "Elemental Astra", 
+    image: "/astra/Parvatastra.png",
     description: "An earth-shattering weapon that rains massive boulders and mountains down from the sky to crush the enemy. It is often countered by the Vayavyastra (Wind) to blow the rocks away.",
     icon: "⛰️" 
   },
@@ -178,6 +199,7 @@ export const weaponsData = [
     name: "Vajra", 
     wielder: "Indra / Arjuna", 
     type: "Divine Weapon", 
+    image: "/astra/Vajra.png",
     description: "The legendary thunderbolt of Lord Indra, forged from the unbreakable bones of the sage Dadhichi. It summons strikes of celestial lightning that can shatter mountains and bypass almost any physical defense.",
     icon: "🌩️" 
   }

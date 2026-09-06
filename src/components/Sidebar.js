@@ -2,6 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import AudioLorePlayer from "./AudioLorePlayer"; 
 
 export default function Sidebar({
   showSidebar,
@@ -18,18 +19,16 @@ export default function Sidebar({
 }) {
   const isChapter43 = currentData.era === "Chapter 43" || currentData.title === "The Death of Kichaka";
 
-  // Handle drag/swipe gesture on the sidebar
   const handleDragEnd = (e, info) => {
-    const swipeThreshold = 60; // minimum pixels to trigger action
+    const swipeThreshold = 60; 
     if (info.offset.x > swipeThreshold) {
-      // Swiped Right -> Close Sidebar
       setShowSidebar(false);
     }
   };
 
   return (
     <>
-      {/* --- LORE SIDEBAR (SUMMARY) WITH SWIPE SUPPORT --- */}
+      {/* --- LORE SIDEBAR WITH SWIPE SUPPORT --- */}
       <motion.aside
         initial={{ x: "100%" }}
         animate={{ x: showSidebar ? 0 : "100%" }}
@@ -38,96 +37,127 @@ export default function Sidebar({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={{ left: 0.05, right: 0.5 }}
         onDragEnd={handleDragEnd}
-        className="absolute top-0 right-0 h-full w-[90vw] md:w-[480px] bg-slate-900/70 opacity-100 border-l border-slate-700 shadow-2xl backdrop-blur-none z-50 p-8 flex flex-col justify-center overflow-y-auto cursor-grab active:cursor-grabbing"
+        className="absolute top-0 right-0 h-full w-[90vw] md:w-[480px] bg-[#050301] opacity-100 border-l border-[#8b5a2b]/40 shadow-[-30px_0_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl z-50 flex flex-col overflow-y-auto cursor-grab active:cursor-grabbing"
       >
+        {/* Floating Glass Close Button */}
         <button
           onClick={() => setShowSidebar(false)}
-          className="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors p-2 text-xl z-50 cursor-pointer"
+          className="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/40 border border-[#8b5a2b]/40 backdrop-blur-md flex items-center justify-center text-[#a67c47] hover:text-[#fbbf24] hover:border-[#fbbf24]/60 hover:bg-black/60 transition-all z-50 shadow-[0_4px_15px_rgba(0,0,0,0.5)] cursor-pointer"
         >
           ✕
         </button>
 
-        <div className="mt-8 mb-6 pb-6 border-b border-slate-700">
-          <h3 className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-3">
-            {currentData.era}
-          </h3>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-amber-500 leading-tight">
-            {currentData.title}
-          </h2>
-        </div>
-
-        {/* --- CHAPTER SIDEBAR IMAGE SECTION (Dynamic Width/Height) --- */}
-        {currentData.sidebarImage && (
-          <div className="w-full flex justify-center mb-6">
-            <div className="rounded-lg overflow-hidden border border-amber-500/40 shadow-[0_15px_40px_rgba(0,0,0,1)] bg-black inline-block max-w-full">
-              <img
-                src={currentData.sidebarImage}
-                alt={currentData.title}
-                className="w-auto h-auto max-w-full max-h-[380px] object-contain block mx-auto"
-              />
-            </div>
+        {/* --- MASSIVE EDGE-TO-EDGE HERO IMAGE --- */}
+        {currentData.sidebarImage ? (
+          // Fixed height ensures the text block is always anchored consistently. 
+          // Landscape images will zoom to fill this height.
+          <div className="relative w-full h-[400px] sm:h-[480px] shrink-0 pointer-events-none">
+            <img
+              src={currentData.sidebarImage}
+              alt={currentData.title}
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+            
+            {/* The Vignette: Restricted to the bottom 2/3rds to leave the top bright and clear */}
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#050301] via-[#050301]/70 to-transparent" />
+            <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#050301]/80 to-transparent" />
           </div>
+        ) : (
+          // Fallback Spacer if no image exists
+          <div className="h-24 shrink-0" />
         )}
 
-        <p className="text-lg text-slate-300 leading-relaxed mb-6">
-          {currentData.summary}
-        </p>
+        {/* --- TEXT CONTENT & BUTTONS --- */}
+        <div className="relative px-8 pb-8 flex flex-col flex-1 z-10 -mt-24 sm:-mt-28">
+          
+          {/* Unified Title Block */}
+          <div className="mb-6">
+            <h3 className="text-[10px] font-black tracking-[0.3em] text-[#fbbf24] uppercase mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">
+              {currentData.era}
+            </h3>
+            <h2 className="text-3xl sm:text-4xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-b from-[#fff6d6] via-[#fbbf24] to-[#a67c47] leading-tight drop-shadow-[0_4px_20px_rgba(0,0,0,1)] pb-1">
+              {currentData.title}
+            </h2>
+          </div>
 
-        <div className="flex flex-col gap-4">
-          {/* Read Full Scripture spans full width at the top */}
-          <button
-            onClick={() => setShowPopup(true)}
-            className="bg-amber-600/20 border border-amber-500/50 text-amber-400 py-4 px-4 rounded hover:bg-amber-600/40 transition-colors uppercase tracking-widest text-sm font-bold shadow-lg cursor-pointer text-center"
-          >
-            Read Full Scripture
-          </button>
+          <p className="text-base text-[#d1bfae] leading-relaxed mb-8 font-light text-justify drop-shadow-sm">
+            {currentData.summary}
+          </p>
 
-          {/* Previous and Next buttons side by side underneath */}
-          {!isWarMode && (
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={onPrevChapter}
-                disabled={!hasPrevChapter}
-                className={`py-3 px-3 rounded uppercase tracking-widest text-xs font-bold shadow-lg transition-all flex items-center justify-center gap-1 ${
-                  hasPrevChapter
-                    ? "bg-slate-800 border border-slate-600 text-slate-200 hover:bg-slate-700 hover:border-amber-500/50 hover:text-amber-400 cursor-pointer"
-                    : "bg-slate-900/40 border border-slate-800 text-slate-600 cursor-not-allowed opacity-50"
-                }`}
-              >
-                &larr; Previous
-              </button>
-
-              <button
-                onClick={onNextChapter}
-                disabled={!hasNextChapter}
-                className={`py-3 px-3 rounded uppercase tracking-widest text-xs font-bold shadow-lg transition-all flex items-center justify-center gap-1 ${
-                  hasNextChapter
-                    ? "bg-slate-800 border border-slate-600 text-slate-200 hover:bg-slate-700 hover:border-amber-500/50 hover:text-amber-400 cursor-pointer"
-                    : "bg-slate-900/40 border border-slate-800 text-slate-600 cursor-not-allowed opacity-50"
-                }`}
-              >
-                <span>Next</span> &rarr;
-              </button>
-            </div>
-          )}
-
-          {/* Kurukshetra War Button on Chapter 43 */}
-          {!isWarMode && isChapter43 && (
+          <div className="flex flex-col gap-4 mt-auto">
+            
+            {/* Read Full Scripture - Glowing Glass Button */}
             <button
-              onClick={() => {
-                if (onOpenKurukshetra) onOpenKurukshetra(0);
-              }}
-              className="bg-red-900 border border-red-500 text-white py-4 px-4 rounded hover:bg-red-950 transition-all uppercase tracking-widest text-sm font-black shadow-xl cursor-pointer flex items-center justify-center gap-2 mt-2"
+              onClick={() => setShowPopup(true)}
+              className="relative overflow-hidden w-full bg-gradient-to-b from-[#8b5a2b]/20 to-[#0a0703] border border-[#8b5a2b]/50 hover:border-[#fbbf24]/60 text-[#fbbf24] py-4 rounded-xl transition-all duration-300 uppercase tracking-[0.2em] text-[11px] font-black shadow-[0_10px_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] group cursor-pointer flex justify-center items-center"
             >
-              <span>Enter Kurukshetra War</span> &rarr;
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#fbbf24]/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              Read Full Scripture &rarr;
             </button>
-          )}
+
+            {/* Previous and Next buttons side by side */}
+            {!isWarMode && (
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={onPrevChapter}
+                  disabled={!hasPrevChapter}
+                  className={`relative py-3.5 px-3 rounded-xl uppercase tracking-[0.15em] text-[10px] font-black transition-all flex items-center justify-center gap-2 overflow-hidden ${
+                    hasPrevChapter
+                      ? "bg-[#0a0703] border border-[#8b5a2b]/40 text-[#a67c47] hover:border-[#fbbf24]/50 hover:text-[#fbbf24] hover:bg-[#1a1108] hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] cursor-pointer"
+                      : "bg-black border border-slate-900 text-slate-700 cursor-not-allowed opacity-50"
+                  }`}
+                >
+                  &larr; Previous
+                </button>
+
+                <button
+                  onClick={onNextChapter}
+                  disabled={!hasNextChapter}
+                  className={`relative py-3.5 px-3 rounded-xl uppercase tracking-[0.15em] text-[10px] font-black transition-all flex items-center justify-center gap-2 overflow-hidden ${
+                    hasNextChapter
+                      ? "bg-[#0a0703] border border-[#8b5a2b]/40 text-[#a67c47] hover:border-[#fbbf24]/50 hover:text-[#fbbf24] hover:bg-[#1a1108] hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] cursor-pointer"
+                      : "bg-black border border-slate-900 text-slate-700 cursor-not-allowed opacity-50"
+                  }`}
+                >
+                  <span>Next</span> &rarr;
+                </button>
+              </div>
+            )}
+
+            {/* Kurukshetra War Button on Chapter 43 */}
+            {!isWarMode && isChapter43 && (
+              <button
+                onClick={() => {
+                  if (onOpenKurukshetra) onOpenKurukshetra(0);
+                }}
+                className="mt-2 relative overflow-hidden w-full bg-gradient-to-br from-[#4a0909]/90 to-black hover:from-[#5e0a0a] border border-red-500/50 text-[#ffedb3] py-4 rounded-xl transition-all duration-300 uppercase tracking-[0.2em] text-[11px] font-black shadow-[0_10px_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(185,28,28,0.5)] cursor-pointer flex justify-center items-center gap-2"
+              >
+                <span>Enter Kurukshetra War</span> &rarr;
+              </button>
+            )}
+          </div>
         </div>
       </motion.aside>
 
       {/* --- DEEP LORE ANCIENT MANUSCRIPT MODAL --- */}
       {showPopup && (
         <div className="absolute inset-0 z-80 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
+          {/* THE GLIDING AUDIO PLAYER */}
+          <AudioLorePlayer 
+            textToRead={currentData.deepLore}
+            hasNextChapter={hasNextChapter}
+            hasPrevChapter={hasPrevChapter}
+            onNextChapter={() => {
+              onNextChapter();
+              setShowSidebar(false); 
+              setShowPopup(true);    
+            }}
+            onPrevChapter={() => {
+              onPrevChapter();
+              setShowSidebar(false);
+              setShowPopup(true);
+            }}
+          />
           {/* ========================================= */}
           {/* 1. PC / DESKTOP VIEW (Landscape proportions) */}
           {/* ========================================= */}
