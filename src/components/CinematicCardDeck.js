@@ -1,10 +1,8 @@
 // src/components/CinematicCardDeck.js
-
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 
 export default function CinematicCardDeck({
   chapters,
@@ -68,6 +66,7 @@ export default function CinematicCardDeck({
       if (currentChapterIndex > 0) {
         handleCardSwitch(currentChapterIndex - 1, -1);
       } else if (isWarMode && currentChapterIndex === 0) {
+        // SWIPE TO EXIT WAR: Trigger back to chapters and force index 38 (Chapter 39)
         onSwitchBackToChapters();
         handleCardSwitch(38, -1);
       }
@@ -93,15 +92,17 @@ export default function CinematicCardDeck({
 
   return (
     <div 
-      className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center pointer-events-auto"
+      className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center justify-center pointer-events-auto transform-gpu"
       onMouseLeave={() => setIsExpanded(false)}
     >
+      {/* CONTAINER WRAPPER */}
       <motion.div
         animate={{ x: slideDir * 20 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }} 
         className="relative flex items-center justify-center"
       >
         
+        {/* --- LEFT PREVIOUS ARROW (Handles both standard Prev and exiting War Mode) --- */}
         {(currentChapterIndex > 0 || (isWarMode && currentChapterIndex === 0)) && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
@@ -109,6 +110,7 @@ export default function CinematicCardDeck({
             {...(currentChapterIndex > 0 
               ? makeSwitchHandler(currentChapterIndex - 1, -1) 
               : { 
+                  // EXITS WAR MODE AND SLIDES TO CHAPTER 39
                   onPointerUp: (e) => { 
                     e.preventDefault(); 
                     e.stopPropagation(); 
@@ -126,6 +128,7 @@ export default function CinematicCardDeck({
           </motion.button>
         )}
 
+        {/* --- ATMOSPHERIC SIDE CARDS --- */}
         <AnimatePresence mode="popLayout">
           {isExpanded && (
             <motion.div
@@ -142,17 +145,11 @@ export default function CinematicCardDeck({
                   whileHover={{ scale: 0.98, x: -4 }}
                   onMouseEnter={() => setIsExpanded(true)}
                   {...makeSwitchHandler(currentChapterIndex - 1, -1)}
-                  className="absolute -left-[140px] sm:-left-44 top-0 sm:top-[-20px] w-40 sm:w-64 h-[280px] sm:h-[380px] rounded-2xl sm:rounded-[2rem] bg-[#050301] border border-[#8b5a2b]/20 flex flex-col justify-between -rotate-6 scale-90 opacity-40 blur-[2px] hover:blur-none hover:opacity-100 shadow-[0_20px_50px_rgba(0,0,0,1)] pointer-events-auto cursor-pointer backdrop-blur-xl group/prev transition-all duration-500 overflow-hidden"
+                  className="absolute -left-[140px] sm:-left-44 top-0 sm:top-[-20px] w-40 sm:w-64 h-[280px] sm:h-[380px] rounded-2xl sm:rounded-[2rem] bg-[#050301] border border-[#8b5a2b]/20 flex flex-col justify-between -rotate-6 scale-90 opacity-40 blur-[2px] hover:blur-none hover:opacity-100 shadow-[0_20px_50px_rgba(0,0,0,1)] pointer-events-auto cursor-pointer backdrop-blur-xl group/prev transition-all duration-500 overflow-hidden transform-gpu"
                 >
                   <div className="absolute top-0 inset-x-0 h-32 sm:h-48 w-full z-0 overflow-hidden rounded-t-2xl sm:rounded-t-[2rem]">
                     {hasImage(prevItem.cardImg || prevItem.image) && (
-                      <Image 
-                        src={prevItem.cardImg || prevItem.image} 
-                        alt={prevItem.title} 
-                        fill
-                        sizes="(max-width: 768px) 160px, 256px"
-                        className="object-cover object-top opacity-50 group-hover/prev:scale-110 group-hover/prev:opacity-80 transition-all duration-700" 
-                      />
+                      <img src={prevItem.cardImg || prevItem.image} alt={prevItem.title} className="w-full h-full object-cover object-top opacity-50 group-hover/prev:scale-110 group-hover/prev:opacity-80 transition-all duration-700" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050301] via-[#050301]/60 to-transparent pointer-events-none" />
                   </div>
@@ -170,17 +167,11 @@ export default function CinematicCardDeck({
                   whileHover={{ scale: 0.98, x: 4 }}
                   onMouseEnter={() => setIsExpanded(true)}
                   {...makeSwitchHandler(currentChapterIndex + 1, 1)}
-                  className="absolute -right-[140px] sm:-right-44 top-0 sm:top-[-20px] w-40 sm:w-64 h-[280px] sm:h-[380px] rounded-2xl sm:rounded-[2rem] bg-[#050301] border border-[#8b5a2b]/20 flex flex-col justify-between rotate-6 scale-90 opacity-40 blur-[2px] hover:blur-none hover:opacity-100 shadow-[0_20px_50px_rgba(0,0,0,1)] pointer-events-auto cursor-pointer backdrop-blur-xl group/next transition-all duration-500 overflow-hidden"
+                  className="absolute -right-[140px] sm:-right-44 top-0 sm:top-[-20px] w-40 sm:w-64 h-[280px] sm:h-[380px] rounded-2xl sm:rounded-[2rem] bg-[#050301] border border-[#8b5a2b]/20 flex flex-col justify-between rotate-6 scale-90 opacity-40 blur-[2px] hover:blur-none hover:opacity-100 shadow-[0_20px_50px_rgba(0,0,0,1)] pointer-events-auto cursor-pointer backdrop-blur-xl group/next transition-all duration-500 overflow-hidden transform-gpu"
                 >
                   <div className="absolute top-0 inset-x-0 h-32 sm:h-48 w-full z-0 overflow-hidden rounded-t-2xl sm:rounded-t-[2rem]">
                     {hasImage(nextItem.cardImg || nextItem.image) && (
-                      <Image 
-                        src={nextItem.cardImg || nextItem.image} 
-                        alt={nextItem.title} 
-                        fill
-                        sizes="(max-width: 768px) 160px, 256px"
-                        className="object-cover object-top opacity-50 group-hover/next:scale-110 group-hover/next:opacity-80 transition-all duration-700" 
-                      />
+                      <img src={nextItem.cardImg || nextItem.image} alt={nextItem.title} className="w-full h-full object-cover object-top opacity-50 group-hover/next:scale-110 group-hover/next:opacity-80 transition-all duration-700" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050301] via-[#050301]/60 to-transparent pointer-events-none" />
                   </div>
@@ -195,6 +186,7 @@ export default function CinematicCardDeck({
           )}
         </AnimatePresence>
 
+        {/* --- MAIN FOREGROUND ACTIVE CARD (RESPONSIVE) --- */}
         <motion.div
           layout
           drag
@@ -214,7 +206,7 @@ export default function CinematicCardDeck({
             borderRadius: isExpanded ? 32 : 36,
           }}
           transition={{ type: "spring", stiffness: 450, damping: 30 }} 
-          className={`relative cursor-pointer transform-gpu shadow-[0_30px_70px_rgba(0,0,0,0.95)] backdrop-blur-xl border border-[#8b5a2b]/60 bg-[#050301] z-20 overflow-hidden flex flex-col justify-between p-0 group/card select-none ${
+          className={`relative cursor-pointer shadow-[0_30px_70px_rgba(0,0,0,0.95)] backdrop-blur-xl border border-[#8b5a2b]/60 bg-[#050301] z-20 overflow-hidden flex flex-col justify-between p-0 group/card select-none transform-gpu ${
             isExpanded 
               ? "w-[300px] sm:w-[380px] h-[380px] sm:h-[460px]" 
               : "w-[240px] sm:w-[300px] h-[56px] sm:h-[72px]"
@@ -223,6 +215,7 @@ export default function CinematicCardDeck({
           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#fbbf24]/60 to-transparent opacity-90 pointer-events-none z-30" />
           <div className="absolute inset-0 rounded-[inherit] shadow-[inset_0_0_50px_rgba(0,0,0,0.9)] pointer-events-none z-20" />
 
+          {/* STATE 1: COLLAPSED PILL VIEW */}
           {!isExpanded && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -248,6 +241,7 @@ export default function CinematicCardDeck({
             </motion.div>
           )}
 
+          {/* STATE 2: EXPANDED ACTIVE CARD */}
           {isExpanded && (
             <AnimatePresence mode="popLayout">
               <motion.div
@@ -261,13 +255,10 @@ export default function CinematicCardDeck({
                 
                 <div className="relative w-full h-[180px] sm:h-[220px] shrink-0 overflow-hidden">
                   {hasImage(currentItem.cardImg || currentItem.image) && (
-                    <Image
+                    <img
                       src={currentItem.cardImg || currentItem.image}
                       alt={currentItem.title}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 300px, 380px"
-                      className="object-cover object-top transition-transform duration-1000 group-hover/card:scale-105 pointer-events-none"
+                      className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-1000 group-hover/card:scale-105 pointer-events-none"
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#050301] via-[#050301]/40 to-transparent pointer-events-none" />
@@ -301,6 +292,7 @@ export default function CinematicCardDeck({
           )}
         </motion.div>
 
+        {/* --- RIGHT NEXT ARROW --- */}
         {currentChapterIndex < chapters.length - 1 && (
           <motion.button
             animate={{ opacity: isExpanded ? 0 : 1, scale: isExpanded ? 0.8 : 1 }}
@@ -314,10 +306,11 @@ export default function CinematicCardDeck({
         )}
       </motion.div>
 
+      {/* Special Kurukshetra War Trigger */}
       {!isWarMode && currentChapterIndex === chapters.length - 1 && (
         <button
           onClick={onEnterWar}
-          className="absolute -right-24 sm:-right-36 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-br from-[#4a0909]/90 to-black hover:from-[#5e0a0a] border border-red-500/60 text-[#ffedb3] text-[10px] sm:text-xs font-black uppercase tracking-widest sm:tracking-[0.2em] shadow-[0_0_30px_rgba(185,28,28,0.5)] backdrop-blur-xl transition-all cursor-pointer flex items-center gap-1.5"
+          className="absolute -right-24 sm:-right-36 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-br from-[#4a0909]/90 to-black hover:from-[#5e0a0a] border border-red-500/60 text-[#ffedb3] text-[10px] sm:text-xs font-black uppercase tracking-widest sm:tracking-[0.2em] shadow-[0_0_30px_rgba(185,28,28,0.5)] backdrop-blur-xl transition-all cursor-pointer flex items-center gap-1.5 transform-gpu"
         >
           <span>War</span> &rarr;
         </button>

@@ -16,39 +16,29 @@ export default function IntroAnimation({ onStart, onComplete }) {
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
-  // --- AAA TRUE PRELOAD ENGINE (Cache API) ---
+  // --- AAA TRUE PRELOAD ENGINE (Aggressive RAM Preloader) ---
   // Automatically runs in the background when the cinematic starts
-  const executeTruePreload = async () => {
-    try {
-      const cache = await caches.open("mahabharat-saga-v1");
+  const executeTruePreload = () => {
+    const allAssets = [
+      ...timelineData.map((d) => d.cardImg),
+      ...timelineData.map((d) => d.sidebarImage),
+      ...kurukshetraWarData.map((d) => d.cardImg),
+      ...kurukshetraWarData.map((d) => d.sidebarImage),
+      ...weaponsData.map((w) => w.image),
+      "/MainMap1.png",
+      "/map-background.png",
+      "/Page.png"
+    ].filter(Boolean);
 
-      const allAssets = [
-        ...timelineData.map((d) => d.cardImg),
-        ...timelineData.map((d) => d.sidebarImage),
-        ...kurukshetraWarData.map((d) => d.cardImg),
-        ...kurukshetraWarData.map((d) => d.sidebarImage),
-        ...weaponsData.map((w) => w.image),
-        "/MainMap1.png",
-        "/map-background.png",
-        "/Page.png"
-      ].filter(Boolean);
+    const uniqueAssets = [...new Set(allAssets)];
 
-      const uniqueAssets = [...new Set(allAssets)];
-
-      for (const url of uniqueAssets) {
-        const existing = await cache.match(url);
-        if (!existing) {
-          try {
-            const response = await fetch(url);
-            if (response.ok) await cache.put(url, response);
-          } catch (err) {
-            // Silently ignore individual failures so the rest keep downloading
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Preload engine failed:", error);
-    }
+    // Fire all requests in parallel directly into browser RAM
+    uniqueAssets.forEach((url) => {
+      const img = new window.Image();
+      // Explicitly tell the browser's network layer to prioritize these
+      img.fetchPriority = "high"; 
+      img.src = url;
+    });
   };
 
   // 1. RANDOMIZE INITIAL QUOTE ON MOUNT
