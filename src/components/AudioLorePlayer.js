@@ -17,24 +17,17 @@ export default function AudioLorePlayer({
   const [isPaused, setIsPaused] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   
+  const [hasBeenActivated, setHasBeenActivated] = useState(false);
+  
   const isHoveringRef = useRef(false);
   const hoverTimeoutRef = useRef(null);
-  const isPlayingRef = useRef(false);
 
-  isPlayingRef.current = isPlaying;
-
-  // Chapter Change & Continuity
   useEffect(() => {
     window.speechSynthesis.cancel();
-    
-    if (isPlayingRef.current && textToRead) {
-      playText();
-    } else {
-      setIsPlaying(false);
-      setIsPaused(false);
-      setAudioProgress(0);
-      setIsExpanded(false);
-    }
+    setIsPlaying(false);
+    setIsPaused(false);
+    setAudioProgress(0);
+    setIsExpanded(false);
     
     return () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -49,7 +42,6 @@ export default function AudioLorePlayer({
 
   const handleMouseLeave = () => {
     isHoveringRef.current = false;
-    // Reduced delay to 1 second (1000ms) for a quicker retraction
     hoverTimeoutRef.current = setTimeout(() => {
       setIsExpanded(false);
     }, 1000);
@@ -69,6 +61,8 @@ export default function AudioLorePlayer({
 
   const playText = () => {
     if (!textToRead) return;
+
+    setHasBeenActivated(true);
 
     const synth = window.speechSynthesis;
     synth.cancel(); 
@@ -140,8 +134,7 @@ export default function AudioLorePlayer({
     }
   };
 
-  const isVisible = isPopupOpen || isPlaying || audioProgress > 0;
-  if (!isVisible) return null;
+  if (!hasBeenActivated && !isPopupOpen) return null;
 
   return (
     <>
@@ -152,7 +145,7 @@ export default function AudioLorePlayer({
         <div 
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="fixed left-1/2 -translate-x-1/2 bottom-[11vh] sm:bottom-[14vh] z-[100] flex items-center justify-center pointer-events-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] animate-in fade-in zoom-in duration-500 cursor-pointer"
+          className="fixed left-1/2 -translate-x-1/2 bottom-[12vh] z-[100] flex items-center justify-center pointer-events-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] animate-in fade-in zoom-in duration-500 cursor-pointer"
         >
           <div className={`relative flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? "w-[200px] sm:w-[220px]" : "w-[72px]"}`}>
             
@@ -217,9 +210,9 @@ export default function AudioLorePlayer({
       )}
 
       {/* ===========================================================================
-        MODE 2: THE EDGE PILL (Background Player)
+        MODE 2: THE SLIM EDGE TABULAR SLIDER (Background Player with Sound Wave)
         =========================================================================== */}
-      {!isPopupOpen && (
+      {!isPopupOpen && hasBeenActivated && (
         <div 
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -227,43 +220,40 @@ export default function AudioLorePlayer({
           className="fixed right-0 top-[70%] sm:top-[75%] -translate-y-1/2 z-[100] flex items-center animate-in slide-in-from-right duration-500 cursor-pointer pointer-events-auto"
         >
           <div className={`relative group bg-gradient-to-l from-[#120a05]/95 via-[#0a0502]/95 to-[#050301]/95 shadow-[inset_0_2px_10px_rgba(255,255,255,0.05),_0_10px_30px_rgba(0,0,0,0.8)] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden backdrop-blur-md
-          ${isExpanded ? "w-[340px] h-20 rounded-l-2xl shadow-[0_0_30px_rgba(245,158,11,0.2)]" : "w-14 h-28 rounded-l-2xl hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]"}`}
+          ${isExpanded ? "w-[340px] h-20 rounded-l-2xl shadow-[0_0_30px_rgba(245,158,11,0.2)]" : "w-11 h-28 rounded-l-xl hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]"}`}
           >
             {!isPlaying ? (
-              <div className="absolute inset-0 rounded-l-2xl pointer-events-none z-0" style={{ padding: "1px 0px 1px 1px", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}>
+              <div className="absolute inset-0 rounded-l-xl pointer-events-none z-0" style={{ padding: "1px 0px 1px 1px", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}>
                 <div className="absolute top-1/2 right-1/2 w-[300%] aspect-square translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_120deg,transparent_75%,#8b5a2b_100%)]" />
               </div>
             ) : (
               isExpanded ? (
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" width="340" height="80" viewBox="0 0 340 80">
-                  <path d="M 340 1 L 24 1 A 23 23 0 0 0 24 79 L 340 79" fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="660" strokeDashoffset={660 - (audioProgress / 100 * 660)} className="transition-all duration-300 ease-linear shadow-[0_0_8px_#fcd34d]" strokeLinecap="round" />
+                  <path d="M 340 1 L 20 1 A 19 19 0 0 0 20 79 L 340 79" fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="660" strokeDashoffset={660 - (audioProgress / 100 * 660)} className="transition-all duration-300 ease-linear shadow-[0_0_8px_#fcd34d]" strokeLinecap="round" />
                 </svg>
               ) : (
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" width="56" height="112" viewBox="0 0 56 112">
-                  <path d="M 56 1 L 24 1 A 23 23 0 0 0 24 111 L 56 111" fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="145" strokeDashoffset={145 - (audioProgress / 100 * 145)} className="transition-all duration-300 ease-linear shadow-[0_0_8px_#fcd34d]" strokeLinecap="round" />
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" width="44" height="112" viewBox="0 0 44 112">
+                  <path d="M 44 1 L 20 1 A 19 19 0 0 0 20 111 L 44 111" fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="135" strokeDashoffset={135 - (audioProgress / 100 * 135)} className="transition-all duration-300 ease-linear shadow-[0_0_8px_#fcd34d]" strokeLinecap="round" />
                 </svg>
               )
             )}
 
-            <div className={`absolute inset-0 rounded-l-2xl pointer-events-none border-y border-l border-r-0 transition-colors duration-500 ${isPlaying ? "border-amber-700/20" : isExpanded ? "border-[#8b5a2b]/60" : "border-[#8b5a2b]/30 group-hover:border-[#8b5a2b]/80"}`} />
+            <div className={`absolute inset-0 rounded-l-xl pointer-events-none border-y border-l border-r-0 transition-colors duration-500 ${isPlaying ? "border-amber-700/20" : isExpanded ? "border-[#8b5a2b]/60" : "border-[#8b5a2b]/30 group-hover:border-[#8b5a2b]/80"}`} />
 
-            {/* COLLAPSED PILL VIEW */}
+            {/* COLLAPSED SLIDER VIEW WITH SOUND WAVE ICON */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 ease-out pr-1 ${isExpanded ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-              <svg className="w-5 h-5 text-amber-500/80 group-hover:text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+              <svg className="w-5 h-5 text-amber-400 group-hover:text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 10v3M6 6v11M10 3v18M14 8v8M18 5v14M22 10v3"/>
               </svg>
-              <span className="text-[9px] font-serif font-black text-amber-500/80 group-hover:text-amber-400 tracking-widest uppercase mt-2 transition-colors">
-                {isPlaying || audioProgress > 0 ? `${Math.round(audioProgress)}%` : "LORE"}
-              </span>
             </div>
 
             {/* EXPANDED MUSIC PLAYER VIEW */}
             <div className={`absolute top-0 right-0 w-[340px] h-20 flex items-center transition-opacity duration-400 delay-100 ease-in ${isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                <div className="w-20 h-full flex flex-col items-center justify-center flex-shrink-0 relative z-10 border-r border-[#8b5a2b]/20 bg-black/40">
-                  <svg className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                  <svg className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 10v3M6 6v11M10 3v18M14 8v8M18 5v14M22 10v3"/>
                   </svg>
-                  <span className="text-[10px] font-serif font-black text-amber-400 tracking-widest uppercase mt-1">
+                  <span className="text-[10px] font-serif font-black text-amber-400 tracking-widest uppercase mt-1 hidden sm:block">
                     {Math.round(audioProgress)}%
                   </span>
                </div>
