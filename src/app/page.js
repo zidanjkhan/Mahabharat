@@ -23,10 +23,22 @@ import { weaponsData } from "@/data/weaponsData";
 
 // --- TRUE DYNAMIC IMPORTS (Code Split: These won't load until needed!) ---
 const Sidebar = dynamic(() => import("../components/Sidebar"), { ssr: false });
-const ChapterDrawer = dynamic(() => import("../components/ChapterDrawer"), { ssr: false });
-const FamilyTreeModal = dynamic(() => import("../components/FamilyTreeModal"), { ssr: false });
-const GlobalSearchModal = dynamic(() => import("../components/GlobalSearchModal"), { ssr: false });
-const RegionLorePanel = dynamic(() => import("../components/RegionLorePanel"), { ssr: false });
+const ChapterDrawer = dynamic(() => import("../components/ChapterDrawer"), {
+  ssr: false,
+});
+const FamilyTreeModal = dynamic(() => import("../components/FamilyTreeModal"), {
+  ssr: false,
+});
+const GlobalSearchModal = dynamic(
+  () => import("../components/GlobalSearchModal"),
+  { ssr: false },
+);
+const RegionLorePanel = dynamic(() => import("../components/RegionLorePanel"), {
+  ssr: false,
+});
+const AudioLorePlayer = dynamic(() => import("../components/AudioLorePlayer"), {
+  ssr: false,
+}); // <-- ADDED GLOBALLY
 
 // Dedicated map content component (Strictly PC/Desktop mode)
 function MapContent({
@@ -36,11 +48,15 @@ function MapContent({
   isWarMode,
   activeEra,
   warDayIndex,
-  isIntroPlaying
+  isIntroPlaying,
 }) {
   const previousPin = isWarMode
-    ? (warDayIndex > 0 ? kurukshetraWarData[warDayIndex - 1]?.pins?.[0] : null)
-    : (!isWarMode && activeEra > 0 ? timelineData[activeEra - 1]?.pins?.[0] : null);
+    ? warDayIndex > 0
+      ? kurukshetraWarData[warDayIndex - 1]?.pins?.[0]
+      : null
+    : !isWarMode && activeEra > 0
+      ? timelineData[activeEra - 1]?.pins?.[0]
+      : null;
 
   return (
     <div className="relative w-[3840px] h-[2160px]">
@@ -53,11 +69,13 @@ function MapContent({
         className="absolute inset-0 w-full h-full object-cover opacity-80 contrast-125 saturate-50"
         style={{ imageRendering: "-webkit-optimize-contrast" }}
       />
-      
+
       <WarAtmosphereOverlay isWarMode={isWarMode} />
 
       {/* Pins and Overlays */}
-      <div className={`absolute inset-0 z-10 transition-opacity duration-[2000ms] ease-in ${isIntroPlaying ? "opacity-0" : "opacity-100"}`}>
+      <div
+        className={`absolute inset-0 z-10 transition-opacity duration-[2000ms] ease-in ${isIntroPlaying ? "opacity-0" : "opacity-100"}`}
+      >
         <MapAnimationOverlay
           currentData={currentData}
           previousPin={previousPin}
@@ -80,18 +98,19 @@ function MapContent({
         ))}
 
         {/* 2. SLIDER-DRIVEN PINS */}
-        {currentData?.pins && currentData.pins.map((pin, index) => (
-          <Place
-            key={`slider-pin-${index}`}
-            name={pin.name}
-            top={pin.top}
-            left={pin.left}
-            size={pin.size}
-            color={pin.color}
-            onMouseEnter={() => setHoveredRegion(pin)}
-            onMouseLeave={() => setHoveredRegion(null)}
-          />
-        ))}
+        {currentData?.pins &&
+          currentData.pins.map((pin, index) => (
+            <Place
+              key={`slider-pin-${index}`}
+              name={pin.name}
+              top={pin.top}
+              left={pin.left}
+              size={pin.size}
+              color={pin.color}
+              onMouseEnter={() => setHoveredRegion(pin)}
+              onMouseLeave={() => setHoveredRegion(null)}
+            />
+          ))}
       </div>
     </div>
   );
@@ -110,7 +129,7 @@ export default function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const [selectedWeapon, setSelectedWeapon] = useState(null); 
+  const [selectedWeapon, setSelectedWeapon] = useState(null);
   const [isArmoryOpen, setIsArmoryOpen] = useState(false);
 
   const [selectedCharacter, setSelectedCharacter] = useState(null);
@@ -127,8 +146,14 @@ export default function Home() {
     : timelineData[activeEra];
 
   // UI STATE TRACKER: Used to pause background downloads
-  const isUIActive = showSidebar || showPopup || isArmoryOpen || showFamilyTree || isSearchOpen || isDrawerOpen;
-  
+  const isUIActive =
+    showSidebar ||
+    showPopup ||
+    isArmoryOpen ||
+    showFamilyTree ||
+    isSearchOpen ||
+    isDrawerOpen;
+
   const imageQueue = useRef([]);
   const isQueueInitialized = useRef(false);
 
@@ -142,7 +167,7 @@ export default function Home() {
         ...kurukshetraWarData.map((d) => d.cardImg),
         ...kurukshetraWarData.map((d) => d.sidebarImage),
       ].filter(Boolean);
-      
+
       // Remove duplicates
       imageQueue.current = [...new Set(allImages)];
       isQueueInitialized.current = true;
@@ -156,13 +181,13 @@ export default function Home() {
     // 3. Load images sequentially (one-by-one) so we don't choke the network
     const loadNextImage = () => {
       if (isCancelled || imageQueue.current.length === 0) return;
-      
+
       const url = imageQueue.current.shift(); // Take next image from queue
       const img = new window.Image();
-      
-      img.onload = loadNextImage;  // If success, load the next one
+
+      img.onload = loadNextImage; // If success, load the next one
       img.onerror = loadNextImage; // If fail, skip and load the next one
-      img.src = url; 
+      img.src = url;
     };
 
     // Give the browser 1.5 seconds to breathe before starting background downloads
@@ -175,7 +200,7 @@ export default function Home() {
       isCancelled = true; // Clean up and pause the queue when UI opens
       clearTimeout(idleTimer);
     };
-  }, [introState, isUIActive]); 
+  }, [introState, isUIActive]);
 
   // Map Scaling Logic
   useEffect(() => {
@@ -208,13 +233,15 @@ export default function Home() {
 
       const targetScale = 0.75;
       const windowX = window.innerWidth / 2;
-      const windowY = isCardExpanded ? window.innerHeight * 0.27 : window.innerHeight / 2;
+      const windowY = isCardExpanded
+        ? window.innerHeight * 0.27
+        : window.innerHeight / 2;
 
       const targetX = windowX - pinPixelX * targetScale;
       const targetY = windowY - pinPixelY * targetScale;
 
-      // STAGGERED ANIMATION FIX: 
-      // We wait 400ms to let the Card UI smoothly finish its expansion 
+      // STAGGERED ANIMATION FIX:
+      // We wait 400ms to let the Card UI smoothly finish its expansion
       // and let the image load before we force the GPU to pan the massive 4K map.
       const panTimer = setTimeout(() => {
         setTransform(targetX, targetY, targetScale, 4000, "easeOut");
@@ -223,7 +250,14 @@ export default function Home() {
       // Cleanup the timer if the user rapidly scrubs through chapters
       return () => clearTimeout(panTimer);
     }
-  }, [activeEra, warDayIndex, isWarMode, isCardExpanded, introState, currentData]);
+  }, [
+    activeEra,
+    warDayIndex,
+    isWarMode,
+    isCardExpanded,
+    introState,
+    currentData,
+  ]);
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
@@ -232,24 +266,20 @@ export default function Home() {
       setShowSidebar(true);
       setShowPopup(false);
       setIsSearchOpen(false);
-    } 
-    else if (item.type === "war-day") {
+    } else if (item.type === "war-day") {
       setIsWarMode(true);
       setWarDayIndex(item.index);
       setShowSidebar(true);
       setShowPopup(false);
       setIsSearchOpen(false);
-    } 
-    else if (item.type === "location") {
+    } else if (item.type === "location") {
       setHoveredRegion(item.data);
       setIsSearchOpen(false);
-    } 
-    else if (item.type === "character") {
+    } else if (item.type === "character") {
       setSelectedCharacter(item.data);
       setShowFamilyTree(true);
       setIsSearchOpen(false);
-    } 
-    else if (item.type === "weapon") {
+    } else if (item.type === "weapon") {
       setSelectedWeapon(item.data);
       setIsArmoryOpen(true);
       setIsSearchOpen(false);
@@ -268,12 +298,11 @@ export default function Home() {
 
   return (
     <main className="w-full h-[100dvh] bg- overflow-hidden flex items-center justify-center touch-none relative text-slate-200">
-      
       {/* CINEMATIC INTRO OVERLAY */}
       {introState !== "finished" && (
-        <IntroAnimation 
-          onStart={() => setIntroState("playing")} 
-          onComplete={() => setIntroState("finished")} 
+        <IntroAnimation
+          onStart={() => setIntroState("playing")}
+          onComplete={() => setIntroState("finished")}
         />
       )}
 
@@ -285,7 +314,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 z-0 pointer-events-none">
           <Image
-            src="/map-background.png" 
+            src="/map-background.png"
             alt="Ancient Leather Backdrop"
             fill
             priority
@@ -319,7 +348,7 @@ export default function Home() {
               isWarMode={isWarMode}
               activeEra={activeEra}
               warDayIndex={warDayIndex}
-              isIntroPlaying={introState !== "finished"} 
+              isIntroPlaying={introState !== "finished"}
             />
           </TransformComponent>
         </TransformWrapper>
@@ -333,8 +362,9 @@ export default function Home() {
       )}
 
       {/* THE UI LAYER */}
-      <div className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-[2000ms] ease-in-out ${introState !== "finished" ? "opacity-0" : "opacity-100"}`}>
-        
+      <div
+        className={`absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-[2000ms] ease-in-out ${introState !== "finished" ? "opacity-0" : "opacity-100"}`}
+      >
         {/* We wrap each UI component to force them to be clickable again */}
         {hoveredRegion && (
           <div className="pointer-events-auto">
@@ -376,19 +406,17 @@ export default function Home() {
               isWarMode={isWarMode}
               hasPrevChapter={activeEra > 0}
               hasNextChapter={activeEra < timelineData.length - 1}
-              // THE FIX: Add keepPopupOpen parameter
-            onPrevChapter={(keepPopupOpen = false) => {
-              if (activeEra > 0) {
-                setActiveEra(activeEra - 1);
-                if (!keepPopupOpen) setShowPopup(false); 
-              }
-            }}
-            // THE FIX: Add keepPopupOpen parameter
-            onNextChapter={(keepPopupOpen = false) => {
-              if (activeEra < timelineData.length - 1) {
-                setActiveEra(activeEra + 1);
-                if (!keepPopupOpen) setShowPopup(false);
-              }
+              onPrevChapter={(keepPopupOpen = false) => {
+                if (activeEra > 0) {
+                  setActiveEra(activeEra - 1);
+                  if (!keepPopupOpen) setShowPopup(false);
+                }
+              }}
+              onNextChapter={(keepPopupOpen = false) => {
+                if (activeEra < timelineData.length - 1) {
+                  setActiveEra(activeEra + 1);
+                  if (!keepPopupOpen) setShowPopup(false);
+                }
               }}
               onOpenKurukshetra={(dayIdx = 0) => {
                 setIsWarMode(true);
@@ -465,6 +493,35 @@ export default function Home() {
             />
           </div>
         )}
+
+        {/* --- THE GLOBAL AUDIO PLAYER --- */}
+        <div className="pointer-events-auto">
+          <AudioLorePlayer
+            textToRead={currentData?.deepLore || ""}
+            currentTitle={currentData?.title || ""} // <-- Pass the title here
+            isPopupOpen={showPopup}
+            hasNextChapter={
+              isWarMode
+                ? warDayIndex < kurukshetraWarData.length - 1
+                : activeEra < timelineData.length - 1
+            }
+            hasPrevChapter={isWarMode ? warDayIndex > 0 : activeEra > 0}
+            onNextChapter={() => {
+              if (isWarMode) {
+                setWarDayIndex(warDayIndex + 1);
+              } else {
+                setActiveEra(activeEra + 1);
+              }
+            }}
+            onPrevChapter={() => {
+              if (isWarMode) {
+                setWarDayIndex(warDayIndex - 1);
+              } else {
+                setActiveEra(activeEra - 1);
+              }
+            }}
+          />
+        </div>
       </div>
     </main>
   );

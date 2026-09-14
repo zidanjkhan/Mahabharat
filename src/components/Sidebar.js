@@ -143,18 +143,7 @@ export default function Sidebar({
       {/* --- DEEP LORE ANCIENT MANUSCRIPT MODAL --- */}
       {showPopup && (
         <div className="absolute inset-0 z-80 flex items-center justify-center bg-black/85 p-3 sm:p-6 overflow-y-auto">
-          {/* THE GLIDING AUDIO PLAYER */}
-          <AudioLorePlayer 
-            textToRead={currentData.deepLore}
-            hasNextChapter={hasNextChapter}
-            hasPrevChapter={hasPrevChapter}
-            onNextChapter={() => {
-              onNextChapter(true); // Clean React architecture: Tell parent to keep popup open
-            }}
-            onPrevChapter={() => {
-              onPrevChapter(true); // Clean React architecture: Tell parent to keep popup open
-            }}
-          />
+          
           {/* ========================================= */}
           {/* 1. PC / DESKTOP VIEW (Landscape proportions) */}
           {/* ========================================= */}

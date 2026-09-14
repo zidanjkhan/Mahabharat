@@ -17,7 +17,7 @@ export default function ChapterDrawer({ isOpen, onClose, chapters, currentChapte
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[40] flex items-center justify-start pointer-events-none">
+      <div className="fixed inset-0 z-50 flex items-center justify-start pointer-events-none">
 
         {/* Drawer Sliding From Left with higher z-index */}
         <motion.div
