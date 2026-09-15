@@ -244,24 +244,17 @@ const [playingWarIndex, setPlayingWarIndex] = useState(0);
       const targetX = windowX - pinPixelX * targetScale;
       const targetY = windowY - pinPixelY * targetScale;
 
-      // STAGGERED ANIMATION FIX:
-      // We wait 400ms to let the Card UI smoothly finish its expansion
-      // and let the image load before we force the GPU to pan the massive 4K map.
       const panTimer = setTimeout(() => {
         setTransform(targetX, targetY, targetScale, 4000, "easeOut");
       }, 500);
 
-      // Cleanup the timer if the user rapidly scrubs through chapters
       return () => clearTimeout(panTimer);
     }
   }, [
-    activeEra,
-    warDayIndex,
-    isWarMode,
-    isCardExpanded,
-    introState,
-    currentData,
-  ]);
+    currentData,       // <-- Just track the actual data
+    isCardExpanded,    // <-- Track UI shifts
+    introState         // <-- Track cinematic state
+  ]); // <-- Removed the redundant dependencies
 
   const handleSearchResultSelect = (item) => {
     if (item.type === "chapter") {
@@ -565,6 +558,15 @@ const [playingWarIndex, setPlayingWarIndex] = useState(0);
         } else {
           setPlayingEra(prev => prev - 1);
         }
+      }
+    }}
+    onForceSync={(startedChapterIndex) => {
+      // currentChapterIndex is 1-based (1, 2, 3), so we subtract 1 to get the array index (0, 1, 2)
+      const dataIndex = startedChapterIndex - 1; 
+      if (isWarMode) {
+        setPlayingWarIndex(dataIndex);
+      } else {
+        setPlayingEra(dataIndex);
       }
     }}
   />

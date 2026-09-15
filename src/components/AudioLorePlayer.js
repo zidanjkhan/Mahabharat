@@ -6,12 +6,13 @@ import { useState, useEffect, useRef } from "react";
 export default function AudioLorePlayer({ 
   textToRead, 
   currentTitle, 
-  currentChapterIndex, // <-- Pass the current chapter number/index (e.g., 1, 2, 3...) here!
+  currentChapterIndex, 
   onNextChapter, 
   onPrevChapter, 
   hasNextChapter, 
   hasPrevChapter,
-  isPopupOpen 
+  isPopupOpen,
+  onForceSync
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,12 +20,17 @@ export default function AudioLorePlayer({
   const [audioProgress, setAudioProgress] = useState(0);
   const [hasBeenActivated, setHasBeenActivated] = useState(false);
   
+  const [activeChapterIndex, setActiveChapterIndex] = useState(null);
+
   const audioRef = useRef(null);
   const isHoveringRef = useRef(false);
   const hoverTimeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  
+  // FIX 2: Ref to lock the UI open while changing chapters
+  const lockExpandedRef = useRef(false); 
 
-  // Chapter Change: Stop everything cleanly
-  useEffect(() => {
+  const stopAllAudio = () => {
     window.speechSynthesis.cancel();
     if (audioRef.current) {
       audioRef.current.pause();
@@ -33,12 +39,15 @@ export default function AudioLorePlayer({
     setIsPlaying(false);
     setIsPaused(false);
     setAudioProgress(0);
-    setIsExpanded(false);
-    
+  };
+
+  useEffect(() => {
     return () => {
+      stopAllAudio();
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
     };
-  }, [textToRead]);
+  }, []);
 
   const handleMouseEnter = () => {
     isHoveringRef.current = true;
@@ -47,6 +56,9 @@ export default function AudioLorePlayer({
   };
 
   const handleMouseLeave = () => {
+    // Prevent UI from collapsing if we just clicked Next/Prev
+    if (lockExpandedRef.current) return; 
+
     isHoveringRef.current = false;
     hoverTimeoutRef.current = setTimeout(() => {
       setIsExpanded(false);
@@ -61,31 +73,40 @@ export default function AudioLorePlayer({
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
       setIsExpanded(true);
     } else {
-      toggleAudio();
+      // FIX 3: On mobile, clicking the empty space of the pill collapses it.
+      // To pause/play, the user explicitly clicks the Play/Pause icon.
+      setIsExpanded(false); 
     }
   };
 
-  // SMART PLAY: Tries MP3 first, falls back to speech synthesis if file doesn't exist
   const playAudioTrack = async () => {
     setHasBeenActivated(true);
+    setActiveChapterIndex(currentChapterIndex); 
+
+    if (onForceSync) onForceSync(currentChapterIndex);
+    
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     const mp3Path = `/audio/ch${currentChapterIndex}.mp3`;
 
-    // Check if MP3 file exists in public folder
     try {
-      const response = await fetch(mp3Path, { method: 'HEAD' });
+      const response = await fetch(mp3Path, { method: 'HEAD', signal });
+      
       if (response.ok) {
-        // MP3 exists! Play it via HTML5 Audio element
         if (!audioRef.current) {
-          audioRef.current = new Audio(mp3Path);
+          audioRef.current = new Audio();
           
-          audioRef.current.ontimeupdate = () => {
+          audioRef.current.addEventListener('timeupdate', () => {
             if (audioRef.current.duration) {
-              const progress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-              setAudioProgress(progress);
+              setAudioProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
             }
-          };
+          });
 
-          audioRef.current.onended = () => {
+          audioRef.current.addEventListener('ended', () => {
             setIsPlaying(false);
             setIsPaused(false);
             setAudioProgress(100);
@@ -93,11 +114,15 @@ export default function AudioLorePlayer({
               setAudioProgress(0);
               setIsExpanded(false);
             }, 1000);
-          };
-        } else if (audioRef.current.src !== window.location.origin + mp3Path) {
+          });
+        } 
+        
+        if (audioRef.current.src !== window.location.origin + mp3Path) {
           audioRef.current.src = mp3Path;
         }
 
+        window.speechSynthesis.cancel();
+        
         audioRef.current.play();
         setIsPlaying(true);
         setIsPaused(false);
@@ -105,10 +130,10 @@ export default function AudioLorePlayer({
         return;
       }
     } catch (err) {
+      if (err.name === 'AbortError') return; 
       console.log("MP3 check failed, falling back to speech synthesis bot.");
     }
 
-    // FALLBACK: Use browser Speech Synthesis bot audio if MP3 is missing
     playFallbackSpeech();
   };
 
@@ -160,7 +185,7 @@ export default function AudioLorePlayer({
         
         if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
         hoverTimeoutRef.current = setTimeout(() => {
-          if (!isHoveringRef.current) setIsExpanded(false);
+          if (!isHoveringRef.current && !lockExpandedRef.current) setIsExpanded(false);
         }, 1000);
         
     }, 50);
@@ -172,8 +197,13 @@ export default function AudioLorePlayer({
       e.preventDefault();
     }
 
-    if (audioRef.current && audioRef.current.src) {
-      // Handling HTML5 MP3 Play/Pause
+    if (activeChapterIndex !== null && activeChapterIndex !== currentChapterIndex) {
+      stopAllAudio();
+      playAudioTrack();
+      return;
+    }
+
+    if (audioRef.current && audioRef.current.src && activeChapterIndex === currentChapterIndex) {
       if (isPlaying && !isPaused) {
         audioRef.current.pause();
         setIsPaused(true);
@@ -184,7 +214,6 @@ export default function AudioLorePlayer({
         playAudioTrack();
       }
     } else {
-      // Handling Browser Speech Synthesis Play/Pause
       const synth = window.speechSynthesis;
       if (isPlaying && !isPaused) {
         synth.pause();
@@ -198,10 +227,59 @@ export default function AudioLorePlayer({
     }
   };
 
+  // FIX 2: Wrapped Next/Prev handlers to lock the pill open during state shifts
+  const handleNext = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    lockExpandedRef.current = true;
+    setIsExpanded(true);
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    
+    stopAllAudio();
+    onNextChapter();
+
+    // Release the lock after 1.5 seconds so it can collapse normally later
+    setTimeout(() => { lockExpandedRef.current = false; }, 1500);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    lockExpandedRef.current = true;
+    setIsExpanded(true);
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    
+    stopAllAudio();
+    onPrevChapter();
+
+    setTimeout(() => { lockExpandedRef.current = false; }, 1500);
+  };
+
   if (!hasBeenActivated && !isPopupOpen) return null;
 
   return (
     <>
+      {/* FIX 1: CSS Animation for the Audio Wave EQ */}
+      <style>{`
+        @keyframes eqPlay {
+          0% { transform: scaleY(0.2); }
+          50% { transform: scaleY(1); }
+          100% { transform: scaleY(0.2); }
+        }
+        .eq-bar {
+          transform-origin: 50% 50%;
+          animation: eqPlay 1.2s ease-in-out infinite;
+        }
+        .eq-bar-1 { animation-delay: 0.0s; animation-duration: 0.9s; }
+        .eq-bar-2 { animation-delay: 0.2s; animation-duration: 1.1s; }
+        .eq-bar-3 { animation-delay: 0.4s; animation-duration: 1.0s; }
+        .eq-bar-4 { animation-delay: 0.1s; animation-duration: 1.2s; }
+        .eq-bar-5 { animation-delay: 0.3s; animation-duration: 1.0s; }
+        .eq-bar-6 { animation-delay: 0.5s; animation-duration: 1.1s; }
+      `}</style>
+
       {/* ===========================================================================
         MODE 1: THE WAX SEAL (Inside Deep Lore Manuscript)
         =========================================================================== */}
@@ -213,22 +291,20 @@ export default function AudioLorePlayer({
         >
           <div className={`relative flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isExpanded ? "w-[200px] sm:w-[220px]" : "w-[72px]"}`}>
             
-            {/* FLOATING BUTTONS TRAY */}
             <div className={`absolute inset-0 flex items-center justify-between transition-all duration-500 ${isExpanded ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
-                <button onClick={(e) => { e.stopPropagation(); onPrevChapter(); }} disabled={!hasPrevChapter} className={`group/btn p-2.5 rounded-full transition-all duration-300 ${hasPrevChapter ? "hover:bg-[#1a0601] hover:shadow-[0_0_15px_rgba(251,191,36,0.4)] cursor-pointer" : "opacity-40"}`}>
+                <button onClick={handlePrev} disabled={!hasPrevChapter} className={`group/btn p-2.5 rounded-full transition-all duration-300 ${hasPrevChapter ? "hover:bg-[#1a0601] hover:shadow-[0_0_15px_rgba(251,191,36,0.4)] cursor-pointer" : "opacity-40"}`}>
                   <svg className={`w-7 h-7 sm:w-8 sm:h-8 transition-all duration-300 drop-shadow-[0_3px_4px_rgba(0,0,0,0.6)] ${hasPrevChapter ? "fill-[#0a0502] stroke-[#fbbf24] stroke-[1.5px] group-hover/btn:fill-[#fbbf24] group-hover/btn:stroke-amber-200" : "fill-[#3a0505] stroke-[#8b5a2b] stroke-[1px]"}`} viewBox="0 0 24 24">
                     <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" strokeLinejoin="round" strokeLinecap="round" />
                   </svg>
                 </button>
                 <div className="w-[72px] shrink-0" />
-                <button onClick={(e) => { e.stopPropagation(); onNextChapter(); }} disabled={!hasNextChapter} className={`group/btn p-2.5 rounded-full transition-all duration-300 ${hasNextChapter ? "hover:bg-[#1a0601] hover:shadow-[0_0_15px_rgba(251,191,36,0.4)] cursor-pointer" : "opacity-40"}`}>
+                <button onClick={handleNext} disabled={!hasNextChapter} className={`group/btn p-2.5 rounded-full transition-all duration-300 ${hasNextChapter ? "hover:bg-[#1a0601] hover:shadow-[0_0_15px_rgba(251,191,36,0.4)] cursor-pointer" : "opacity-40"}`}>
                   <svg className={`w-7 h-7 sm:w-8 sm:h-8 transition-all duration-300 drop-shadow-[0_3px_4px_rgba(0,0,0,0.6)] ${hasNextChapter ? "fill-[#0a0502] stroke-[#fbbf24] stroke-[1.5px] group-hover/btn:fill-[#fbbf24] group-hover/btn:stroke-amber-200" : "fill-[#3a0505] stroke-[#8b5a2b] stroke-[1px]"}`} viewBox="0 0 24 24">
                     <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" strokeLinejoin="round" strokeLinecap="round" />
                   </svg>
                 </button>
             </div>
 
-            {/* THE CENTER WAX SEAL */}
             <div onClick={handleCenterClick} className="relative z-10 w-[72px] h-[72px] rounded-full bg-gradient-to-br from-[#680b0b] via-[#4a0606] to-[#260101] border-[1.5px] border-[#fbbf24]/80 shadow-[0_5px_15px_rgba(0,0,0,0.9)] flex flex-col items-center justify-center cursor-pointer group">
               {!isPlaying ? (
                 <div className="absolute inset-0 rounded-full pointer-events-none z-0" style={{ padding: "2px", WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}>
@@ -304,19 +380,32 @@ export default function AudioLorePlayer({
 
             <div className={`absolute inset-0 rounded-l-xl pointer-events-none border-y border-l border-r-0 transition-colors duration-500 ${isPlaying ? "border-amber-700/20" : isExpanded ? "border-[#8b5a2b]/60" : "border-[#8b5a2b]/30 group-hover:border-[#8b5a2b]/80"}`} />
 
-            {/* COLLAPSED SLIDER VIEW WITH SOUND WAVE ICON */}
+            {/* COLLAPSED SLIDER VIEW WITH ANIMATED SOUND WAVE */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 ease-out pr-1 ${isExpanded ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
               <svg className="w-5 h-5 text-amber-400 group-hover:text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M2 10v3M6 6v11M10 3v18M14 8v8M18 5v14M22 10v3"/>
+                <path d="M2 10v3" className={isPlaying && !isPaused ? "eq-bar eq-bar-1" : ""} />
+                <path d="M6 6v11" className={isPlaying && !isPaused ? "eq-bar eq-bar-2" : ""} />
+                <path d="M10 3v18" className={isPlaying && !isPaused ? "eq-bar eq-bar-3" : ""} />
+                <path d="M14 8v8" className={isPlaying && !isPaused ? "eq-bar eq-bar-4" : ""} />
+                <path d="M18 5v14" className={isPlaying && !isPaused ? "eq-bar eq-bar-5" : ""} />
+                <path d="M22 10v3" className={isPlaying && !isPaused ? "eq-bar eq-bar-6" : ""} />
               </svg>
             </div>
 
             {/* EXPANDED MUSIC PLAYER VIEW */}
             <div className={`absolute top-0 right-0 w-[340px] h-20 flex items-center transition-opacity duration-400 delay-100 ease-in ${isExpanded ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                <div className="w-20 h-full flex flex-col items-center justify-center flex-shrink-0 relative z-10 border-r border-[#8b5a2b]/20 bg-black/40">
+                  
+                  {/* EXPANDED ANIMATED SOUND WAVE */}
                   <svg className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 10v3M6 6v11M10 3v18M14 8v8M18 5v14M22 10v3"/>
+                    <path d="M2 10v3" className={isPlaying && !isPaused ? "eq-bar eq-bar-1" : ""} />
+                    <path d="M6 6v11" className={isPlaying && !isPaused ? "eq-bar eq-bar-2" : ""} />
+                    <path d="M10 3v18" className={isPlaying && !isPaused ? "eq-bar eq-bar-3" : ""} />
+                    <path d="M14 8v8" className={isPlaying && !isPaused ? "eq-bar eq-bar-4" : ""} />
+                    <path d="M18 5v14" className={isPlaying && !isPaused ? "eq-bar eq-bar-5" : ""} />
+                    <path d="M22 10v3" className={isPlaying && !isPaused ? "eq-bar eq-bar-6" : ""} />
                   </svg>
+                  
                   <span className="text-[10px] font-serif font-black text-amber-400 tracking-widest uppercase mt-1 hidden sm:block">
                     {Math.round(audioProgress)}%
                   </span>
@@ -329,7 +418,7 @@ export default function AudioLorePlayer({
                   </div>
 
                   <div className="flex items-center justify-between px-1">
-                     <button onClick={(e) => { e.stopPropagation(); onPrevChapter(); }} disabled={!hasPrevChapter} className={`p-1.5 rounded-full transition-all cursor-pointer ${hasPrevChapter ? "text-amber-500/70 hover:text-amber-300 hover:bg-slate-800/50" : "text-slate-600 opacity-30"}`}>
+                     <button onClick={handlePrev} disabled={!hasPrevChapter} className={`p-1.5 rounded-full transition-all cursor-pointer ${hasPrevChapter ? "text-amber-500/70 hover:text-amber-300 hover:bg-slate-800/50" : "text-slate-600 opacity-30"}`}>
                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
                      </button>
                      <button onClick={toggleAudio} className="w-8 h-8 flex items-center justify-center rounded-full border border-amber-500/40 bg-gradient-to-br from-[#2a1708] to-black text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)] hover:scale-105 transition-all cursor-pointer">
@@ -339,7 +428,7 @@ export default function AudioLorePlayer({
                           <svg className="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         )}
                      </button>
-                     <button onClick={(e) => { e.stopPropagation(); onNextChapter(); }} disabled={!hasNextChapter} className={`p-1.5 rounded-full transition-all cursor-pointer ${hasNextChapter ? "text-amber-500/70 hover:text-amber-300 hover:bg-slate-800/50" : "text-slate-600 opacity-30"}`}>
+                     <button onClick={handleNext} disabled={!hasNextChapter} className={`p-1.5 rounded-full transition-all cursor-pointer ${hasNextChapter ? "text-amber-500/70 hover:text-amber-300 hover:bg-slate-800/50" : "text-slate-600 opacity-30"}`}>
                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                      </button>
                   </div>
