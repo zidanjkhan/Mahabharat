@@ -123,6 +123,10 @@ export default function Home() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
+  // Add this alongside your other states
+const [playingEra, setPlayingEra] = useState(0); 
+const [playingWarIndex, setPlayingWarIndex] = useState(0);
+
   const [isMapHovered, setIsMapHovered] = useState(false);
   const [showFamilyTree, setShowFamilyTree] = useState(false);
   const [hoveredRegion, setHoveredRegion] = useState(null);
@@ -495,33 +499,76 @@ export default function Home() {
         )}
 
         {/* --- THE GLOBAL AUDIO PLAYER --- */}
-        <div className="pointer-events-auto">
-          <AudioLorePlayer
-            textToRead={currentData?.deepLore || ""}
-            currentTitle={currentData?.title || ""} // <-- Pass the title here
-            isPopupOpen={showPopup}
-            hasNextChapter={
-              isWarMode
-                ? warDayIndex < kurukshetraWarData.length - 1
-                : activeEra < timelineData.length - 1
-            }
-            hasPrevChapter={isWarMode ? warDayIndex > 0 : activeEra > 0}
-            onNextChapter={() => {
-              if (isWarMode) {
-                setWarDayIndex(warDayIndex + 1);
-              } else {
-                setActiveEra(activeEra + 1);
-              }
-            }}
-            onPrevChapter={() => {
-              if (isWarMode) {
-                setWarDayIndex(warDayIndex - 1);
-              } else {
-                setActiveEra(activeEra - 1);
-              }
-            }}
-          />
-        </div>
+<div className="pointer-events-auto">
+  <AudioLorePlayer
+    // 1. If popup is open, show the active manuscript data. If background, show the playing data.
+    textToRead={
+      showPopup
+        ? (isWarMode ? kurukshetraWarData[warDayIndex]?.deepLore : timelineData[activeEra]?.deepLore) || ""
+        : (isWarMode ? kurukshetraWarData[playingWarIndex]?.deepLore : timelineData[playingEra]?.deepLore) || ""
+    }
+    currentTitle={
+      showPopup
+        ? (isWarMode ? kurukshetraWarData[warDayIndex]?.title : timelineData[activeEra]?.title) || ""
+        : (isWarMode ? kurukshetraWarData[playingWarIndex]?.title : timelineData[playingEra]?.title) || ""
+    }
+    currentChapterIndex={
+      showPopup
+        ? (isWarMode ? warDayIndex + 1 : activeEra + 1)
+        : (isWarMode ? playingWarIndex + 1 : playingEra + 1)
+    }
+    isPopupOpen={showPopup}
+    
+    hasNextChapter={
+      showPopup
+        ? (isWarMode ? warDayIndex < kurukshetraWarData.length - 1 : activeEra < timelineData.length - 1)
+        : (isWarMode ? playingWarIndex < kurukshetraWarData.length - 1 : playingEra < timelineData.length - 1)
+    }
+    hasPrevChapter={
+      showPopup
+        ? (isWarMode ? warDayIndex > 0 : activeEra > 0)
+        : (isWarMode ? playingWarIndex > 0 : playingEra > 0)
+    }
+    
+    // 2. Context-aware Next/Prev handlers
+    onNextChapter={() => {
+      if (showPopup) {
+        // When reading the full scripture, change the main page view AND the audio tracking together
+        if (isWarMode) {
+          setWarDayIndex(prev => prev + 1);
+          setPlayingWarIndex(prev => prev + 1);
+        } else {
+          setActiveEra(prev => prev + 1);
+          setPlayingEra(prev => prev + 1);
+        }
+      } else {
+        // When in background, ONLY change the background audio chapter
+        if (isWarMode) {
+          setPlayingWarIndex(prev => prev + 1);
+        } else {
+          setPlayingEra(prev => prev + 1);
+        }
+      }
+    }}
+    onPrevChapter={() => {
+      if (showPopup) {
+        if (isWarMode) {
+          setWarDayIndex(prev => prev - 1);
+          setPlayingWarIndex(prev => prev - 1);
+        } else {
+          setActiveEra(prev => prev - 1);
+          setPlayingEra(prev => prev - 1);
+        }
+      } else {
+        if (isWarMode) {
+          setPlayingWarIndex(prev => prev - 1);
+        } else {
+          setPlayingEra(prev => prev - 1);
+        }
+      }
+    }}
+  />
+</div>
       </div>
     </main>
   );

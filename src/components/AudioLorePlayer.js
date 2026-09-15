@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 export default function AudioLorePlayer({ 
   textToRead, 
   currentTitle, 
+  currentChapterIndex, // <-- Pass the current chapter number/index (e.g., 1, 2, 3...) here!
   onNextChapter, 
   onPrevChapter, 
   hasNextChapter, 
@@ -16,14 +17,19 @@ export default function AudioLorePlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
-  
   const [hasBeenActivated, setHasBeenActivated] = useState(false);
   
+  const audioRef = useRef(null);
   const isHoveringRef = useRef(false);
   const hoverTimeoutRef = useRef(null);
 
+  // Chapter Change: Stop everything cleanly
   useEffect(() => {
     window.speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
     setIsPlaying(false);
     setIsPaused(false);
     setAudioProgress(0);
@@ -59,10 +65,55 @@ export default function AudioLorePlayer({
     }
   };
 
-  const playText = () => {
-    if (!textToRead) return;
-
+  // SMART PLAY: Tries MP3 first, falls back to speech synthesis if file doesn't exist
+  const playAudioTrack = async () => {
     setHasBeenActivated(true);
+    const mp3Path = `/audio/ch${currentChapterIndex}.mp3`;
+
+    // Check if MP3 file exists in public folder
+    try {
+      const response = await fetch(mp3Path, { method: 'HEAD' });
+      if (response.ok) {
+        // MP3 exists! Play it via HTML5 Audio element
+        if (!audioRef.current) {
+          audioRef.current = new Audio(mp3Path);
+          
+          audioRef.current.ontimeupdate = () => {
+            if (audioRef.current.duration) {
+              const progress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+              setAudioProgress(progress);
+            }
+          };
+
+          audioRef.current.onended = () => {
+            setIsPlaying(false);
+            setIsPaused(false);
+            setAudioProgress(100);
+            setTimeout(() => {
+              setAudioProgress(0);
+              setIsExpanded(false);
+            }, 1000);
+          };
+        } else if (audioRef.current.src !== window.location.origin + mp3Path) {
+          audioRef.current.src = mp3Path;
+        }
+
+        audioRef.current.play();
+        setIsPlaying(true);
+        setIsPaused(false);
+        setIsExpanded(true);
+        return;
+      }
+    } catch (err) {
+      console.log("MP3 check failed, falling back to speech synthesis bot.");
+    }
+
+    // FALLBACK: Use browser Speech Synthesis bot audio if MP3 is missing
+    playFallbackSpeech();
+  };
+
+  const playFallbackSpeech = () => {
+    if (!textToRead) return;
 
     const synth = window.speechSynthesis;
     synth.cancel(); 
@@ -121,16 +172,29 @@ export default function AudioLorePlayer({
       e.preventDefault();
     }
 
-    const synth = window.speechSynthesis;
-
-    if (isPlaying && !isPaused) {
-      synth.pause();
-      setIsPaused(true);
-    } else if (isPlaying && isPaused) {
-      synth.resume();
-      setIsPaused(false);
+    if (audioRef.current && audioRef.current.src) {
+      // Handling HTML5 MP3 Play/Pause
+      if (isPlaying && !isPaused) {
+        audioRef.current.pause();
+        setIsPaused(true);
+      } else if (isPlaying && isPaused) {
+        audioRef.current.play();
+        setIsPaused(false);
+      } else {
+        playAudioTrack();
+      }
     } else {
-      playText();
+      // Handling Browser Speech Synthesis Play/Pause
+      const synth = window.speechSynthesis;
+      if (isPlaying && !isPaused) {
+        synth.pause();
+        setIsPaused(true);
+      } else if (isPlaying && isPaused) {
+        synth.resume();
+        setIsPaused(false);
+      } else {
+        playAudioTrack();
+      }
     }
   };
 
@@ -210,7 +274,7 @@ export default function AudioLorePlayer({
       )}
 
       {/* ===========================================================================
-        MODE 2: THE SLIM EDGE TABULAR SLIDER (Background Player with Sound Wave)
+        MODE 2: THE SLIM EDGE TABULAR SLIDER (Background Player)
         =========================================================================== */}
       {!isPopupOpen && hasBeenActivated && (
         <div 
